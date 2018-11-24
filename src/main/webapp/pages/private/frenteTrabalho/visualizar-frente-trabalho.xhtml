@@ -1,0 +1,214 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{visualizaFrenteTrabalhoBean.voltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Visualizar Frente de Trabalho</h1>
+                        <p:tabView id="tabDadosPessoais">
+                            <p:tab title="Frente Trabalho">
+                                <p:panelGrid id="pgNomeSiglaTipoFrenteTrabalho" columns="3"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itNomeFrenteTrabalho"
+                                                     value="#{visualizaFrenteTrabalhoBean.frenteTrabalho.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itNomeFrenteTrabalho" value="Nome da Frente de Trabalho"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itSigla"
+                                                     value="#{visualizaFrenteTrabalhoBean.frenteTrabalho.sigla}"
+                                                     readonly="true"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itSigla" value="Sigla"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:inputText id="itTipoFrenteTrabalho"
+                                                     value="#{visualizaFrenteTrabalhoBean.frenteTrabalho.tipoFrenteTrabalho.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itTipoFrenteTrabalho" value="Tipo"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgLotacaoNumeroVagas" columns="3"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:inputText id="itLotacaoMae"
+                                                     value="#{visualizaFrenteTrabalhoBean.frenteTrabalho.unidadePrisional.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itLotacaoMae" value="Lotação Mãe"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itNumeroVagas"
+                                                     value="#{visualizaFrenteTrabalhoBean.frenteTrabalho.capacidade}"
+                                                     readonly="true"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itNumeroVagas" value="Número de Vagas"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <h:panelGroup id="hpCoordenador">
+                                    <p:panelGrid id="pgDtCoordenador" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 rendered="#{!visualizaFrenteTrabalhoBean.servidores.isEmpty()}"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:dataTable id="dtCoordenador"
+                                                         value="#{visualizaFrenteTrabalhoBean.servidores}"
+                                                         var="servidor"
+                                                         rows="5"
+                                                         style="padding-bottom: 10px"
+                                            >
+                                                <p:column headerText="Coordenador" style="text-align: center">
+                                                    <h:outputText value="#{servidor.pessoa.nome}"/>
+                                                </p:column>
+                                            </p:dataTable>
+
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                                <h:panelGroup id="hpAtividadeLaboral">
+                                    <p:panelGrid id="pgDtAtividadesLaborais" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 rendered="#{!visualizaFrenteTrabalhoBean.atividadesLaborais.isEmpty()}"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:dataTable id="dtAtividadesLaborais"
+                                                         value="#{visualizaFrenteTrabalhoBean.atividadesLaborais}"
+                                                         var="atividadeLaboral"
+                                                         rows="5">
+                                                <p:column headerText="Atividade Laboral" style="text-align: center">
+                                                    <h:outputText value="#{atividadeLaboral.descricao}"/>
+                                                </p:column>
+                                            </p:dataTable>
+
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                                <h:panelGroup id="hpProduto">
+                                    <p:panelGrid id="pgDtProdutos" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 rendered="#{!visualizaFrenteTrabalhoBean.produtos.isEmpty()}"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <p:dataTable id="dtProdutos"
+                                                     value="#{visualizaFrenteTrabalhoBean.produtos}"
+                                                     var="produto">
+                                            <p:column headerText="Produto" style="text-align: center">
+                                                <h:outputText value="#{produto.descricao}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                            </p:tab>
+                            <p:tab title="Produção Diária">
+                                <p:panelGrid
+                                        id="pgDtProducaoDiaria"
+                                        columns="1"
+                                        columnClasses="ui-grid-col-12"
+                                        layout="grid"
+                                        styleClass="ui-panelgrid-blank form-group"
+                                        style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtProducaoDiaria"
+                                                     value="#{visualizaFrenteTrabalhoBean.producoesDiarias}"
+                                                     rows="10"
+                                                     emptyMessage="Nenhum registro encontrado."
+                                                     var="producaoDiaria"
+                                                     paginator="#{visualizaFrenteTrabalhoBean.producoesDiarias.size()>10}"
+                                                     paginatorPosition="bottom"
+
+                                        >
+                                            <f:facet name="header">
+                                                <h:outputText value="Produção Diária"/>
+                                            </f:facet>
+                                            <p:column headerText="Data" style="text-align: center;">
+                                                <h:outputText value="#{producaoDiaria.data}">
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Produto" style="text-align: center;">
+                                                <h:outputText value="#{producaoDiaria.produto.descricao}"/>
+                                            </p:column>
+                                            <p:column headerText="Quantidade" style="text-align: center;">
+                                                <h:outputText value="#{producaoDiaria.quantidade}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Presos">
+                                <p:panelGrid
+                                        id="pgDtPresos"
+                                        columns="1"
+                                        columnClasses="ui-grid-col-12"
+                                        layout="grid"
+                                        styleClass="ui-panelgrid-blank form-group"
+                                        style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtPresos"
+                                                     value="#{visualizaFrenteTrabalhoBean.frenteTrabalhoDetentos}"
+                                                     rows="10"
+                                                     emptyMessage="Nenhum registro encontrado."
+                                                     var="frenteTrabalhoDetento"
+                                                     paginator="#{visualizaFrenteTrabalhoBean.frenteTrabalhoDetentos.size()>10}"
+                                                     paginatorPosition="bottom"
+
+                                        >
+                                            <f:facet name="header">
+                                                <h:outputText value="Produção Diária"/>
+                                            </f:facet>
+                                            <p:column headerText="Nome" style="text-align: center;">
+                                                <h:outputText value="#{frenteTrabalhoDetento.detento.pessoa.nome}"/>
+                                            </p:column>
+                                            <p:column headerText="Unidade Prisional" style="text-align: center;">
+                                                <h:outputText
+                                                        value="#{frenteTrabalhoDetento.frenteTrabalho.unidadePrisional.descricao}"/>
+                                            </p:column>
+                                            <p:column headerText="Data Início" style="text-align: center;">
+                                                <h:outputText value="#{frenteTrabalhoDetento.dataInicio}">
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

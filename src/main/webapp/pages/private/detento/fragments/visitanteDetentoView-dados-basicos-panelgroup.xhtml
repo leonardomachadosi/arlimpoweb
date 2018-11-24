@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="car-details">
+        <p:graphicImage
+                value="#{fotoBean.getFotoFrontalPath(detento.codPessoaDetento, 1)}"
+                style="width: 78px; margin:24px;"/>
+    </div>
+    <div class="car-details">
+        <p><strong>#{detento.nomeDetento}</strong></p>
+        <p>Situação do preso: <h:outputLabel
+                value="#{detento.situacaoDetento}"
+                styleClass="#{utilBean.addStyleByStatus(detento.situacaoDetento)}"/>
+        </p>
+        <p>Parentesco: <h:outputLabel
+                id="detentoParentesco"
+                value="#{detento.parentesco}"/>
+        </p>
+        Situação Vínculo:
+        <p:outputLabel value="#{detento.vinculo}"
+                       styleClass="#{utilBean.addStyleByStatus(detento.vinculo)}"/>
+
+        <h:panelGroup rendered="#{detalhesVisitanteBean.renderizaPeriodoSuspensao(detento)}">
+            <h:outputText value=" de "
+                          styleClass="#{utilBean.addStyleByStatus(detento.vinculo)}"/>
+            <p:outputLabel
+                    value="#{detento.dataInicioSuspensao}"
+                    styleClass="#{utilBean.addStyleByStatus(detento.vinculo)}">
+                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+            </p:outputLabel>
+            <h:outputText value=" até "
+                          styleClass="#{utilBean.addStyleByStatus(detento.vinculo)}"/>
+            <p:outputLabel
+                    value="#{detento.dataFimSuspensao}"
+                    styleClass="#{utilBean.addStyleByStatus(detento.vinculo)}">
+                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+            </p:outputLabel>
+        </h:panelGroup>
+    </div>
+</ui:composition>

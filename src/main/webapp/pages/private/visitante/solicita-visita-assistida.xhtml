@@ -1,0 +1,170 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Solicitação de Visita Assistida</b></h1>
+                        <p:panelGrid id="pgPresoVisitante" columns="2"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%"
+                                                inputStyle="width: 80%"
+                                                completeMethod="#{solicitaVisitaAssistidaBean.completeDetento}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{solicitaVisitaAssistidaBean.detentoView}"
+                                                var="detentoView"
+                                                itemValue="#{detentoView}"
+                                                itemLabel="#{detentoView.nomeDetento}"
+                                                converter="detentoViewConverter">
+                                    <p:column style="width: 10%; text-align: center">
+                                        <p:graphicImage style="max-width: 3em;"
+                                                        value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText
+                                                value="#{detentoView.nomeDetento} - #{detentoView.nomeUnidadePrisional}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{solicitaVisitaAssistidaBean.carregarVisitantesDetentoView()}"
+                                            update="hpDetentoView, hpVisitantesDetento"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Preso"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acVisitante"
+                                                style="width: 100%"
+                                                inputStyle="width: 80%"
+                                                completeMethod="#{solicitaVisitaAssistidaBean.completeVisitanteView}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{solicitaVisitaAssistidaBean.visitanteView}"
+                                                var="visitanteView"
+                                                itemValue="#{visitanteView}"
+                                                itemLabel="#{visitanteView.nome}"
+                                                converter="visitanteViewConverter">
+                                    <p:column style="width: 10%; text-align: center">
+                                        <p:graphicImage style="max-width: 3em;"
+                                                        value="#{fotoBean.getFotoFrontalPath(visitanteView.codPessoa, 2)}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{visitanteView.nome}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{solicitaVisitaAssistidaBean.carregarVisitanteDetentosView()}"
+                                            update="hpVisitanteView, hpVisitanteDetentos"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acVisitante" value="Visitante"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpDetentoView">
+                                <ui:include src="fragments/detentoView-panelgrid.xhtml">
+                                    <ui:param name="detentoView"
+                                              value="#{solicitaVisitaAssistidaBean.detentoView}"/>
+                                </ui:include>
+
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitanteView">
+                                <ui:include src="fragments/visitanteView-panelgrid.xhtml">
+                                    <ui:param name="visitanteView"
+                                              value="#{solicitaVisitaAssistidaBean.visitanteView}"/>
+                                </ui:include>
+
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitantesDetento">
+                                <ui:include src="fragments/visitanteDetentoView-datalist.xhtml">
+                                    <ui:param name="tipo" value="visitante"/>
+                                    <ui:param name="List"
+                                              value="#{solicitaVisitaAssistidaBean.visitantesList}"/>
+                                </ui:include>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitanteDetentos">
+                                <ui:include src="fragments/visitanteDetentoView-datalist.xhtml">
+                                    <ui:param name="tipo" value="detento"/>
+                                    <ui:param name="List"
+                                              value="#{solicitaVisitaAssistidaBean.detentosList}"/>
+                                </ui:include>
+                            </h:panelGroup>
+
+                            <p:outputLabel value="Dados da Solicitação" styleClass="customLabel"/>
+                            <p:spacer/>
+                            <h:panelGroup styleClass="md-selectonemenu" style="margin-top: 1em;">
+                                <p:selectOneMenu id="soGrauParentesco"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 80%"
+                                                 value="#{solicitaVisitaAssistidaBean.parentesco}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{solicitaVisitaAssistidaBean.parentescos}"
+                                                   var="parentesco"
+                                                   itemLabel="#{parentesco.descricao}"/>
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Parentesco" for="soGrauParentesco"/>
+                            </h:panelGroup>
+
+                            <!--<h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">-->
+                                <!--<p:calendar id="cdDataPrevista"-->
+                                            <!--value="#{solicitaVisitaAssistidaBean.dataPrevista}"-->
+                                            <!--pattern="dd/MM/yyyy"-->
+                                            <!--locale='pt'-->
+                                            <!--mask="99/99/9999"-->
+                                            <!--mindate="today"-->
+                                            <!--style="width: 100%"/>-->
+                                <!--<p:outputLabel for="cdDataPrevista" value="Data Prevista"/>-->
+                            <!--</h:panelGroup>-->
+                            <!--<p:spacer/>-->
+                            <!--<h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">-->
+                            <!--<p:inputTextarea id="itObservacao" value="#{solicitaVisitaAssistidaBean.observacao}"-->
+                            <!--rows="1"-->
+                            <!--cols="120"/>-->
+                            <!--<p:outputLabel for="itObservacao" value="Observação"/>-->
+                            <!--</h:panelGroup>-->
+                        </p:panelGrid>
+                        <p:panelGrid id="pgMotivo" columns="1"
+                                     columnClasses="ui-grid-col-11"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">
+                                <p:inputTextarea id="itMotivo" value="#{solicitaVisitaAssistidaBean.motivo}"
+                                                 rows="1"
+                                                 cols="120"
+                                                 style="width: 100%"/>
+                                <p:outputLabel for="itMotivo" value="Motivo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="Salvar"
+                                             action="#{solicitaVisitaAssistidaBean.salvar()}"
+                                             process="@form" update="@form"
+                                             icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

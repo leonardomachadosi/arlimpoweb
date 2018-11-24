@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"/>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1><b>Visualização de Recursos</b></h1>
+                    <p:panelGrid id="pgNome" columns="1" columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                 style="border:0px none; background-color:transparent;">
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itDescricao"
+                                         value="#{visualizarRecursoBean.resource.description}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itDescricao" value="Recurso"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itUUID"
+                                         value="#{visualizarRecursoBean.resource.uuid}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itUUID" value="UUID"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itStatus"
+                                         value="#{visualizarRecursoBean.resource.status}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itStatus" value="Status"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itLatitude"
+                                         value="#{visualizarRecursoBean.resource.lat}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itLatitude" value="Latitude"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itLongitude"
+                                         value="#{visualizarRecursoBean.resource.lon}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itLongitude" value="Longitude"/>
+                        </h:panelGroup>
+
+                    </p:panelGrid>
+                </div>
+
+
+
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

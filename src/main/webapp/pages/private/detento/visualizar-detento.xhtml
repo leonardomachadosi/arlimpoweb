@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-panelgrid {
+                border-collapse: unset !important;
+            }
+            .ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+            .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+            .ui-panelgrid .ui-panelgrid-cell {
+                border: 0;
+            }
+            body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-right .ui-icon, body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-left .ui-icon {
+                display:none !important;
+            }
+
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             ajax="false"
+                                             action="/pages/private/detento/buscar-detento.xhtml?faces-redirect=true"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:tabView id="tvDetento" prependId="false">
+                            <p:tab title="Preso">
+                                <ui:include src="fragments/tab-detento.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Dados Pessoais">
+                                <ui:include src="fragments/tab-dados-pessoais.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Dados Físicos">
+                                <ui:include src="fragments/tab-dados-fisicos.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Fotos">
+                                <ui:include src="fragments/tab-fotos-tatuagem.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Prontuario">
+                                <ui:include src="fragments/tab-prontuario.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Visitantes">
+                                <ui:include src="fragments/tab-visitantes.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Histórico de Visitas">
+                                <ui:include src="fragments/tab-historico-visita.xhtml"/>
+                            </p:tab>
+                            <p:tab title="Histórico Prisional">
+                                <ui:include src="fragments/tab-historico.xhtml"/>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+            <ui:include src="fragments/modal/modal-edicao-dados-pessoais.xhtml" />
+            <ui:include src="fragments/modal/modal-edicao-rg.xhtml" />
+            <ui:include src="fragments/modal/modal-edicao-endereco.xhtml" />
+            <ui:include src="fragments/modal/modal-edicao-arquivos.xhtml" />
+            <ui:include src="fragments/modal/modal-edicao-nome.xhtml" />
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Delegacia</b></h1>
+                        <p:panelGrid id="pgDelegaciaMunicipio" columns="3"
+                                     columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itDelegacia"
+                                             value="#{buscaDelegaciaOrigemBean.delegaciaOrigem.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itDelegacia" value="Delegacia"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soEstado"
+                                                 value="#{buscaDelegaciaOrigemBean.estado}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Estado"
+                                                  itemValue=""/>
+                                    <f:selectItems var="estado"
+                                                   itemLabel="#{estado.descricao.toUpperCase()}"
+                                                   value="#{buscaDelegaciaOrigemBean.estados}"/>
+                                    <p:ajax process="@this" update="soMunicipio"
+                                            listener="#{buscaDelegaciaOrigemBean.onSelectEstados}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estado"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soMunicipio"
+                                                 filter="true"
+                                                 value="#{buscaDelegaciaOrigemBean.municipio}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o município" itemValue=""/>
+                                    <f:selectItems var="municipio"
+                                                   itemLabel="#{municipio.descricao.toUpperCase()}"
+                                                   value="#{buscaDelegaciaOrigemBean.municipios}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Município"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+
+                            <p:commandButton id="btnCadastrarDelegacia"
+                                             value="Cadastar"
+                                             process="@this"
+                                             update="@form"
+                                             action="#{buscaDelegaciaOrigemBean.onClickCadastrar()}"
+                                             icon="ui-icon-plus"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton id="btnBuscarDelegacia" value="Buscar"
+                                             process="@form" update="@form"
+                                             action="#{buscaDelegaciaOrigemBean.buscarDelegaciasOrigem()}"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Delegacias</b></h1>
+                        <p:dataTable
+                                id="dtDelegacias"
+                                var="delegacia"
+                                value="#{buscaDelegaciaOrigemBean.delegaciaOrigems}"
+                                reflow="true"
+                                rowKey="#{delegacia.id}"
+                                paginator="true"
+                                rows="10"
+                                emptyMessage="Nenhum registro encontrado">
+                            <p:column headerText="Nome" style="text-align: center">
+                                <h:outputText value="#{delegacia.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Município" style="width:180px;text-align: center">
+                                <h:outputText value="#{delegacia.municipio.descricao.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:70px;text-align: center">
+                                <p:commandButton title="Editar"
+                                                 process="@this"
+                                                 update="@form"
+                                                 action="#{buscaDelegaciaOrigemBean.onClickEditar()}"
+                                                 icon="ui-icon-edit">
+                                    <f:setPropertyActionListener value="#{delegacia}"
+                                                                 target="#{buscaDelegaciaOrigemBean.delegaciaOrigem}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+
+
+</ui:composition>

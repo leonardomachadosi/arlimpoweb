@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog header="Editar Prontuário" id="dialogEdicaoProntuario" widgetVar="addEdicaoProntuario" modal="true"
+              width="600" responsive="true" showEffect="fade" hideEffect="fade">
+        <p:panelGrid id="pgDescricaoArquivoProntuario" columns="1"
+                     columnClasses="ui-grid-col-12"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0 none;">
+            <h:panelGroup>
+                <p:outputLabel style="font-weight: bold"
+                               value="Arquivo"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itDescricaoArquivoProntuario"
+                             style="width: 100%"
+                             value="#{visualizaDetentoBean.arquivo.descricao}">
+                    <p:ajax process="@this" event="blur"/>
+                </p:inputText>
+                <p:outputLabel for="itDescricaoArquivoProntuario"
+                               value="Descrição do Arquivo"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-selectonemenu">
+                <p:selectOneMenu id="smTipoArquivo"
+                                 style="width: 100%"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 filter="true"
+                                 value="#{visualizaDetentoBean.arquivo.tipoArquivo}">
+                    <f:selectItem noSelectionOption="true"/>
+                    <f:selectItems
+                            value="#{visualizaDetentoBean.tiposAquivoEnum}"
+                            var="tipoArquivo"
+                            itemValue="#{tipoArquivo.objeto}"
+                            itemLabel="#{tipoArquivo.descricao}"/>
+                    <p:ajax process="@this" event="blur"/>
+                </p:selectOneMenu>
+                <p:outputLabel for="itDescricaoArquivoProntuario"
+                               value="Descrição do Arquivo"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid id="pgUploadArquivoProntuario"
+                     columns="1"
+                     columnClasses="ui-grid-col-12"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0 none;">
+            <h:panelGroup>
+                <p:fileUpload
+                        cancelLabel="Cancelar"
+                        fileUploadListener="#{visualizaDetentoBean.uploadDocumento}"
+                        uploadLabel="Anexar"
+                        label="Escolher"
+                        mode="advanced"
+                        update="pgDescricaoArquivoProntuario pgUploadArquivoProntuario pgArquivo"
+                        dragDropSupport="false"
+                        invalidFileMessage="Tipo de arquivo inválido."
+                        invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                        sizeLimit="#{utilBean.sizeFile}"
+                        multiple="false" allowTypes="/(\.|\/)(pdf)$/"
+                />
+            </h:panelGroup>
+
+        </p:panelGrid>
+        <p:panelGrid
+                id="pgArquivo"
+                columns="1"
+                columnClasses="ui-grid-col-12"
+                layout="grid"
+                styleClass="ui-panelgrid-blank form-group"
+                style="border:0 none;">
+            <p:dataTable id="dtArquivo"
+                         paginator="true"
+                         value="#{visualizaDetentoBean.detentoArquivos}"
+                         reflow="true"
+                         style="text-align: center"
+                         var="detentoArquivo"
+
+                         rows="5"
+                         rowKey="#{detentoArquivo.arquivo.id}">
+                <p:column headerText="Arquivo">
+                    <p:outputLabel value="#{detentoArquivo.arquivo.descricao}"/>
+                </p:column>
+                <p:column headerText="Tipo">
+                    <p:outputLabel value="#{detentoArquivo.arquivo.tipoArquivo.descricao}"/>
+                </p:column>
+                <p:column style="width: 20%">
+                    <p:commandButton title="Visualizar"
+                                     icon="ui-icon-file-download" process="@this"
+                                     update="pgArquivo pgUpload"
+                                     action="#{visualizaDetentoBean.mostrarPdf(detentoArquivo.arquivo.path)}"
+                                     onclick="this.form.target='_blank'" ajax="false">
+                    </p:commandButton>
+                    <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                     action="#{visualizaDetentoBean.removerArquivoDetento(detentoArquivo)}"
+                                     update="pgArquivo pgDescricaoArquivoProntuario">
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:panelGrid>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="btnSalvarProntuario" value="Salvar"
+                                         process="@this" update="@form"
+                                         action="#{visualizaDetentoBean.salvarDetentoArquivo()}" icon="ui-icon-check"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

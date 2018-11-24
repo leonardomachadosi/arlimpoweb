@@ -1,0 +1,315 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+
+            .text-success {
+                color: #4CAF50;
+            }
+
+            .text-info {
+                color: #00BCD4;
+            }
+
+            .text-warning {
+                color: #FFC107;
+            }
+
+            .text-danger {
+                color: #F44336;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Presos</b></h1>
+                        <p:panelGrid id="pgDetento" columns="1"
+                                     columnClasses="ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{buscaPipBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                value="#{buscaPipBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                                itemValue="#{detentoView}">
+                                    <p:column style="width: 15%; text-align: center">
+                                        <h:panelGroup
+                                                rendered="#{detentoView.foto == null or detentoView.foto == '' or detentoView.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:60px;color:#757575;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <p:graphicImage
+                                                rendered="#{detentoView.foto != null and detentoView.foto != '' and !detentoView.foto.contains('\\')}"
+                                                value="/foto-detento?foto=#{buscaPipBean.enconder(detentoView.foto)}"
+                                                style="width: 110%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText style="font-weight: bold" value="Nome: "/>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText style="font-weight: bold" value="Mãe: "
+                                                      rendered="#{detentoView.nomeMae != null and detentoView.nomeMae != ''}"/>
+                                        <h:outputText value="#{detentoView.nomeMae}"
+                                                      rendered="#{detentoView.nomeMae != null and detentoView.nomeMae != ''}"/>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText style="font-weight: bold" value="Pai: "
+                                                      rendered="#{detentoView.nomePai != null and detentoView.nomePai != ''}"/>
+                                        <h:outputText value="#{detentoView.nomePai}"
+                                                      rendered="#{detentoView.nomePai != null and detentoView.nomePai != ''}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{buscaPipBean.buscarProcessosDetento()}"
+                                            update="@form"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Presos"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDetentoView" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="hpDetentoView">
+                                <p:panelGrid
+                                        rendered="#{buscaPipBean.detentoView.codDetento != null and buscaPipBean.detentoView.matriculaDetento != null}">
+                                    <f:facet name="header">
+                                        <h:panelGroup
+                                                rendered="#{buscaPipBean.detentoView.foto == null or buscaPipBean.detentoView.foto == '' or buscaPipBean.detentoView.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:200px;margin-left:140px;color:#757575;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <p:graphicImage
+                                                rendered="#{buscaPipBean.detentoView.foto != null and buscaPipBean.detentoView.foto != '' and !buscaPipBean.detentoView.foto.contains('\\')}"
+                                                value="/foto-detento?foto=#{buscaPipBean.enconder(buscaPipBean.detentoView.foto)}"
+                                                style="height: 200px;margin-left:140px;"/>
+                                    </f:facet>
+
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputLabel value="Nome: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.detentoView.nomeDetento}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputLabel value="Data de Nascimento: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.format(buscaPipBean.detentoView.dataNascimento)}"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputLabel value="Nome da Mãe: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.detentoView.nomeMae}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputLabel value="Nome do Pai: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.detentoView.nomePai}"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel value="CPF: " style="font-weight: bold"/>
+                                            <p:inputMask mask="999.999.999-90" disabled="true"
+                                                         styleClass="outputMask"
+                                                         value="#{buscaPipBean.documento.cpf}">
+                                            </p:inputMask>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputLabel value="RG: " style="font-weight: bold"/>
+                                            <p:inputMask mask="9?9999999999999" disabled="true"
+                                                         value="#{buscaPipBean.rg.numero}"
+                                                         styleClass="outputMask"
+                                                         decimalPlaces="0" thousandSeparator=""/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputLabel value="Unidade Prisional: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.detentoView.nomeUnidadePrisional}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputLabel value="Pavilhão: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.detentoView.nomePavilhao}"/>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <h:outputLabel value="Cela: " style="font-weight: bold"/>
+                                            <h:outputText
+                                                    value="#{buscaPipBean.detentoView.nomeCela}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputLabel value="Situação: " style="font-weight: bold"/>
+                                            <h:outputText value="#{buscaPipBean.detentoView.situacao}"
+                                                          styleClass="#{buscaPipBean.addClassSituacaoDetento(buscaPipBean.detentoView.situacao)}"/>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <!--<h:panelGroup-->
+                    <!--rendered="#{buscaPipBean.detentoView.codDetento != null and !buscaPipBean.detentoProcessos.isEmpty()}">-->
+                <!--<div class="ui-g">-->
+                    <!--<div class="ui-g-12">-->
+                        <!--<p:toolbar>-->
+                            <!--<f:facet name="right">-->
+                                <!--<p:commandButton id="btnResumoProcessual"-->
+                                                 <!--value="Resumo Processual"-->
+                                                 <!--ajax="false"-->
+                                                 <!--onclick="this.form.target='_blank'"-->
+                                                 <!--action="#{buscaPipBean.emitirResumoProcessual()}"-->
+                                                 <!--icon="ui-icon-print"/>-->
+                                <!--<span class="ui-separator" style="padding-right: 5px;"/>-->
+                            <!--</f:facet>-->
+                            <!--<f:facet name="right">-->
+                                <!--<p:commandButton id="btnFichaCtc"-->
+                                                 <!--value="Ficha CTC"-->
+                                                 <!--process="@this " icon="ui-icon-print"/>-->
+                            <!--</f:facet>-->
+                        <!--</p:toolbar>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</h:panelGroup>-->
+
+            <h:panelGroup rendered="#{buscaPipBean.detentoView.codDetento != null }">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h:panelGroup id="hpProcessos">
+                                <h1><b>Planos de Individualização da Pena</b></h1>
+                                <p:dataTable
+                                        id="dtProcessos"
+                                        value="#{buscaPipBean.detentoProcessos}"
+                                        var="processo"
+                                        emptyMessage="Nenhum registro encontrado" style="text-align: center"
+                                        paginator="true"
+                                        rows="10">
+                                    <p:column style="width:16px">
+                                        <p:rowToggler/>
+                                    </p:column>
+                                    <p:column headerText="" style="width:110px;text-align: center">
+                                        <h:outputText value="#{processo.nomeComarca}"
+                                                      rendered="#{buscaPipBean.detentoProcessoView.nomeComarca == null}"/>
+                                        <h:outputText value="#{processo.nomeSecao.toUpperCase()}"
+                                                      rendered="#{buscaPipBean.detentoProcessoView.nomeSecao == null}"/>
+                                    </p:column>
+                                    <p:column headerText="" style="width:120px;text-align: center">
+                                        <h:outputText value="#{processo.nomeVara}"
+                                                      rendered="#{buscaPipBean.detentoProcessoView.nomeVara == null}"/>
+                                        <h:outputText value="#{processo.nomeSubsecao}"
+                                                      rendered="#{buscaPipBean.detentoProcessoView.nomeSubsecao == null}"/>
+                                    </p:column>
+                                    <p:column headerText="" style="width:100px;text-align: center">
+                                        <h:outputText value="#{processo.numeroPequeno}"/>
+                                    </p:column>
+                                    <p:column headerText="" style="width:180px;text-align: center">
+                                        <h:outputText value="#{processo.numeroGrande}" converter="numeroCnjConverter">
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="" style="width:70px;text-align: center">
+                                        <h:outputText value="#{processo.nomeCompetenciaProcesso}"/>
+                                    </p:column>
+                                    <p:column headerText="" style="width:130px;text-align: center">
+                                        <h:outputText value="#{processo.nomeTipoParticipacao}"/>
+                                    </p:column>
+                                    <p:column headerText="" style="width:70px;text-align: center">
+                                        <h:outputText value="#{processo.dataProcesso}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="" style="width:130px;text-align: center">
+                                        <h:outputText value="#{processo.nomeSituacaoProcesso}"/>
+                                    </p:column>
+                                    <p:column headerText=""
+                                              style="width:60px;text-align: center">
+                                        <p:commandButton title="Visualizar" process="@this"
+                                                         action="#{buscaPipBean.cadastrarPip()}"
+                                                         icon="ui-icon-remove-red-eye">
+                                            <f:setPropertyActionListener value="#{processo}"
+                                                                         target="#{buscaPipBean.detentoProcessoView}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid id="pgNaturezaCustodia" columns="2"
+                                                     columnClasses="label, value"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent; width: 30%">
+                                            <p:column>
+                                                <h:outputLabel value="Regime: "
+                                                               style="font-weight: bold"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{processo.nomeNaturezaCustodia}"/>
+                                            </p:column>
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <br/>
+                            <h:panelGroup>
+                                <p:commandButton title="Cadastrar Pip"
+                                                 action="#{buscaPipBean.cadastrarPip()}"
+                                                 style="margin-left: 95%"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

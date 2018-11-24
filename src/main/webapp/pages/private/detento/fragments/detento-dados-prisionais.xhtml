@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{detentoDadosPrisionaisBean.carregaDados(detento)}"/>
+    </f:metadata>
+    <p:panelGrid style="margin-bottom:20px;width: 100%;" styleClass="customDadosPanelgrid">
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Unidade Prisional: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.unidadePrisional}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Situação: "/>
+                <h:outputText styleClass="#{utilBean.addStyleByStatus(detentoDadosPrisionaisBean.situacao)}"
+                              value="#{detentoDadosPrisionaisBean.situacao}"/>
+
+                <h:outputText rendered="#{detentoDadosPrisionaisBean.exibeUltimaMovimentacao}"
+                              value=" - "/>
+            </p:column>
+        </p:row>
+        <p:row rendered="#{detentoDadosPrisionaisBean.renderizarCelaPavilhao}">
+            <p:column>
+                <h:outputLabel value="Pavilhão: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.pavilhao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Cela: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.cela}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Esfera de Origem: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.esferaOrigem}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Oriundo: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.delegaciaOrigem}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Tipo de Prisão: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.tipoPrisao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Código do Ciclo: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.codCiclo}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Estado da Prisão: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.estadoPrisao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Cidade da Prisão: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.cidadePrisao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Nº da Tornozeleira Eletrônica: "/>
+                <!--<h:outputText value="#{detentoDadosPrisionaisBean.tornozeleira}"/>-->
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Data da Prisão: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.dataPrisao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Data de Inicio de Ciclo: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.dataInicioCiclo}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Data de Cadastro: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.dataCadastro}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Data do Fim de Ciclo: "/>
+                <h:outputText value="#{detentoDadosPrisionaisBean.dataFimCiclo}"/>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+
+</ui:composition>

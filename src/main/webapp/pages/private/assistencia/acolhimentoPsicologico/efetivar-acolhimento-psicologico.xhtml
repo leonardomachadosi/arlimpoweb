@@ -1,0 +1,563 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{efetivaAcolhimentoPsicologicoBean.voltar()}"
+                                             process="@this" icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1 class="assistencia-subtitulo">Acolhimento Psicológico</h1>
+                        <p:panelGrid id="pgAvaliadorDataAtendimento"
+                                     columns="2"
+                                     columnClasses="ui-grid-col-10, ui-grid-col-2"
+                                     layout="grid"
+                                     rendered="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                     styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{efetivaAcolhimentoPsicologicoBean.getServidorNome(efetivaAcolhimentoPsicologicoBean.atendimentoPsicologico.servidor)}"
+                                        id="profissionalAtendente"
+                                        readonly="true" styleClass="input-auto"/>
+                                <p:outputLabel value="Profissional que atendeu:" for="profissionalAtendente"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield"
+                                          rendered="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}">
+                                <p:calendar
+                                        id="cdDataAtendimento"
+                                        value="#{efetivaAcolhimentoPsicologicoBean.atendimentoPsicologico.dataAtendimento}"
+                                        readonly="true"
+                                        showOn="none"
+                                        inputStyle="width: 96%"
+                                        pattern="dd/MM/yyyy HH:mm"
+                                        mask="99/99/9999 99:99"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="cdDataAtendimento" value="Data de Atendimento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="2"
+                                     id="pgDetentoNascimentoIdadeDataIngresso"
+                                     columnClasses="ui-grid-col-10, ui-grid-col-2"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        id="itNomeDetento"
+                                        value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.nome}"
+                                        readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="itNomeDetento" value="Nome de Pessoa Presa"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar
+                                        id="cdDataIngresso"
+                                        value="#{efetivaAcolhimentoPsicologicoBean.detento.dataCadastro}"
+                                        readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                        showOn="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus != 2}"
+                                        readonlyInput="readonly"
+                                        inputStyle="width: 96%"
+                                        pattern="dd/MM/yyyy"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="cdDataIngresso" value="Data de Ingresso"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="4"
+                                     id="pgNascimento"
+                                     columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar
+                                        id="cdDataNascimento"
+                                        value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.dataNascimento}"
+                                        readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                        showOn="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus != 2}"
+                                        readonlyInput="readonly"
+                                        inputStyle="width: 96%"
+                                        pattern="dd/MM/yyyy"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="cdDataNascimento" value="Data de Nascimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itIdade"
+                                             value="#{efetivaAcolhimentoPsicologicoBean.calcularIdade()}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itIdade" value="Idade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        id="itNacionalidade"
+                                        value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.nacionalidade.descricao}"
+                                        readonly="true"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="itNacionalidade" value="Nacionalidade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        id="itNaturalidade"
+                                        readonly="true"
+                                        value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.municipioNascimento.descricao}"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="itNaturalidade" value="Naturalidade"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="3"
+                                     id="pgSexoOrientacaoSexualIdentidadeGenero"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSexo"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.sexo}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{efetivaAcolhimentoPsicologicoBean.sexos}"
+                                                   var="sexo"
+                                                   itemLabel="#{sexo.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soSexo" value="Sexo"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soOrientacaoSexual"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.orientacaoSexual}"
+                                                 required="true"
+                                                 requiredMessage="Orientação Sexual não infomada"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{efetivaAcolhimentoPsicologicoBean.orientacoesSexuais}"
+                                                   var="orientacaoSexual"
+                                                   itemLabel="#{orientacaoSexual.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soOrientacaoSexual" value="Orientação Sexual"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soIdentidadeGenero"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.identidadeGenero}"
+                                                 required="true"
+                                                 requiredMessage="Identidade de Gênero não informada"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{efetivaAcolhimentoPsicologicoBean.identidadesGenero}"
+                                                   var="identidadeGenero"
+                                                   itemLabel="#{identidadeGenero.descricao}"/>
+                                    <f:ajax event="change" execute="@this" render="hpNomeSocial"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soIdentidadeGenero" value="Identidade de Gênero"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="hpNomeSocial">
+                            <p:panelGrid columns="1"
+                                         id="pgNomeSocial"
+                                         columnClasses="ui-grid-col-8"
+                                         rendered="#{efetivaAcolhimentoPsicologicoBean.detento.pessoa.identidadeGenero.id == 1}"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText
+                                            id="itNomeSocial"
+                                            value="#{efetivaAcolhimentoPsicologicoBean.nomeFalso.nome}"
+                                            readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                            style="width: 100%"/>
+                                    <p:outputLabel for="itNomeSocial" value="Nome Social"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <br/>
+                        <br/>
+                        <p:panel header="Como a Pessoa Presa se identifica?">
+                            <p:panelGrid columns="1"
+                                         id="pgPessoaPresaRaca"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-selectonemenu">
+                                    <p:selectOneRadio id="soEtnia" columns="3"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                      value="#{efetivaAcolhimentoPsicologicoBean.detentoDadoFisico.etnia}"
+                                                      required="true"
+                                                      requiredMessage="Marque uma opção de como a Pessoa Presa se indentica"
+                                                      style="width: 100%">
+                                        <f:selectItems value="#{efetivaAcolhimentoPsicologicoBean.etnias}"
+                                                       var="etnia"
+                                                       itemLabel="#{etnia.descricao.toUpperCase()}"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel header="É pessoa com deficiência?">
+                            <p:panelGrid columns="1"
+                                         id="pgDeficienciaSo"
+                                         columnClasses="ui-grid-col-5"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                      style="color:darkBlue;"
+                                                      value="#{efetivaAcolhimentoPsicologicoBean.detentoDeficiente}"
+                                                      disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemValue="#{true}" itemLabel="Sim"/>
+                                        <f:selectItem itemValue="#{false}" itemLabel="Não"/>
+                                        <f:ajax event="change" execute="@this" render="hpDeficiencias"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <h:panelGroup id="hpDeficiencias">
+                                <p:panelGrid columns="1"
+                                             id="pgDtPessoaTipoDeficiencias"
+                                             columnClasses="ui-grid-col-12"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.detentoDeficiente}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <p:dataTable id="dtPessoaTipoDeficiencias"
+                                                 value="#{efetivaAcolhimentoPsicologicoBean.pessoaTipoDeficiencias}"
+                                                 var="pessoaTipoDeficiencia"
+                                                 type="ordered"
+                                                 emptyMessage="Nenhum registro encontrado"
+                                                 style="text-align: center ">
+                                        <f:facet name="header">
+                                            Deficiências
+                                        </f:facet>
+                                        <p:column headerText="Deficiência">
+                                            <h:outputText
+                                                    value="#{pessoaTipoDeficiencia.deficiencia.descricao}"/>
+                                        </p:column>
+                                        <p:column headerText="Grau">
+                                            <h:outputText
+                                                    value="#{pessoaTipoDeficiencia.grauDeficiencia.descricao}"/>
+                                        </p:column>
+                                        <p:column headerText="Opções" style="text-align: center"
+                                                  rendered="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus != 2}">
+                                            <p:commandButton title="Remover"
+                                                             icon="ui-icon-trash"
+                                                             styleClass="red-btn"
+                                                             action="#{efetivaAcolhimentoPsicologicoBean.removerDeficiencias()}"
+                                                             update="dtPessoaTipoDeficiencias"
+                                                             process="@this">
+                                                <f:setPropertyActionListener
+                                                        value="#{pessoaTipoDeficiencia}"
+                                                        target="#{efetivaAcolhimentoPsicologicoBean.pessoaTipoDeficiencia}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgdPessoaTipoDeficiencias" columns="1"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.detentoDeficiente and efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus != 2}"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                             cellpadding="5">
+                                    <h:panelGroup style="float: right">
+                                        <p:commandButton title="Adicionar Deficiência"
+                                                         icon="ui-icon-plus"
+                                                         oncomplete="PF('addDeficiencia').show();"
+                                                         update="form-dialog-deficiencia-acolhimento-psicologico:dialogDeficienciaAcolhimentoPsicologico"
+                                                         process="@this"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel header="O que aconteceu para você ser preso(a)?">
+                            <br/>
+                            <p:panelGrid columns="1"
+                                         id="pgAcontecimentoPrisaoTx"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputTextarea id="itaAcontecimentoPrisao"
+                                                     rows="1"
+                                                     readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                     value="#{efetivaAcolhimentoPsicologicoBean.atendimentoPsicologico.descricaoMotivoPrisao}"
+                                                     required="true"
+                                                     requiredMessage="Relato da prisão não informado"
+                                                     style="width: 100%"/>
+                                    <p:outputLabel for="itaAcontecimentoPrisao" value="Relato do Preso"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel
+                                header="Em relação a sua saúde, como você se sente? Transtornos mentais e comportamentais, depressão, ansiedade, uso de psicotrópicos.">
+                            <br/>
+                            <p:panelGrid columns="1"
+                                         id="pgRelacaoSaude"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0 none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputTextarea id="itaRelacaoSaude"
+                                                     rows="1"
+                                                     value="#{efetivaAcolhimentoPsicologicoBean.atendimentoPsicologico.obsSaudeAcolhida}"
+                                                     readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                     required="true"
+                                                     requiredMessage="Relato sobre a saúde não informado"
+                                                     style="width: 100%"/>
+                                    <p:outputLabel for="itaRelacaoSaude" value="Relato do Preso"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel header="É usuário de substâncias psicoativas?">
+                            <p:panelGrid columns="1"
+                                         id="pgUsoSubstanciasPsicoativasSo"
+                                         columnClasses="ui-grid-col-5"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                      style="color:darkBlue;"
+                                                      value="#{efetivaAcolhimentoPsicologicoBean.usuarioDroga}"
+                                                      disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemValue="#{true}" itemLabel="Sim"/>
+                                        <f:selectItem itemValue="#{false}" itemLabel="Não"/>
+                                        <f:ajax event="change" execute="@this" render="hpSubstanciasPsicoativas"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <h:panelGroup id="hpSubstanciasPsicoativas">
+                                <p:panelGrid columns="1"
+                                             id="pgSubstanciasPsicoativasQuais"
+                                             columnClasses="ui-grid-col-6"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.usuarioDroga}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:outputLabel value="Quais?" style="color:darkBlue;font-weight: bold"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             id="pgSubstanciasPsicoativas"
+                                             columnClasses="ui-grid-col-12"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.usuarioDroga}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:selectManyCheckbox id="smSubstanciasPsicoativas"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive"
+                                                              columns="4"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                              value="#{efetivaAcolhimentoPsicologicoBean.selectedSubstanciasPsicoativas}">
+                                            <f:selectItems
+                                                    value="#{efetivaAcolhimentoPsicologicoBean.substanciasPsicoativas}"
+                                                    var="substanciaPsicoativa"
+                                                    itemLabel="#{substanciaPsicoativa.descricao}"/>
+                                        </p:selectManyCheckbox>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             id="pgUsoSubstanciasPsicoativasSoss"
+                                             columnClasses="ui-grid-col-5"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield ui-grid-col-5"
+                                                  rendered="#{efetivaAcolhimentoPsicologicoBean.usuarioDroga}">
+                                        <p:calendar id="txtDataInicioDrogas" navigator="true" pattern="dd/MM/yyyy"
+                                                    value="#{efetivaAcolhimentoPsicologicoBean.atendimentoPsicologico.dataInicioUsoDroga}"
+                                                    styleClass="input-auto" locale="pt" maxdate="today">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </p:calendar>
+                                        <p:outputLabel for="txtDataInicioDrogas" value="Quando iniciou?"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel header="Já foi internado para algum tipo de tratamento?">
+                            <p:panelGrid columns="1"
+                                         id="pgInternacaoDrogasSo"
+                                         columnClasses="ui-grid-col-5"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                      style="color:darkBlue;"
+                                                      value="#{efetivaAcolhimentoPsicologicoBean.internacaoDroga}"
+                                                      disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemValue="#{true}" itemLabel="Sim"/>
+                                        <f:selectItem itemValue="#{false}" itemLabel="Não"/>
+                                        <f:ajax event="change" execute="@this" render="hpInternacaoDroga"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <h:panelGroup id="hpInternacaoDroga">
+                                <p:panelGrid columns="1"
+                                             id="pgInternacaoDroga"
+                                             columnClasses="ui-grid-col-6"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.internacaoDroga}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:outputLabel value="Onde?"
+                                                       style="color: darkblue;font-weight: bold"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             id="pgInternacaoDrogaTxt"
+                                             columnClasses="ui-grid-col-6"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.internacaoDroga}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itInternacaoDrogaTxt"
+                                                     value="#{efetivaAcolhimentoPsicologicoBean.atendimentoPsicologico.localInternacao}"
+                                                     readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                     required="true"
+                                                     requiredMessage="Local de Intenação não informado"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itInternacaoDrogaTxt"
+                                                       value="Local de Intenação"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel header="A prisão atual tem relação com o uso de drogas?">
+                            <p:panelGrid columns="1"
+                                         id="pgUsoDrogasPrisaoSo"
+                                         columnClasses="ui-grid-col-5"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                      style="color:darkBlue;"
+                                                      value="#{efetivaAcolhimentoPsicologicoBean.detento.prisaoUsoDroga}"
+                                                      disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemValue="#{true}" itemLabel="Sim"/>
+                                        <f:selectItem itemValue="#{false}" itemLabel="Não"/>
+                                        <f:ajax event="change" execute="@this" render="hpModoRelacaoDroga"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <h:panelGroup id="hpModoRelacaoDroga">
+                                <p:panelGrid columns="1"
+                                             id="pgModo"
+                                             columnClasses="ui-grid-col-12"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.detento.prisaoUsoDroga}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:outputLabel
+                                                value="De que modo?" style="color: darkblue;font-weight: bold"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="1"
+                                             id="pgModoRelacaoDrogaTxt"
+                                             columnClasses="ui-grid-col-12"
+                                             rendered="#{efetivaAcolhimentoPsicologicoBean.detento.prisaoUsoDroga}"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputTextarea id="itaModoRelacaoDrogaTxt"
+                                                         rows="1"
+                                                         value="#{efetivaAcolhimentoPsicologicoBean.detento.modoRelacaoDroga}"
+                                                         readonly="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                         style="width: 100%"/>
+                                        <p:outputLabel for="itaModoRelacaoDrogaTxt" value="Relato do Preso"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <p:panel header="Quer participar do projeto nova vida?">
+                            <p:panelGrid columns="1"
+                                         id="pgProjetoNovaVidaSo"
+                                         columnClasses="ui-grid-col-5"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                      style="color:darkBlue;"
+                                                      value="#{efetivaAcolhimentoPsicologicoBean.detento.projetoNovaVida}"
+                                                      disabled="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus == 2}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemValue="#{true}" itemLabel="Sim"/>
+                                        <f:selectItem itemValue="#{false}" itemLabel="Não"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{efetivaAcolhimentoPsicologicoBean.detentoSolicitacaoView.codStatus != 2}">
+                <div class="ui-g" style="margin-top: -13px;">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton id="btnSalvarUnidadePrisional"
+                                                 action="#{efetivaAcolhimentoPsicologicoBean.salvar()}"
+                                                 process="@form" update="@form"
+                                                 value="Salvar"
+                                                 icon="ui-icon-check"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-deficiencia-acolhimentoPsicologico.xhtml"/>
+        </ui:insert>
+    </ui:define>
+</ui:composition>

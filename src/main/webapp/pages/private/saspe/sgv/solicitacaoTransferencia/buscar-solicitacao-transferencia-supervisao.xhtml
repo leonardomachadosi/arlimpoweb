@@ -1,0 +1,197 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Buscar Solicitação de Transferência</b></h1>
+                        <p:panelGrid id="pgEstabelecimentoSituacaoPrioridade" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu style="width: 100%;color: darkgray"
+                                                      value="#{buscaSolicitacaoTransferenciaSupervisaoBean.selectedUnidadesPrisionais}"
+                                                      converter="omnifaces.SelectItemsConverter" filter="true"
+                                                      filterMatchMode="startsWith"
+                                                      id="soEstabelecimentoOrigem" label="Estabelecimentos">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaSolicitacaoTransferenciaSupervisaoBean.unidadesPrisionais}"
+                                                   var="unidadePrisional"
+                                                   itemLabel="#{unidadePrisional.descricao}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <!--<h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSituacao"
+                                                 style="width: 100%"
+                                                 value="#{buscaSolicitacaoTransferenciaSupervisaoBean.situacaoSolicitacaoTransferencia}"
+                                                 converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems
+                                            value="#{buscaSolicitacaoTransferenciaSupervisaoBean.situacoesSolicitacaoTransferencia}"
+                                            var="situacaoSolicitacaoTransferencia"
+                                            itemLabel="#{situacaoSolicitacaoTransferencia.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soSituacao" value="Situação"/>
+                            </h:panelGroup>-->
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputNumber id="itNumeroSolicitacao"
+                                               value="#{buscaSolicitacaoTransferenciaSupervisaoBean.solicitacaoTransferencia.id}"
+                                               thousandSeparator=""
+                                               decimalPlaces="0"
+                                               style="width: 100%;"
+                                               inputStyle="width:100%;"
+                                />
+                                <p:outputLabel for="itNumeroSolicitacao" value="Número da Solicitação"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soPrioridade"
+                                                 style="width: 100%"
+                                                 value="#{buscaSolicitacaoTransferenciaSupervisaoBean.solicitacaoTransferencia.prioridadeTransferencia}"
+                                                 converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{buscaSolicitacaoTransferenciaSupervisaoBean.prioridadesTransferencia}"
+                                                   var="prioridadeTransferencia"
+                                                   itemLabel="#{prioridadeTransferencia.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soPrioridade" value="Prioridade"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgNumeroDataInicioFimSolicitacao" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSituacao"
+                                                 style="width: 100%"
+                                                 value="#{buscaSolicitacaoTransferenciaSupervisaoBean.situacaoSolicitacaoTransferencia}"
+                                                 converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems
+                                            value="#{buscaSolicitacaoTransferenciaSupervisaoBean.situacoesSolicitacaoTransferencia}"
+                                            var="situacaoSolicitacaoTransferencia"
+                                            itemLabel="#{situacaoSolicitacaoTransferencia.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soSituacao" value="Situação"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataInicio"
+                                            pattern="dd/MM/yyyy"
+                                            mask="99/99/9999"
+                                            styleClass="input-auto"
+                                            locale='pt'
+                                            value="#{buscaSolicitacaoTransferenciaSupervisaoBean.dataInicial}"
+                                            maxdate="#{buscaSolicitacaoTransferenciaSupervisaoBean.dataAtual}"
+                                            style="width: 100%"/>
+                                <p:outputLabel for="cdDataInicio" value="Data Início"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataFim"
+                                            pattern="dd/MM/yyyy"
+                                            mask="99/99/9999"
+                                            locale='pt'
+                                            styleClass="input-auto"
+                                            value="#{buscaSolicitacaoTransferenciaSupervisaoBean.dataFinal}"
+                                            style="width: 100%"/>
+                                <p:outputLabel for="cdDataFim" value="Data Fim"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%"
+                                                inputStyle="width: 100%"
+                                                completeMethod="#{buscaSolicitacaoTransferenciaSupervisaoBean.completeDetento}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{buscaSolicitacaoTransferenciaSupervisaoBean.detentoView}"
+                                                var="detentoView"
+                                                itemValue="#{detentoView}"
+                                                itemLabel="#{detentoView.nomeDetento}"
+                                                converter="detentoViewConverter">
+                                    <p:column style="width: 30%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"
+                                                style="width: 50%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento} - #{detentoView.nomeUnidadePrisional}"/>
+                                    </p:column>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Preso"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnBuscar" value="Buscar"
+                                             actionListener="#{buscaSolicitacaoTransferenciaSupervisaoBean.buscarSolicitacoesTransferencia()}"
+                                             update="@form"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Solicitações</b></h1>
+                        <p:dataTable id="dtSolicitacaoTransferencia"
+                                     reflow="true"
+                                     value="#{buscaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacoesTransferencias}"
+                                     var="historicoSolicitacaoTransferencia"
+                                     paginator="true" rows="10"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                            <p:column headerText="Número da Solicitação">
+                                <h:outputText value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.numeroSolicitacao}"/>
+                            </p:column>
+                            <p:column headerText="Unidade de Origem" style="text-align: center">
+                                <h:outputText
+                                        value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Data da Solicitação" style="text-align: center">
+                                <h:outputText
+                                        value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.dataSolicitacao}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Status" style="text-align: center">
+                                <h:outputText
+                                        value="#{historicoSolicitacaoTransferencia.situacaoSolicitacaoTransferencia.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Prioridade" style="text-align: center">
+                                <h:outputText
+                                        value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.prioridadeTransferencia.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Ação" style="text-align: center; width: 15%">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaSolicitacaoTransferenciaSupervisaoBean.visualizarSolicitacaoTransferencia()}"
+                                                 ajax="false" onclick="this.form.target='_blank'"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{historicoSolicitacaoTransferencia}"
+                                                                 target="#{buscaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia}"  />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

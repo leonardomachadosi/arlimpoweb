@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.0.final using JasperReports Library version 6.5.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2fd8ff44-6363-4bb8-b475-76b2126695d6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="diretorUnidadePrisional" class="java.lang.String"/>
+	<parameter name="visitante" class="java.lang.String"/>
+	<parameter name="parentesco" class="java.lang.String"/>
+	<parameter name="profissao" class="java.lang.String"/>
+	<parameter name="logradouro" class="java.lang.String"/>
+	<parameter name="detento" class="java.lang.String"/>
+	<parameter name="bairro" class="java.lang.String"/>
+	<parameter name="municipio" class="java.lang.String"/>
+	<parameter name="uf" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="telefone" class="java.lang.String"/>
+	<parameter name="imagem_seap" class="java.awt.image.BufferedImage"/>
+	<parameter name="imagem_saf" class="java.awt.image.BufferedImage"/>
+	<parameter name="sexo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="90" y="10" width="370" height="71" uuid="7fc024bd-79ef-4bce-8b9b-fafe0e36a96c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ESTADO DO MARANHÃO	
+SECRETARIA DE ESTADO DE ADMINISTRAÇÃO PENITENCIÁRIA
+SECRETARIA ADJUNTA DE ATENDIMENTO E HUMANIZAÇÃO PENITENCIÁRIA 
+	SUPERVISÃO DE ASSISTÊNCIA ÀS FAMÍLIAS]]></text>
+			</staticText>
+			<image>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="10" width="80" height="70" uuid="16b5ffa9-7a09-4e5b-8009-fdc89a14dcd0"/>
+				<imageExpression><![CDATA[$P{imagem_seap}]]></imageExpression>
+			</image>
+			<image evaluationTime="Page">
+				<reportElement x="470" y="10" width="81" height="70" uuid="a11de79b-3a87-4e7f-b97a-2b15fcb032e2"/>
+				<imageExpression><![CDATA[$P{imagem_saf}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="617" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="558" height="17" uuid="5784f904-2c2e-4ad9-a6cd-74bf1b983810"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ REQUERIMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="80" height="21" uuid="4a4a1645-3481-4fce-ba6d-7a85e0aae23f"/>
+				<text><![CDATA[INTERNO (A):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="120" height="20" uuid="89de68bb-f2d9-4609-957f-9499a9f5e41d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Senhor (a) Diretor (a):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="120" width="558" height="32" uuid="3e41d2b0-ab2a-4fc2-9a58-cc546ccf6c73"/>
+				<text><![CDATA[O epigrafado vem mui respeitosamente requerer a Vossa Senhoria, através da Supervisão de Assistência às Famílias – SAF, autorização para:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="168" width="70" height="22" uuid="49d978fb-6cbe-415d-90dd-f810ae7ed4b4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VISITANTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="200" width="106" height="16" uuid="836e5800-2b39-4419-af07-8178a3855ade"/>
+				<text><![CDATA[Grau de Parentesco:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="230" width="60" height="20" uuid="c6b9fcb6-3862-4a39-837d-4174497ad8c4"/>
+				<text><![CDATA[Profissão:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="290" width="50" height="21" uuid="8ee80309-7ee4-43c8-888e-2ae75fcc28c4"/>
+				<text><![CDATA[Bairro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="255" width="30" height="20" uuid="9a7216fe-b97a-4a54-831b-cbc0245151e5"/>
+				<text><![CDATA[Fone: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="260" width="50" height="19" uuid="7d25a50c-f198-49f5-8bcb-5d808a40a1de"/>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="211" y="290" width="39" height="21" uuid="2a5d5400-924d-4372-ba5a-4a69822879de"/>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="290" width="19" height="21" uuid="7da7bbcc-7c40-40b0-82b0-57ab936c78ea"/>
+				<text><![CDATA[UF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="340" width="291" height="21" uuid="d90aadc7-eef0-48ea-a0f2-f7bff42f329a"/>
+				<text><![CDATA[CIENTE PELO INTERNO (A),]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="380" width="20" height="20" uuid="9ecce4b4-9a34-46ca-bf2b-fad2056633e1"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="30" y="380" width="242" height="20" uuid="5e7bc3ea-98ad-4eba-a118-16d14c1b20fb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[AUTORIZO ESTA VISITA.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="410" width="19" height="20" uuid="c98e46b0-ba37-49eb-951c-c2119c816d52"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="30" y="410" width="242" height="21" uuid="ea2e02c7-9ecc-47ff-9ff0-bca26e1c5f20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[NÃO AUTORIZO A ENTRADA DA VISITA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="460" width="564" height="28" uuid="8a42999c-0711-4ffb-9d5d-e85228682802"/>
+				<text><![CDATA[Declaro que estou ciente que havendo cadastramento posterior de parentes de até o 2º grau e/ou cônjuge ou companheira, este cadastro será automaticamente cancelado.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="540" width="430" height="34" uuid="d3067520-e11c-498f-96d1-4609f2b68a69"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[--------------------------------------------------
+Assinatura do Interno]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="81" y="61" width="299" height="20" uuid="977e0331-1e1c-40f4-b91e-af707047d338"/>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$P{detento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="89" width="270" height="21" uuid="0628e521-ca64-476f-bec6-b6ef14169f50"/>
+				<textFieldExpression><![CDATA[$P{diretorUnidadePrisional}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="168" width="326" height="22" uuid="b163cb5e-a0f8-464c-a26e-2259b5c2ed92"/>
+				<textFieldExpression><![CDATA[$P{visitante}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="200" width="184" height="16" uuid="b83a2208-9b6b-4432-b7f3-faf7e16a69a8"/>
+				<textFieldExpression><![CDATA[$P{parentesco}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="230" width="220" height="20" uuid="4f2b7f85-3ec2-40a2-88e4-8d09bb061187"/>
+				<textFieldExpression><![CDATA[$P{profissao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="50" y="260" width="320" height="15" uuid="e037ca5a-39df-49fd-a005-378d6506763b"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{logradouro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="50" y="290" width="161" height="20" uuid="0743aa3b-ef04-4e57-ae46-c7fc9e7c5bcb"/>
+				<textElement verticalAlignment="Top" markup="none"/>
+				<textFieldExpression><![CDATA[$P{bairro}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="290" width="150" height="20" uuid="eaedc0aa-6f47-423e-84e4-5a983a4faee4"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{municipio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="230" width="29" height="21" uuid="fa45bc6d-f519-4512-b064-2eae8072ee72"/>
+				<text><![CDATA[Sexo: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="420" y="290" width="100" height="19" uuid="98e1be10-b462-4528-9f43-6881c3362fca"/>
+				<textFieldExpression><![CDATA[$P{uf}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="440" y="255" width="117" height="20" uuid="80078f92-2943-4ea3-abe2-69f5568c08dc"/>
+				<textFieldExpression><![CDATA[$P{telefone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="230" width="80" height="20" uuid="7ec55f5c-3ae0-4cb3-a714-7e626ac37d0c"/>
+				<textFieldExpression><![CDATA[$P{sexo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch"/>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="60" y="0" width="461" height="54" uuid="0177f679-acd1-477b-867d-a46ba9df4115"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[___________________________________________________________
+Avenida dos Franceses (próximo ao Viaduto do Café) – CEP: 65036-284. São Luís/MA
+e-mail: assistencia.familias@seap.ma.gov.br/ Fone: (98)992045458/ Ramal 2408]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

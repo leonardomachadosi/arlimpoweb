@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templateSemMenu.xhtml">
+
+    <ui:define name="title">Recuperar Senha</ui:define>
+    <ui:define name="content">
+        <!-- MESSAGES -->
+        <p:growl id="messages" showDetail="false" autoUpdate="true"/>
+        <p:ajaxStatus
+                oncomplete="setTimeout(function() {$('.ui-messages').slideUp();}, 3000)"/>
+        <!-- MESSAGES -->
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-8 ui-lg-8">
+                    <div class="card card-w-title">
+                        <p:fieldset legend="Recuperação de senha"
+                                    style="margin-bottom:20px">
+                            <p:panelGrid id="gridRecuperacao" columns="1"
+                                         columnClasses="ui-grid-col-6"
+                                         styleClass="ui-panelgrid-blank form-control" layout="grid">
+                                <h:panelGroup>
+                                    <h:outputLabel value="CPF" for="cpf"/>
+                                    <p:inputMask id="cpf" mask="999.999.999-99"
+                                                 value="#{recuperarSenhaBean.cpf}"
+                                                 autocomplete="false"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton id="btnSave" icon="ui-icon-send"
+                                                     style="width:auto;" value="Enviar" actionListener="#{recuperarSenhaBean.save}"/>
+                                </f:facet>
+                                <f:facet name="right">
+                                    <p:commandButton id="btnBack" icon="ui-icon-arrow-back" style="width:auto;"
+                                                     value="Voltar" action="#{recuperarSenhaBean.onClickVoltar}" ajax="false"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </p:fieldset>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

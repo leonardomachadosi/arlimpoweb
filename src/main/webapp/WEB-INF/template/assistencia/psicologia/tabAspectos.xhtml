@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panel header="Aspectos Cognitivos">
+        <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+            <h:panelGroup>
+                <p:outputLabel value="Pensamento" for="smcPensamento" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.pensamento}" id="smcPensamento" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.pensamentoList}" var="aspectoCognitivoPensamento"
+                                   itemValue="#{aspectoCognitivoPensamento}" itemLabel="#{aspectoCognitivoPensamento.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+
+            <h:panelGroup>
+                <h:outputLabel value="Atenção" for="smcAtencao" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.atencao}" id="smcAtencao" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.atencaoList}" var="aspectoCognitivoAtencao"
+                                   itemValue="#{aspectoCognitivoAtencao}" itemLabel="#{aspectoCognitivoAtencao.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+
+            <h:panelGroup>
+                <h:outputLabel value="Memória" for="smcMemoria" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.memoria}" id="smcMemoria" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.memoriaList}" var="aspectoCognitivoMemoria"
+                                   itemValue="#{aspectoCognitivoMemoria}" itemLabel="#{aspectoCognitivoMemoria.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+
+            <h:panelGroup>
+                <h:outputLabel value="Linguagem" for="smcLinguagem" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.linguagem}" id="smcLinguagem" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.linguagemList}" var="aspectoCognitivoLinguagem"
+                                   itemValue="#{aspectoCognitivoLinguagem}" itemLabel="#{aspectoCognitivoLinguagem.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+
+            <h:panelGroup>
+                <h:outputLabel value="Inteligência" for="smcInteligencia" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.inteligencia}" id="smcInteligencia" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.inteligenciaList}" var="aspectoCognitivoInteligencia"
+                                   itemValue="#{aspectoCognitivoInteligencia}" itemLabel="#{aspectoCognitivoInteligencia.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+        </p:panelGrid>
+    </p:panel>
+
+    <p:panel header="Aspectos Relacionais">
+        <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+            <h:panelGroup>
+                <p:outputLabel value="Relacionamento" for="smcRelacionamento" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.relacionamento}" id="smcRelacionamento" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.relacionamentoList}" var="aspectoCognitivoRelacionamento"
+                                   itemValue="#{aspectoCognitivoRelacionamento}" itemLabel="#{aspectoCognitivoRelacionamento.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+
+            <h:panelGroup>
+                <p:outputLabel value="Apresentação" for="smcApresentacao" styleClass="questao"/>
+                <p:selectOneRadio value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.apresentacao}" id="smcApresentacao" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.apresentacaoList}" var="aspectoCognitivoApresentacao"
+                                   itemValue="#{aspectoCognitivoApresentacao}" itemLabel="#{aspectoCognitivoApresentacao.descricao}"/>
+                </p:selectOneRadio>
+            </h:panelGroup>
+        </p:panelGrid>
+    </p:panel>
+
+    <p:panel header="Aspectos Mentais e Comportamentais">
+        <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+            <h:panelGroup>
+                <p:outputLabel value="Aspectos Mentais" for="smcMentais" styleClass="questao"/>
+                <p:selectManyCheckbox value="#{efetivaAtendimentoPsicologicoBean.aspectoMentalParaSalvarList}" id="smcMentais" converter="omnifaces.SelectItemsConverter" layout="responsive" columns="4">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.aspectoMentalList}" var="aspectoMental"
+                                   itemValue="#{aspectoMental}" itemLabel="#{aspectoMental.descricao}"/>
+                </p:selectManyCheckbox>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputTextarea styleClass="input-auto" id="txtPlanoFuturo" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.planoExpectativasFuturo}"/>
+                <p:outputLabel for="txtPlanoFuturo" value="Plano e expectativas para o futuro"/>
+            </h:panelGroup>
+        </p:panelGrid>
+    </p:panel>
+</ui:composition>

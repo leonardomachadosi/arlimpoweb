@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-rg-acolhimentoSocial">
+        <p:dialog header="Adicionar RG" id="dialogRG" widgetVar="addRG" modal="true"
+                  width="900" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid id="pgRgData"
+                         columns="2"
+                         columnClasses="ui-grid-col-8, ui-grid-col-4"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                              background-color:transparent;"
+                         layout="grid">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="inRg"
+                                 mask="9?9999999999999"
+                                 value="#{efetivaAcolhimentoSocialBean.rg.numero}"
+                    style="width: 100%;"/>
+                    <p:outputLabel for="inRg" value="RG"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar id="cdDataExpedicao" format="dd/MM/yyyy"
+                                value="#{efetivaAcolhimentoSocialBean.rg.dataExpedicao}"
+                                maxdate="#{efetivaAcolhimentoSocialBean.dataMaxima}"
+                                pattern="dd/MM/yyyy"
+                                mask="99/99/9999"
+                                locale='pt'
+                                inputStyle="width: 96%"
+                    style="width: 100%"/>
+                    <p:outputLabel for="cdDataExpedicao" value="Data de Emissão"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid columns="2"
+                         id="pgOrgaoExpedidor"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                              background-color:transparent;"
+                         layout="grid">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soOrgaoExpedidor"
+                                     value="#{efetivaAcolhimentoSocialBean.rg.orgaoExpedidor}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Orgão Expedidor"
+                                      itemValue=""/>
+                        <f:selectItems value="#{efetivaAcolhimentoSocialBean.orgaoExpedidores}" var="orgaoExpedidor"
+                                       itemLabel="#{orgaoExpedidor.sigla}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soOrgaoExpedidor" value="Órgão Expedidor"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soEstadoEmissor"
+                                     value="#{efetivaAcolhimentoSocialBean.rg.estado}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Estado de Emissão"
+                                      itemValue=""/>
+                        <f:selectItems value="#{efetivaAcolhimentoSocialBean.estados}"
+                                       var="estado"
+                                       itemLabel="#{estado.descricao.toUpperCase()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soEstadoEmissor" value="Estado de Emissão"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            actionListener="#{efetivaAcolhimentoSocialBean.adicionarRg()}"
+                            update="form:tab:pgRg"
+                            oncomplete="PF('addRG').hide();"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

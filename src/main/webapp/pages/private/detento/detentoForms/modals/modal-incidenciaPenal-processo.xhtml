@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-incidenciaPenal-processo">
+        <p:dialog header="Adicionar Incidência Penal" id="dialogIncidenciaPenalProcesso" widgetVar="addIncidenciaPenal"
+                  modal="true" width="1000" height="500" resizable="false" style="overflow:auto;"
+                  showEffect="fade" hideEffect="fade">
+            <p:panelGrid id="pgLeiOrigemArtigo" columns="2"
+                         columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgLeiOrigem" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somLeiOrigem" filter="true"
+                                     filterMatchMode="contains"
+                                     value="#{cadastroDetentoBean.leiOrigem}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems var="leiOrigem" itemLabel="#{leiOrigem.descricao}"
+                                       value="#{cadastroDetentoBean.leiOrigens}"/>
+                        <p:ajax process="@this"
+                                update="pgArtigo plLeiParagrafo"
+                                listener="#{cadastroDetentoBean.onSelectLeiOrigens()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Lei de Origem"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgArtigo" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somIncidenciaPenal" filter="true"
+                                     filterMatchMode="contains"
+                                     rendered="#{cadastroDetentoBean.renderizaInsercao}"
+                                     value="#{cadastroDetentoBean.incidenciaPenal}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems var="incidenciaPenal"
+                                       itemLabel=" Art. #{incidenciaPenal.descricao}"
+                                       value="#{cadastroDetentoBean.selectedIncidenciasPenais}"/>
+                        <p:ajax process="@this"
+                                update="pgLeiParagrafo plLeiParagrafo pgLeiInciso plLeiInciso pgBtnAdcionarArtigo"
+                                listener="#{cadastroDetentoBean.onSelectLeiParagragos()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Artigo"
+                                   rendered="#{cadastroDetentoBean.renderizaInsercao}"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <h:panelGroup id="pgLeiParagrafo">
+                <p:panelGrid id="ipsLeiParagrafo"
+                             rendered="#{cadastroDetentoBean.renderizaInsercao}"
+                             columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h3>Parágrafos</h3>
+                    <p:pickList id="plLeiParagrafo"
+                                converter="leiParagrafoPickListConverter"
+                                value="#{cadastroDetentoBean.dualListModelLeiParagrafo}"
+                                var="leiParagrafo"
+                                itemLabel="#{leiParagrafo.numeroFormatado} #{leiParagrafo.descricao}"
+                                itemValue="#{leiParagrafo}"
+                                showSourceControls="true" showTargetControls="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true" responsive="true">
+                        <f:facet name="sourceCaption">Parágrafos </f:facet>
+                        <f:facet name="targetCaption">Parágrafos Selecionados</f:facet>
+                        <p:ajax event="transfer" listener="#{cadastroDetentoBean.onTransfer}"
+                                update="plLeiInciso"/>
+                    </p:pickList>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="pgLeiInciso">
+                <p:panelGrid id="ipsLeiInciso"
+                             rendered="#{cadastroDetentoBean.renderizaInsercao}"
+                             columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h3>Incisos</h3>
+                    <p:pickList id="plLeiInciso"
+                                value="#{cadastroDetentoBean.dualListModelLeiInciso}"
+                                converter="leiIncisoPickListConverter"
+                                var="leiInciso"
+                                itemLabel="#{leiInciso.leiParagrafo.numeroFormatado} #{leiInciso.numeroFormatado} #{leiInciso.descricao}"
+                                itemValue="#{leiInciso}"
+                                showSourceControls="true" showTargetControls="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true" responsive="true">
+                        <f:facet name="sourceCaption">Incisos</f:facet>
+                        <f:facet name="targetCaption">Incisos Selecionados</f:facet>
+                    </p:pickList>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="pgBtnAdcionarArtigo">
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <p:toolbar id="tbBtn"
+                               rendered="#{cadastroDetentoBean.renderizaInsercao}">
+                        <f:facet name="right">
+                            <p:commandButton id="btnAdcionarArtigo" value="Adicionar"
+                                             update="form:tabDadosPrisionais:dtProcessoArtigos"
+                                             action="#{cadastroDetentoBean.adicionarIncidenciaPenal()}"
+                                             oncomplete="PF('addIncidenciaPenal').hide();"
+                                             icon="ui-icon-plus"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:panelGrid>
+            </h:panelGroup>
+        </p:dialog>
+    </h:form>
+</ui:composition>

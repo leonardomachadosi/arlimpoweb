@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-pessoa-composicaoFamiliar">
+        <p:dialog header="Adicionar Pessoa" id="dialogPessoaComposicaoFamiliar" widgetVar="addPessoa" modal="true"
+                  width="900" height="300" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="2"
+                         columnClasses="ui-grid-col-8, ui-grid-col-4"
+                         id="pgNomeTelefone"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itNomePesquisa"
+                                 value="#{efetivaAcolhimentoSocialBean.pessoaPesquisa.nome}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itNomePesquisa" value="Nome"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgTelefone"
+                              styleClass="md-inputfield">
+                    <p:inputMask id="itTelefone"
+                                 value="#{efetivaAcolhimentoSocialBean.telefone.descricao}"
+                                 rendered="#{efetivaAcolhimentoSocialBean.renderizaInsercao}"
+                                 mask="(99)?999999999"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itTelefone" value="Telefone"
+                                   rendered="#{efetivaAcolhimentoSocialBean.renderizaInsercao}"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid columns="2"
+                         columnClasses="ui-grid-col-6, ui-grid-col-6"
+                         id="pgParentescoRenda"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgParentesco"
+                              styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soParentescos"
+                                     value="#{efetivaAcolhimentoSocialBean.pessoaParentesco.parentesco}"
+                                     rendered="#{efetivaAcolhimentoSocialBean.renderizaInsercao}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Parentesco"
+                                      itemValue=""/>
+                        <f:selectItems value="#{efetivaAcolhimentoSocialBean.parentescos}" var="parentesco"
+                                       itemLabel="#{parentesco.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soParentescos" value="Parentesco"
+                                   rendered="#{efetivaAcolhimentoSocialBean.renderizaInsercao}"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton value="Buscar"
+                                     id="btnbuscar"
+                                     icon="ui-icon-search"
+                                     action="#{efetivaAcolhimentoSocialBean.buscaPessoasParentescoByNome()}"
+                                     update="dtPessoaParentescos,
+                                      pgParentesco,
+                                      pgTelefone,
+                                      tbBtn"
+                                     process="@form"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                    <p:commandButton
+                            value="Inserir Novo"
+                            id="btnInserir"
+                            update="form:tab:dtPessoasParentesco"
+                            oncomplete="PF('addPessoa').hide();"
+                            actionListener="#{efetivaAcolhimentoSocialBean.adicionarPessoaParentesco()}"
+                            rendered="#{efetivaAcolhimentoSocialBean.renderizaInsercao}"
+                            icon="ui-icon-done"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+
+                </f:facet>
+            </p:toolbar>
+            <p:spacer/>
+            <p:dataTable
+                    id="dtPessoaParentescos" paginator="true" rows="10"
+                    paginatorPosition="bottom"
+                    value="#{efetivaAcolhimentoSocialBean.pessoasParenteResponsavel}"
+                    var="pessoaParentesco"
+                    emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                <f:facet name="header">
+                    Pessoas
+                </f:facet>
+                <p:column headerText="Nome">
+                    <h:outputText value="#{pessoaParentesco.pessoaParente.nome}"/>
+                </p:column>
+                <p:column headerText="Parentesco">
+                    <h:outputText value="#{pessoaParentesco.parentesco.descricao}"/>
+                </p:column>
+                <p:column headerText="Telefone">
+                    <h:outputText value="#{pessoaParentesco.pessoaParente.telefones[0].descricao}"/>
+                </p:column>
+                <p:column style="width: 30px;">
+                    <p:commandButton title="Adicionar Pessoa"
+                                     update="form:tab:dtPessoasParentesco"
+                                     action="#{efetivaAcolhimentoSocialBean.adicionarPessoaParentesco()}"
+                                     oncomplete="PF('addPessoa').hide();"
+                                     icon="ui-icon-check"
+                                     process="@this">
+                        <f:setPropertyActionListener value="#{pessoaParentesco.pessoaParente}"
+                                                     target="#{efetivaAcolhimentoSocialBean.pessoaPesquisa}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </h:form>
+</ui:composition>

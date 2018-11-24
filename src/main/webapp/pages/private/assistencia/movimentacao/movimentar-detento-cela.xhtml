@@ -1,0 +1,550 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .pgUnidadePrisionalRecomendada .ui-panelgrid-content {
+                border: none;
+            }
+
+
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{movimentacaoDetentoCelaBean.voltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Movimentação de Cela</b></h1>
+                        <p:panelGrid
+                                style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                                styleClass="ui-panelgrid-blank form-group">
+                            <p:row>
+                                <p:column rowspan="7">
+                                    <h:graphicImage style="width: 20em"
+                                                    value="/foto-detento?foto=#{movimentacaoDetentoCelaBean.enconder(movimentacaoDetentoCelaBean.detentoView.foto)}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Matrícula: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detentoView.matriculaDetento}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Nome: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detentoView.nomeDetento}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputLabel value="Data de nascimento: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detentoView.dataNascimento}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Nome do pai: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detentoView.nomePai}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputLabel value="Naturalidade: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detento.pessoa.municipioNascimento.descricao.toUpperCase()}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Nome da mãe: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detentoView.nomeMae}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputLabel value="Nacionalidade: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detento.pessoa.nacionalidade.descricao}"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <h:panelGroup
+                                rendered="#{movimentacaoDetentoCelaBean.outrosNomes != null and !movimentacaoDetentoCelaBean.outrosNomes.isEmpty()}">
+                            <p:outputLabel value="Outros Nomes" styleClass="customLabel"/>
+                            <p:dataTable value="#{movimentacaoDetentoCelaBean.outrosNomes}"
+                                         var="outroNome"
+                                         style="text-align: center; margin-top: 1em;margin-bottom: 2em;">
+                                <f:facet name="header">
+                                    Nomes
+                                </f:facet>
+                                <p:column headerText="Nome">
+                                    <h:outputText value="#{outroNome.nome}"/>
+                                </p:column>
+                                <p:column headerText="Tipo">
+                                    <h:outputText value="#{outroNome.tipoNome.descricao}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+                        <p:panelGrid
+                                style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                                styleClass="ui-panelgrid-blank form-group">
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Sexo: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detento.pessoa.sexo.descricao}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputLabel value="Orientação Sexual: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detento.pessoa.orientacaoSexual.descricao}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputLabel value="Identidade de Gênero: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detento.pessoa.identidadeGenero.descricao}"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-4"
+                                     rendered="#{movimentacaoDetentoCelaBean.pessoaTiposDeficiencia != null and !movimentacaoDetentoCelaBean.pessoaTiposDeficiencia.isEmpty()}"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                            <p:outputLabel value="Deficiências" styleClass="customLabel"/>
+                            <p:dataTable
+                                    value="#{movimentacaoDetentoCelaBean.pessoaTiposDeficiencia}"
+                                    var="pessoaTipoDeficiencia"
+                                    style="text-align: center; margin-top: 1em;margin-bottom: 2em;">
+                                <f:facet name="header">
+                                    Deficiências
+                                </f:facet>
+                                <p:column headerText="Tipo">
+                                    <h:outputText value="#{pessoaTipoDeficiencia.tipoDeficiencia.descricao}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                        <p:panelGrid
+                                style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                                styleClass="ui-panelgrid-blank form-group">
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Grupo Criminoso: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.perfilDetento.faccao.descricao} "/>
+                                    -
+
+                                    <strong><h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.perfilDetento.cargoFaccao.descricao} "/></strong>
+                                </p:column>
+                                <!--<p:column>
+                                    <h:outputLabel value="Posição :"/>
+                                    <h:outputText
+                                        value="#{movimentaDetentoCelaBean.perfilDetento.cargoFaccao.descricao}" />
+                                </p:column>-->
+                                <p:column>
+                                    <h:outputLabel value="Periculosidade: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.perfilDetento.periculosidade.descricao}"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputLabel value="Regime: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.detentoNaturezaCustodia.naturezaCustodia.descricao}"/>
+                                </p:column>
+                            </p:row>
+                            <!--<p:row>
+                                <p:column>
+                                    <h:outputLabel value="Regime: "/>
+                                    <h:outputText
+                                            value="#{movimentaDetentoCelaBean.naturezaCustodia.descricao}"/>
+                                </p:column>
+                            </p:row>-->
+                            <p:row>
+
+                            </p:row>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     id="pgDtProcessoArtigo"
+                                     rendered="#{!movimentacaoDetentoCelaBean.processoArtigos.isEmpty()}"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:outputLabel value="Incidência Penal" styleClass="customLabel"/>
+                            <h:panelGroup>
+                                <ui:include src="../../assistencia/gerenciamentoProcesso/fragments/processo-artigo-datatable.xhtml">
+                                    <ui:param name="tituloFacet" value="Incidência Penal"/>
+                                </ui:include>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     id="pgDtRestricao"
+                                     rendered="#{!movimentacaoDetentoCelaBean.detentosView.isEmpty()}"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:outputLabel value="Restrição de Convivência" styleClass="customLabel"/>
+                            <h:panelGroup>
+                                <p:dataTable
+                                        id="dtPessoasRestricao"
+                                        value="#{movimentacaoDetentoCelaBean.detentosView}"
+                                        var="detento"
+                                        reflow="true"
+                                        rowKey="#{detento.matriculaDetento}"
+                                        paginator="#{movimentacaoDetentoCelaBean.detentosView.size() > 5}"
+                                        style="text-align: center"
+                                >
+                                    <f:facet name="header">
+                                        Presos
+                                    </f:facet>
+                                    <p:column headerText="Nome">
+                                        <h:outputText value="#{detento.nomeDetento}"/>
+                                    </p:column>
+                                    <p:column headerText="Estabelecimento">
+                                        <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                                    </p:column>
+                                    <p:column headerText="Pavilhão">
+                                        <h:outputText value="#{detento.nomePavilhao}"/>
+                                    </p:column>
+                                    <p:column headerText="Cela">
+                                        <h:outputText value="#{detento.nomeCela}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     id="pgDtTipoCrimePraticado"
+                                     columnClasses="ui-grid-col-4"
+                                     layout="grid"
+                                     rendered="#{movimentacaoDetentoCelaBean.tiposDetentoPerfilDetento != null and !movimentacaoDetentoCelaBean.tiposDetentoPerfilDetento.isEmpty()}"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:outputLabel value="Tipo de Crime Praticado" styleClass="customLabel"/>
+                            <h:panelGroup>
+                                <p:dataTable id="dtTipoPerfilDetento" var="tipoDetentoPerfilDetento"
+                                             value="#{movimentacaoDetentoCelaBean.tiposDetentoPerfilDetento}"
+                                             reflow="true"
+                                             rowKey="#{tipoDetentoPerfilDetento.id}"
+                                             paginator="false" rows="5"
+                                             emptyMessage="Nenhum registro encontrado"
+                                             style="text-align: center">
+                                    <f:facet name="header">
+                                        Tipos de Crimes Praticados
+                                    </f:facet>
+                                    <p:column headerText="Crime">
+                                        <h:outputText value="#{tipoDetentoPerfilDetento.tipoDetento.descricao}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid
+                                style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                                rendered="#{movimentacaoDetentoCelaBean.atendimentoSeguranca != null}"
+                                styleClass="ui-panelgrid-blank form-group">
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Comportamento na Triagem: "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.atendimentoSeguranca.comportamento}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Conduta com os presos na triagem (Observação): "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.atendimentoSeguranca.conduta.descricao} ( #{movimentacaoDetentoCelaBean.atendimentoSeguranca.observacaoCondutaTriagem} ) "/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Higiene Pessoal (Observação): "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.atendimentoSeguranca.higiene.descricao} ( #{movimentacaoDetentoCelaBean.atendimentoSeguranca.observacaoHigiene} ) "/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel
+                                            value="Aspecto de liderança em relação aos demais presos (Observação): "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.atendimentoSeguranca.aspectoLideranca.descricao} ( #{movimentacaoDetentoCelaBean.atendimentoSeguranca.observacaoLideranca} ) "/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Conduta com os funcionários na triagem (Observação): "/>
+                                    <h:outputText
+                                            value="#{movimentacaoDetentoCelaBean.atendimentoSeguranca.condutaPresoFuncionario.descricao} ( #{movimentacaoDetentoCelaBean.atendimentoSeguranca.observacaoConduta} ) "/>
+
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{movimentacaoDetentoCelaBean.celas.isEmpty()}">
+                <div class="ui-g" style="margin-top: -13px;">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton value="Selecionar Outra Cela"
+                                                 oncomplete="PF('addCela').show();"
+                                                 icon="ui-icon-plus"
+                                                 rendered="#{movimentacaoDetentoCelaBean.celas.isEmpty()}"
+                                                 actionListener="#{movimentacaoDetentoCelaBean.refreshCelaPavilhao()}"
+                                                 id="btnSelecionar"
+                                                 update="form:dialogCela"
+                                                 process="@this">
+                                    <p:confirm header="Confirmação"
+                                               message="Deseja realmente selecionar outra cela?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlgCela">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"
+                                                         oncomplete="PF('confirmDlgCela').hide();"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup id="hpCelaDestino"
+                          rendered="#{!movimentacaoDetentoCelaBean.listaPerfilCelaNotaAuxiliary.isEmpty() || !movimentacaoDetentoCelaBean.celas.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:panelGrid id="pgCelaRecomendada" columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         rendered="#{!movimentacaoDetentoCelaBean.listaPerfilCelaNotaAuxiliary.isEmpty() and movimentacaoDetentoCelaBean.celas.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h1>Celas Recomendadas</h1>
+                                <p:dataTable id="dtCelaRecomendada"
+                                             value="#{movimentacaoDetentoCelaBean.listaPerfilCelaNotaAuxiliary}"
+                                             var="perfilCelaNotaAuxiliary"
+                                             rowKey="#{perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.id}"
+                                             selection="#{movimentacaoDetentoCelaBean.perfilCelaNotaAuxiliary}"
+                                             style="text-align:center" rowStyleClass="ui-datatable-even">
+                                    <f:facet name="header">Celas Recomendadas</f:facet>
+                                    <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                                    <p:column headerText="Nome">
+                                        <h:outputText
+                                                value="#{perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Pavilhão">
+                                        <h:outputText
+                                                value="#{perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.pavilhao != null ?
+                                                 perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.pavilhao.descricao: ''}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo">
+                                        <h:outputText
+                                                value="#{perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.tipoCela.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Capacidade Efetiva">
+                                        <h:outputText
+                                                value="#{perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.capacidadeEfetiva}"/>
+                                    </p:column>
+                                    <p:column headerText="Número de Vagas">
+                                        <h:outputText
+                                                style="#{movimentacaoDetentoCelaBean.carregarCSSTexto(perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.vagas)}"
+                                                value="#{perfilCelaNotaAuxiliary.perfilCelaAuxiliary.cela.vagas}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+                            <p:panelGrid id="pgBotaoAdicionar" columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         rendered="#{!movimentacaoDetentoCelaBean.listaPerfilCelaNotaAuxiliary.isEmpty() and movimentacaoDetentoCelaBean.celas.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                                <h:panelGroup>
+                                    <p:commandButton
+                                            title="Selecionar Estabelecimento de Destino"
+                                            style="float: right"
+                                            action="#{movimentacaoDetentoCelaBean.selecionarCelaRecomendada()}"
+                                            update="@form"
+                                            icon="ui-icon-plus">
+                                    </p:commandButton>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:panelGrid id="pgCelaDestino" columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         rendered="#{!movimentacaoDetentoCelaBean.celas.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h1>Cela de Destino</h1>
+                                <p:dataTable id="dtCelaDestino"
+                                             value="#{movimentacaoDetentoCelaBean.celas}"
+                                             var="cela"
+                                             reflow="true"
+                                             style="text-align:center">
+                                    <f:facet name="header">
+                                        Celas
+                                    </f:facet>
+                                    <p:column headerText="Nome">
+                                        <h:outputText value="#{cela.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo">
+                                        <h:outputText value="#{cela.tipoCela.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Capacidade Efetiva">
+                                        <h:outputText value="#{cela.capacidadeEfetiva}"/>
+                                    </p:column>
+                                    <p:column headerText="Número de Vagas">
+                                        <h:outputText
+                                                style="#{movimentacaoDetentoCelaBean.carregarCSSTexto(cela.vagas)}"
+                                                value="#{cela.vagas}"/>
+                                    </p:column>
+                                    <p:column headerText="Ação" style="text-align: center; width: 15%">
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                styleClass="red-btn"
+                                                action="#{movimentacaoDetentoCelaBean.removerCelaDestino()}"
+                                                title="Remover"
+                                                update="@form">
+                                            <p:confirm header="Confirmação"
+                                                       message="Deseja realmente remover cela?"
+                                                       icon="ui-icon-alert"/>
+                                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                             widgetVar="confirmDlg">
+                                                <p:commandButton value="Sim" type="button"
+                                                                 styleClass="ui-confirmdialog-yes"
+                                                                 icon="ui-icon-check"/>
+                                                <p:commandButton value="Não" type="button"
+                                                                 styleClass="ui-confirmdialog-no"
+                                                                 icon="ui-icon-close"/>
+                                            </p:confirmDialog>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+                            <p:panelGrid id="pgMotivoDetentoCela" columns="1"
+                                         columnClasses="ui-grid-col-4"
+                                         rendered="#{!movimentacaoDetentoCelaBean.celas.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h1>Motivo da Movimentação</h1>
+                                <h:panelGroup id="pgMotivo" styleClass="md-selectonemenu">
+                                    <p:selectOneMenu id="somMotivo"
+                                                     value="#{movimentacaoDetentoCelaBean.detentoCela.motivoDetentoCela}"
+                                                     converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItem itemLabel="Selecione o Motivo" itemValue=""/>
+                                        <f:selectItems var="motivoDetentoCela"
+                                                       itemLabel="#{motivoDetentoCela.descricao}"
+                                                       value="#{movimentacaoDetentoCelaBean.motivosDetentoCela}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Motivo"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{!movimentacaoDetentoCelaBean.celas.isEmpty()}">
+                <div class="ui-g" style="margin-top: -13px;">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <p:commandButton value="Salvar"
+                                                 icon="ui-icon-check"
+                                                 action="#{movimentacaoDetentoCelaBean.salvar()}"
+                                                 rendered="#{!movimentacaoDetentoCelaBean.celas.isEmpty()}"
+                                                 id="btnFinalizar"
+                                                 update="@form"
+                                                 process="@form">
+                                    <p:confirm header="Confirmação"
+                                               message="Deseja realmente salvar alterações?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlg">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <p:dialog header="Selecionar Outra Cela" id="dialogCela"
+                      widgetVar="addCela" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid id="pgPavilhaoCela" columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup id="pgPavilhao">
+                        <p:outputLabel value="Pavilhão"/>
+                        <p:selectOneMenu id="somPavilhao"
+                                         value="#{movimentacaoDetentoCelaBean.pavilhao}"
+                                         converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione o Pavilhão" itemValue=""/>
+                            <f:selectItems var="pavilhao" itemLabel="#{pavilhao.descricao}"
+                                           value="#{movimentacaoDetentoCelaBean.pavilhoes}"/>
+                            <p:ajax process="@this" update="pgCela"
+                                    listener="#{movimentacaoDetentoCelaBean.onSelectPavilhoes}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+                    <h:panelGroup id="pgCela">
+                        <p:outputLabel value="Cela"/>
+                        <p:selectOneMenu id="somCela"
+                                         value="#{movimentacaoDetentoCelaBean.cela}"
+                                         converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione a Cela" itemValue=""/>
+                            <f:selectItems var="cela" itemLabel="#{cela.descricao}"
+                                           value="#{movimentacaoDetentoCelaBean.selectCelas}"/>
+                        </p:selectOneMenu>
+                    </h:panelGroup>
+
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar id="tbBtn">
+                    <f:facet name="left">
+                        <p:commandButton value="Adicionar"
+                                         id="btnAdicionar"
+                                         actionListener="#{movimentacaoDetentoCelaBean.selecionarOutraCela()}"
+                                         icon="ui-icon-check"
+                                         update="@form"
+                        />
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

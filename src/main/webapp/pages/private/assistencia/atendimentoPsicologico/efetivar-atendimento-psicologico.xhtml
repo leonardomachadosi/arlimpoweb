@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head"></ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="Voltar" icon="ui-icon-arrow-back" action="#{efetivaAtendimentoPsicologicoBean.onClickVoltar}" immediate="true"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton value="Salvar" icon="ui-icon-check" action="#{efetivaAtendimentoPsicologicoBean.onClickSalvar}" process=":form:tabView @this" update="@form"
+                                             rendered="#{!efetivaAtendimentoPsicologicoBean.solicitacaoAtendida}">
+                                <p:confirm header="Confirme sua solicitação" message="Você tem certeza que deseja efetuar o atendimento?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:tabView id="tabView">
+                            <p:tab title="Dados" id="tabDados">
+                                <ui:include src="/WEB-INF/template/assistencia/psicologia/tabDadosPessoais.xhtml"/>
+                            </p:tab>
+
+                            <p:tab title="Aspectos Familiares" id="tabAspecFamiliares">
+                                <ui:include src="/WEB-INF/template/assistencia/psicologia/tabAspectosFamiliares.xhtml"/>
+                            </p:tab>
+
+                            <p:tab title="Delito e Encarceramento" id="tabConsciencia">
+                                <ui:include src="/WEB-INF/template/assistencia/psicologia/tabConscienciaDelitoEncarceramento.xhtml"/>
+                            </p:tab>
+
+                            <p:tab title="Saúde Mental" id="tabSaudeMental">
+                                <ui:include src="/WEB-INF/template/assistencia/psicologia/tabSaudeMental.xhtml"/>
+                            </p:tab>
+
+                            <p:tab title="Depedência Química" id="tabDepQuimica">
+                                <ui:include src="/WEB-INF/template/assistencia/psicologia/tabDependenciaQuimica.xhtml"/>
+                            </p:tab>
+
+                            <p:tab title="Aspectos Cognitivos">
+                                <ui:include src="/WEB-INF/template/assistencia/psicologia/tabAspectos.xhtml"/>
+                            </p:tab>
+
+                            <p:tab title="Síntese para a CTC">
+                                <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputTextarea id="txtSinteseCTC" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.sintese}"
+                                                         styleClass="input-auto"/>
+                                        <p:outputLabel for="txtSinteseCTC" value="Sintese para a CTC"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+
+            <ui:include src="/WEB-INF/template/assistencia/enderecoModal.xhtml"/>
+            <ui:include src="/WEB-INF/template/assistencia/addMedicamentoModal.xhtml"/>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+
+        <script type="text/javascript">
+            function handleAddMedicamentoRequest(args) {
+                if(args.ehValido) PF('dlgAddMedicamento').hide();
+            }
+        </script>
+    </ui:define>
+</ui:composition>

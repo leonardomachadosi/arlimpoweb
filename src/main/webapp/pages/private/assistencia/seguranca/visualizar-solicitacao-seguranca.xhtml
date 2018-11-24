@@ -1,0 +1,334 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{visualizaSolicitacaoSegurancaBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton id="btnLiberar" value="Liberar Acolhida Dir. Segurança"
+                                             icon="" process="@this "
+                                             rendered="#{!visualizaSolicitacaoSegurancaBean.opcaoLiberar()}"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Solicitação de Atendimento</b></h1>
+                        <br/>
+                        <p:panelGrid id="pgCodSolicitacaoSetorTipoAtendimento" columns="4"
+                                     columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgCodSolicitacao" styleClass="md-inputfield">
+                                <p:inputText id="itCodSolicitacao"
+                                             value="#{visualizaSolicitacaoSegurancaBean.solicitacaoAtendimento.matricula}"
+                                             readonly="true"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itCodSolicitacao" value="Código da Solicitação"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgLotacao" styleClass="md-inputfield">
+                                <p:inputText id="itLotacao"
+                                             value="#{visualizaSolicitacaoSegurancaBean.servidorLotacao.lotacaoReal.nome}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itLotacao" value="Lotação"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                <p:inputText id="itNome"
+                                             value="#{visualizaSolicitacaoSegurancaBean.usuario.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNome" value="Funcionário"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgTipoSolicitacaoAtendimento" styleClass="md-selectonemenu">
+                                <p:inputText id="itTipoSolicitacaoAtendimento"
+                                             value="#{visualizaSolicitacaoSegurancaBean.solicitacaoAtendimento.tipoSolicitacaoAtendimento.descricao}"
+                                             readonly="true"
+                                             style="width: 100%;"/>
+                                <p:outputLabel value="Tipo de Atendimento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgStatusDataRealizacaoDataPrevista" columns="2"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <!--<h:panelGroup id="pgStatusSolicitacao" styleClass="md-selectonemenu">-->
+                                <!--<p:inputText id="itStatusSolicitacao"-->
+                                             <!--value="#{visualizaSolicitacaoSegurancaBean.statusSolicitacaoAtendimento.descricao}"-->
+                                             <!--readonly="true"-->
+                                             <!--style="width: 100%;"/>-->
+                                <!--<p:outputLabel value="Status"/>-->
+                            <!--</h:panelGroup>-->
+                            <h:panelGroup id="pgDataRealizacao" styleClass="md-inputfield">
+                                <p:inputText id="cdDataRealizacao"
+                                             value="#{visualizaSolicitacaoSegurancaBean.solicitacaoAtendimento.dataSolicitacao}"
+                                             readonly="true"
+                                             style="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                                <p:outputLabel for="cdDataRealizacao" value="Data da Realização"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgDataPrevista" styleClass="md-inputfield">
+                                <p:inputText id="cdDataPrevista"
+                                             value="#{visualizaSolicitacaoSegurancaBean.solicitacaoAtendimento.dataPrevistaAtendimento}"
+                                             readonly="true"
+                                             style="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                                <p:outputLabel for="cdDataPrevista" value="Data Prevista Atendimento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="1"
+                                     id="pgObervacao"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputTextarea
+                                        id="itaObservacao"
+                                        value="#{visualizaSolicitacaoSegurancaBean.solicitacaoAtendimento.observacao}"
+                                        readonly="true"
+                                        rows="1"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="itaObservacao" value="Observação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:outputLabel value="Status da Solicitação" styleClass="customLabel"/>
+                        <p:steps styleClass="stepTimeline"
+                                 activeIndex="#{visualizaSolicitacaoSegurancaBean.statusAtual.id - 1}">
+                            <p:menuitem id="menu_1" value="PENDENTE"
+                                        containerStyleClass="#{visualizaSolicitacaoSegurancaBean.stepClass(1)}"/>
+                            <p:menuitem id="menu_2" value="PENDENTE DE APROVAÇÃO"
+                                        containerStyleClass="#{visualizaSolicitacaoSegurancaBean.stepClass(2)}"/>
+                            <p:menuitem id="menu_3" value="APROVADO"
+                                        containerStyleClass="#{visualizaSolicitacaoSegurancaBean.stepClass(3)}"
+                                        rendered="#{visualizaSolicitacaoSegurancaBean.exibeAprovadoReprovado(3)}"/>
+                            <p:menuitem id="menu_4" value="REPROVADO"
+                                        containerStyleClass="#{visualizaSolicitacaoSegurancaBean.stepClass(4)}"
+                                        rendered="#{visualizaSolicitacaoSegurancaBean.exibeAprovadoReprovado(4)}"/>
+                            <p:menuitem id="menu_AR" value="APROVADO/REPROVADO"
+                                        rendered="#{visualizaSolicitacaoSegurancaBean.statusAtual.id lt 3}"/>
+                            <p:menuitem id="menu_5" value="EXECUTADO"
+                                        containerStyleClass="#{visualizaSolicitacaoSegurancaBean.stepClass(5)}"
+                                        rendered="#{visualizaSolicitacaoSegurancaBean.statusAtual.id != 4}"/>
+                        </p:steps>
+                        <p:repeat
+                                value="#{visualizaSolicitacaoSegurancaBean.solicitacaoAtendimentoStatusAtendimentos}"
+                                var="solicitacaoAtendimentoStatusAtendimentos">
+                            <p:tooltip
+                                    for="form:menu_#{solicitacaoAtendimentoStatusAtendimentos.statusSolicitacaoAtendimento.id}"
+                                    position="bottom">
+                                De
+                                <h:outputText value="#{solicitacaoAtendimentoStatusAtendimentos.dataInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <h:outputText rendered="#{solicitacaoAtendimentoStatusAtendimentos.dataFim != null}"
+                                              value=" Até "/>
+                                <h:outputText value="#{solicitacaoAtendimentoStatusAtendimentos.dataFim}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:tooltip>
+                        </p:repeat>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvar" value="Salvar"
+                                             action="#{visualizaSolicitacaoSegurancaBean.salvar()}"
+                                             icon="ui-icon-check" process="@this"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <p:spacer/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Presos</b></h1>
+                        <p:dataTable id="dtDetentosSelecionados" var="solicitacaoAtendimentoDetento"
+                                     value="#{visualizaSolicitacaoSegurancaBean.detentosSolicitacao}" reflow="true"
+                                     rowKey="#{solicitacaoAtendimentoDetento.id}"
+                                     paginator="true" rows="10"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                            <f:facet name="header">
+                                Presos Selecionados
+                            </f:facet>
+                            <p:column headerText="Foto" style="width: 12%; text-align: center">
+                                <h:panelGroup
+                                        rendered="#{solicitacaoAtendimentoDetento.foto == null or solicitacaoAtendimentoDetento.foto == '' or solicitacaoAtendimentoDetento.foto.contains('\\')}">
+                                    <i class="ui-icon ui-icon-person"
+                                       style="font-size:40px;color:#757575;">
+                                    </i>
+                                </h:panelGroup>
+                                <p:graphicImage
+                                        rendered="#{solicitacaoAtendimentoDetento.foto != null and solicitacaoAtendimentoDetento.foto != '' and !solicitacaoAtendimentoDetento.foto.contains('\\')}"
+                                        value="/foto-detento?foto=#{visualizaSolicitacaoSegurancaBean.enconder(solicitacaoAtendimentoDetento.foto)}"
+                                        style="max-height:4em;"/>
+                            </p:column>
+                            <p:column headerText="Matrícula"
+                                      style="width:10%;text-align: center">
+                                <h:outputText
+                                        value="#{visualizaSolicitacaoSegurancaBean.getMatricula(solicitacaoAtendimentoDetento.matriculaDetento)}"/>
+                            </p:column>
+                            <p:column headerText="Nome"
+                                      style="width:22%;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimentoDetento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Estabelecimento"
+                                      style="width:18%;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimentoDetento.unidadePrisional}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão"
+                                      style="width:12%;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimentoDetento.pavilhao}"/>
+                            </p:column>
+                            <p:column headerText="Cela"
+                                      style="width:8%;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimentoDetento.cela}"/>
+                            </p:column>
+                            <p:column headerText="Status"
+                                      style="width:10%;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimentoDetento.status}"/>
+                            </p:column>
+                            <p:column headerText="Opções"
+                                      style="width:8%;text-align: center">
+                                <p:commandButton title="Aprovar" styleClass="green-btn"
+                                                 action="#{visualizaSolicitacaoSegurancaBean.aprovarDetentoSolicitacao()}"
+                                                 rendered="#{solicitacaoAtendimentoDetento.codStatus == 6}"
+                                                 update="dtDetentosSelecionados"
+                                                 icon="ui-icon-thumb-up">
+                                    <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                 target="#{visualizaSolicitacaoSegurancaBean.detentoSolicitacaoView}"/>
+                                </p:commandButton>
+                                <p:commandButton
+                                        icon="ui-icon-thumb-down" style="border-bottom: 10px"
+                                        oncomplete="PF('addReprovarDetento').show();"
+                                        rendered="#{solicitacaoAtendimentoDetento.codStatus == 6}"
+                                        action="#{visualizaSolicitacaoSegurancaBean.refreshDetentoSolicitacao()}"
+                                        styleClass="red-btn" title="Reprovar"
+                                        update="dtDetentosSelecionados,form:dlgReprovarDetento">
+                                    <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                 target="#{visualizaSolicitacaoSegurancaBean.detentoSolicitacaoView}"/>
+                                </p:commandButton>
+                                <p:commandButton
+                                        icon="ui-icon-cancel" style="border-bottom: 10px"
+                                        rendered="#{solicitacaoAtendimentoDetento.codStatus != 6}"
+                                        action="#{visualizaSolicitacaoSegurancaBean.cancelarAnaliseDetentoSolicitacao()}"
+                                        styleClass="red-btn" title="Cancelar" update="dtDetentosSelecionados">
+                                    <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                 target="#{visualizaSolicitacaoSegurancaBean.detentoSolicitacaoView}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+            <p:dialog id="dlgReprovarDetento" header="Reprovar Solicitacao"
+                      widgetVar="addReprovarDetento" modal="true" width="900" responsive="true"
+                      showEffect="fade" hideEffect="fade">
+                <p:panelGrid id="pgdMotivoReprovacao" columns="1"
+                             columnClasses="ui-grid-col-6"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup id="pgMotivoReprovacao" styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soMotivoReprovacao"
+                                         value="#{visualizaSolicitacaoSegurancaBean.detentoSolicitacaoView.codMotivoReprovacao}"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         style="width: 100%">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems var="motivoReprovacaoAtendimento"
+                                           itemLabel="#{motivoReprovacaoAtendimento.descricao}"
+                                           itemValue="#{motivoReprovacaoAtendimento.id}"
+                                           value="#{visualizaSolicitacaoSegurancaBean.motivosReprovacoesAtendimento}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="soMotivoReprovacao" value="Motivo da Reprovação"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:panelGrid id="pgdObservacao" columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup id="pgObservacao" styleClass="md-inputfield">
+                        <p:inputText
+                                value="#{visualizaSolicitacaoSegurancaBean.detentoSolicitacaoView.observacaoReprovacao}"
+                                id="itObservacao"
+                                style="width: 100%"/>
+                        <p:outputLabel for="itObservacao" value="Observação"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton
+                                value="Reprovar" icon="ui-icon-done"
+                                update="dtDetentosSelecionados"
+                                oncomplete="PF('addReprovarDetento').hide();"
+                                actionListener="#{visualizaSolicitacaoSegurancaBean.reprovarDetentoSolicitacao()}"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

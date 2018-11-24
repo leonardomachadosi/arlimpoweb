@@ -1,0 +1,29 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:steps styleClass="stepTimeline" id="stepSituacao"
+             rendered="#{historicoList.size() > 0}"
+             activeIndex="#{historicoList.size() - 1}">
+        <c:forEach items="#{historicoList}" var="historico"
+                   varStatus="loop">
+            <p:menuitem id="historico_${historico.id}"
+                        value="#{historico.situacaoSolicitacaoVisitante.descricao}"/>
+        </c:forEach>
+    </p:steps>
+    <p:repeat value="#{historicoList}" var="historico"
+              rendered="#{historicoList.size() > 0}">
+        <p:tooltip for="historico_#{historico.id}" position="bottom">
+            De
+            <h:outputText value="#{historico.dataInicio}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+            <h:outputText rendered="#{historico.dataFim != null}" value=" Até "/>
+            <h:outputText value="#{historico.dataFim}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:tooltip>
+    </p:repeat>
+</ui:composition>

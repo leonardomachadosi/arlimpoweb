@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid columns="1"
+                 columnClasses="ui-grid-col-12,ui-grid-col-12"
+                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                 rendered="#{parecerOcorrenciaList.size() > 0}"
+                 style="border:0px none; background-color:transparent;">
+        <p:dataTable
+                id="dtPareceres"
+                emptyMessage="Nenhum Parecer adicionado"
+                value="#{parecerOcorrenciaList}"
+                var="parecerOcorrencia"
+                paginator="#{parecerOcorrenciaList.size() > 10}"
+                paginatorPosition="bottom"
+                rows="10" style="text-align: left;">
+            <f:facet name="header">Pareceres</f:facet>
+
+            <p:column headerText="Parecer" style="text-align: center;">
+                <h:outputText value="#{visualizaOcorrenciaBean.formatNumId(parecerOcorrencia.id)}"/>
+            </p:column>
+            <p:column headerText="Servidor" style="text-align: center;">
+                <h:outputText
+                        value="#{visualizaOcorrenciaBean.getServidorParecer(parecerOcorrencia.codServidor).pessoa.nome}"/>
+            </p:column>
+            <p:column headerText="Data da Criação" style="text-align: center;">
+                <h:outputText value="#{parecerOcorrencia.dataCriacao}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Ação" style="width: 5%; text-align: center">
+                <p:commandButton
+                        icon="ui-icon-remove-red-eye"
+                        style="border-bottom: 10px"
+                        title="Visualizar"
+                        oncomplete="PF('viewParecer').show();"
+                        action="#{visualizaOcorrenciaBean.editarParecer()}"
+                        update="dlgViewParecer"
+                        process="@this">
+                    <f:setPropertyActionListener value="#{parecerOcorrencia}"
+                                                 target="#{visualizaOcorrenciaBean.parecerOcorrencia}"/>
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </p:panelGrid>
+    <p:panel styleClass="panelBtnRight">
+        <p:commandButton icon="ui-icon-plus"
+                         actionListener="#{visualizaOcorrenciaBean.novoParecer()}"
+                         rendered="#{visualizaOcorrenciaBean.exibeBtnAdd()}"
+                         title="Adicionar Parecer"
+                         update="dlgAddParecer"
+                         oncomplete="PF('addParecer').show();"/>
+    </p:panel>
+
+    <p:dialog id="dlgAddParecer" header="Parecer"
+              widgetVar="addParecer" modal="true" width="1200" height="500" responsive="true"
+              showEffect="fade" hideEffect="fade" style="margin-top: 2em;">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:textEditor widgetVar="editor2" height="300" style="margin-bottom:10px"
+                              converter="textEditorConverter"
+                              value="#{visualizaOcorrenciaBean.descricaoParecer}">
+                    <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"/>
+                                    <select class="ql-size"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <button class="ql-bold"/>
+                                    <button class="ql-italic"/>
+                                    <button class="ql-underline"/>
+                                    <button class="ql-strike"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <select class="ql-color"/>
+                                    <select class="ql-background"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <button class="ql-script" value="sub"/>
+                                    <button class="ql-script" value="super"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <button class="ql-header" value="1"/>
+                                    <button class="ql-header" value="2"/>
+                                    <button class="ql-blockquote"/>
+                                    <button class="ql-code-block"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"/>
+                                    <button class="ql-list" value="bullet"/>
+                                    <button class="ql-indent" value="-1"/>
+                                    <button class="ql-indent" value="+1"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <button class="ql-direction" value="rtl"/>
+                                    <select class="ql-align"/>
+                                </span>
+                        <span class="ql-formats">
+                                    <button class="ql-clean"/>
+                                </span>
+                    </f:facet>
+                </p:textEditor>
+                <p:toolbar>
+                    <f:facet name="right">
+                        <p:commandButton id="btnSalvarParecer"
+                                         title="Salvar Parecer"
+                                         oncomplete="PF('addParecer').hide();"
+                                         process="@form"
+                                         value="Salvar"
+                                         update="@form"
+                                         actionListener="#{visualizaOcorrenciaBean.salvarParecer()}"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </div>
+    </p:dialog>
+
+    <p:dialog id="dlgViewParecer" header="Parecer"
+              widgetVar="viewParecer" modal="true" width="1200" height="400" responsive="true"
+              showEffect="fade" hideEffect="fade" style="margin-top: 2em;">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:panel style="height: 300px;overflow-y: scroll;">
+                    <h:outputText value="#{visualizaOcorrenciaBean.parecerOcorrencia.descricao}"
+                                  escape="false"/>
+                </p:panel>
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

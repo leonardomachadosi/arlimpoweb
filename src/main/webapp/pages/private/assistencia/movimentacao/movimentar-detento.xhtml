@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{movimentacaoDetentoBean.onClickVoltar}"
+                                             icon="ui-icon-arrow-back" process="@this"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Destino</h1>
+                        <p:panelGrid id="pgPavilhaoCela" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgPavilhao" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somPavilhao"
+                                                 value="#{movimentacaoDetentoBean.pavilhao}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Pavilhão" itemValue=""/>
+                                    <f:selectItems var="pavilhao" itemLabel="#{pavilhao.descricao}"
+                                                   value="#{movimentacaoDetentoBean.pavilhoes}"/>
+                                    <p:ajax process="@this" update="pgCela"
+                                            listener="#{movimentacaoDetentoBean.onSelectPavilhoes}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Pavilhão"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgCela" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somCela"
+                                                 value="#{movimentacaoDetentoBean.cela}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Cela" itemValue=""/>
+                                    <f:selectItems var="cela" itemLabel="#{cela.descricao}"
+                                                   value="#{movimentacaoDetentoBean.selectCelas}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Cela"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgMotivo" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somMotivo"
+                                                 value="#{movimentacaoDetentoBean.detentoCela.motivoDetentoCela}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Motivo" itemValue=""/>
+                                    <f:selectItems var="motivoDetentoCela" itemLabel="#{motivoDetentoCela.descricao}"
+                                                   value="#{movimentacaoDetentoBean.motivosDetentoCela}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Motivo"/>
+                            </h:panelGroup>
+
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarMovimentacao" value="Salvar"
+                                             process="@this somPavilhao
+                                                               somCela
+                                                               somMotivo"
+                                             update="@form"
+                                             action="#{movimentacaoDetentoBean.salvarDetentosMovimentados}" icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1>Presos</h1>
+                    <p:dataList value="#{movimentacaoDetentoBean.selectedDetentos}" var="detento"
+                                type="unordered" itemType="none" paginator="true" rows="5" styleClass="cars-datalist">
+                        <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                            <h:panelGroup
+                                    rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                            <i class="ui-icon ui-icon-person"
+                               style="font-size:78px;color:#757575;margin:24px;">
+                            </i>
+                            </h:panelGroup>
+                            <div class="car-details">
+                                <p:graphicImage
+                                        rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                        value="/foto-detento?foto=#{movimentacaoDetentoBean.enconder(detento.foto)}"
+                                        style="width: 78px; margin:24px;"/>
+                            </div>
+                            <div class="car-details">
+                                <p>#{detento.nomeDetento}</p>
+                                <p style="color:#757575">#{detento.nomePavilhao} - #{detento.nomeCela}</p>
+                            </div>
+                            <p:commandButton title="Visualizar"
+                                             icon="ui-icon-remove-red-eye"
+                                             action="#{movimentacaoDetentoBean.visualizarDetento()}"
+                                             style="margin:36px 24px 0 0">
+                                <f:setPropertyActionListener value="#{detento}" target="#{movimentacaoDetentoBean.detentoMovimentacao}"/>
+                            </p:commandButton>
+                        </div>
+                    </p:dataList>
+
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

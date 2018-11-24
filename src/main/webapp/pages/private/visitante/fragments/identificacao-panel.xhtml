@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panel>
+        <p:spacer/>
+        <p:panelGrid id="pgIdentificacao"
+                     columns="1"
+                     columnClasses="ui-grid-col-6"
+                     layout="grid" styleClass="ui-panelgrid form-group">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:autoComplete id="acVisitante"
+                                style="width: 100%"
+                                inputStyle="width: 80%"
+                                completeMethod="#{entradaVisitanteBean.completeVisitanteView}"
+                                minQueryLength="3"
+                                maxResults="5"
+                                value="#{entradaVisitanteBean.visitanteView}"
+                                var="visitanteView"
+                                itemValue="#{visitanteView}"
+                                itemLabel="#{visitanteView.nome}"
+                                converter="visitanteViewConverter">
+                    <p:column style="width: 10%; text-align: center">
+                        <p:graphicImage
+                                value="#{fotoBean.getFotoFrontalPath(visitanteView.codPessoa, 2)}"
+                                style="max-width: 3em;"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText value="#{visitanteView.nome}"/>
+                    </p:column>
+                    <p:ajax event="itemSelect"
+                            listener="#{entradaVisitanteBean.carregarVisitanteDetentosView()}"
+                            update="@form"/>
+                </p:autoComplete>
+                <p:outputLabel for="acVisitante" value="Visitante"/>
+            </h:panelGroup>
+
+            <h:panelGroup id="hpVisitanteView">
+                <ui:include src="visitanteView-panelgrid.xhtml">
+                    <ui:param name="visitanteView"
+                              value="#{entradaVisitanteBean.visitanteView}"/>
+                </ui:include>
+            </h:panelGroup>
+        </p:panelGrid>
+
+        <h:panelGroup id="hpDetentoView">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:dataTable value="#{entradaVisitanteBean.visitanteDetentosView}" var="detento"
+                                 selection="#{entradaVisitanteBean.detentoSelecionado}"
+                                 emptyMessage="Nenhum preso vinculado."
+                                 rowKey="#{detento.codDetento}" styleClass="cars-datalist">
+                        <f:facet name="header">Presos</f:facet>
+                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                        <p:column styleClass="clearfix car-item">
+                            <p:graphicImage value="#{fotoBean.getFotoFrontalPath(detento.codPessoaDetento, 1)}"
+                                            style="width: 78px; margin:24px;"/>
+                            <div style="display: inline-block">
+                                <p><strong>#{detento.nomeDetento}</strong></p>
+                                <p>Unidade Prisional: <h:outputLabel
+                                        value="#{entradaVisitanteBean.getUnidadePrisional(detento.codDetento).unidadePrisional.descricao}"/>
+                                </p>
+                                <p>Situação do preso: <h:outputLabel
+                                        value="#{detento.situacaoDetento}"
+                                        styleClass="#{utilBean.addStyleByStatus(detento.situacaoDetento)}"/>
+                                </p>
+                                <p>Parentesco: <h:outputLabel
+                                        id="detentoParentesco"
+                                        value="#{detento.parentesco}"/>
+                                </p>
+                                Situação Vínculo:
+                                <p:outputLabel value="#{detento.vinculo}"
+                                               styleClass="#{utilBean.addStyleByStatus(detento.vinculo)}"/>
+                            </div>
+                        </p:column>
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:panelGroup>
+    </p:panel>
+
+</ui:composition>

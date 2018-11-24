@@ -1,0 +1,38 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable value="#{beanName}"
+                 var="detentoSolicitacaoTransferencia"
+                 style="text-align: center;" reflow="true"
+                 paginator="#{visualizaSolicitacaoTransferenciaNecBean.detentoSolicitacaoTransferenciaList.size() > 10}"
+                 rows="10">
+
+        <f:facet name="header">
+            Presos
+        </f:facet>
+
+        <p:column headerText="Foto">
+            <p:graphicImage
+                    value="/foto-detento?foto=#{visualizaSolicitacaoTransferenciaNecBean.encoder(detentoSolicitacaoTransferencia.detento.detentoFoto.path)}"
+                    style="max-height:5em;"/>
+        </p:column>
+        <p:column headerText="Nome">
+            <h:outputText value="#{detentoSolicitacaoTransferencia.detento.pessoa.nome}"/>
+        </p:column>
+        <p:column headerText="Situação">
+            <h:outputText value="#{detentoSolicitacaoTransferencia.situacaoDetentoSolicitacaoTransferencia.descricao}"/>
+        </p:column>
+        <p:column headerText="Ações">
+            <p:commandButton icon="ui-icon-remove-red-eye" title="Visualizar" immediate="true" style="margin-right: 5px"
+                             action="#{visualizaSolicitacaoTransferenciaNecBean.gotoDetalhaSolicitacaoTransferenciaNec(detentoSolicitacaoTransferencia)}"/>
+
+            <p:commandButton icon="ui-icon-directions-bus" title="Visualizar Escolta" style="margin-left: 5px" process="@this" oncomplete="PF('dlgEscoltaDescricao').show();"
+                             action="#{visualizaSolicitacaoTransferenciaNecBean.onClickVerEscolta(detentoSolicitacaoTransferencia)}" update=":form:dlgDetalhaDetendoEscolta"
+                             styleClass=""/>
+        </p:column>
+    </p:dataTable>
+
+</ui:composition>

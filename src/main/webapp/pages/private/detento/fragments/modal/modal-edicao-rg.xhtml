@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog header="Editar RG" id="dialogEdicaoRg" widgetVar="addEdicaoRg" modal="true"
+              width="600" responsive="true" showEffect="fade" hideEffect="fade">
+        <p:panelGrid columns="2"
+                     id="pgRgData"
+                     styleClass="form-group ui-panelgrid-blank"
+                     style="border:0px none;
+                     background-color:transparent;"
+                     layout="grid">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itRg"
+                             mask="9?9999999999999"
+                             value="#{visualizaDetentoBean.rg.numero}"
+                             style="width: 100%;"
+                             decimalPlaces="0" thousandSeparator=""/>
+                <p:outputLabel for="itRg" value="RG"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:calendar id="cdDataExpedicao" maxdate="#{now}" format="dd/MM/yyyy"
+                            value="#{visualizaDetentoBean.rg.dataExpedicao}" pattern="dd/MM/yyyy" mask="99/99/9999"
+                            locale='pt' style="width: 100%"/>
+                <p:outputLabel for="cdDataExpedicao" value="Data de Emissão"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid columns="3"
+                     id="pgOrgaoExpedidor"
+                     columnClasses="ui-grid-col-5, ui-grid-col-5, ui-grid-col-2"
+                     styleClass="form-group ui-panelgrid-blank"
+                     style="border:0px none;
+                              background-color:transparent;"
+                     layout="grid">
+            <h:panelGroup styleClass="md-selectonemenu">
+                <p:selectOneMenu id="soOrgaoExpedidor"
+                                 value="#{visualizaDetentoBean.rg.orgaoExpedidor}"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 style="width: 100%">
+                    <f:selectItem noSelectionOption="true"/>
+                    <f:selectItems value="#{visualizaDetentoBean.orgaosExpedidoresEnum}" var="orgaoExpedidor"
+                                   itemValue="#{orgaoExpedidor.objeto}"
+                                   itemLabel="#{orgaoExpedidor.descricao}"/>
+                </p:selectOneMenu>
+                <p:outputLabel for="soOrgaoExpedidor" value="Órgão Expedidor"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-selectonemenu">
+                <p:selectOneMenu id="soEstadoEmissor"
+                                 value="#{visualizaDetentoBean.rg.estado}"
+                                 filter="true"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 style="width: 100%">
+                    <f:selectItem noSelectionOption="true"/>
+                    <f:selectItems value="#{visualizaDetentoBean.estadosEnum}"
+                                   itemValue="#{estado.objeto}"
+                                   var="estado"
+                                   itemLabel="#{estado.descricao}"/>
+                </p:selectOneMenu>
+                <p:outputLabel for="soEstadoEmissor" value="Estado de Emissão"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:commandButton
+                        actionListener="#{visualizaDetentoBean.adicionarRg()}"
+                        update="pgEditRgList pgRgData pgOrgaoExpedidor"
+                        icon="ui-icon-plus"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:spacer/>
+        <p:panelGrid id="pgEditRgList" columns="1"
+                     columnClasses="ui-grid-col-12" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <p:dataTable value="#{visualizaDetentoBean.rgList}"
+                         var="rg" rows="10" paginatorPosition="bottom" style="text-align: center;">
+                <f:facet name="header">
+                    RG
+                </f:facet>
+                <p:column headerText="Número">
+                    <h:outputText value="#{rg.numero}"/>
+                </p:column>
+                <p:column headerText="UF">
+                    <h:outputText value="#{rg.estado.descricao}"/>
+                </p:column>
+                <p:column style="width: 10%">
+                    <p:commandButton
+                            actionListener="#{visualizaDetentoBean.removerRg(rg)}"
+                            rendered="#{visualizaDetentoBean.renderizarBotaoRemover(rg)}"
+                            update="pgEditRgList"
+                            styleClass="red-btn"
+                            icon="ui-icon-trash"/>
+                </p:column>
+            </p:dataTable>
+        </p:panelGrid>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="btnSalvarRgs" value="Salvar"
+                                         process="@this" update="@form"
+                                         action="#{visualizaDetentoBean.salvarRgs()}" icon="ui-icon-check"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

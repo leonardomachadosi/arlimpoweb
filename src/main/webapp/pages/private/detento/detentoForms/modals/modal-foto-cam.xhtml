@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form enctype="multipart/form-data" id="form-dialog-foto-cam">
+        <p:dialog header="Adicionar Foto" id="dialogFotoCam" widgetVar="addFotoCam" modal="true" dynamic="true"
+                  width="400" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="2"
+                         id="pgFotoCam"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <h:panelGroup rendered="#{cadastroDetentoFotoBiometriaBean.renderizaCamera}">
+                    <p:photoCam id="pcFotoDetento"
+                                widgetVar="pc"
+                                listener="#{cadastroDetentoFotoBiometriaBean.onCapture}"
+                                update="form:tabDetentoFotoBiometria"
+                    />
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgTipoFoto"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="soTipoFoto" value="Tipo de Foto"/>
+                    <p:inputText id="soTipoFoto"
+                                 style="width: 100%"
+                                 value="#{cadastroDetentoFotoBiometriaBean.detentoFoto.tipoFoto.descricao}"
+                                 readonly="true"/>
+                    <!--<p:selectOneMenu id="soTipoFoto"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoFotoBiometriaBean.detentoFoto.tipoFoto}"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{cadastroDetentoFotoBiometriaBean.tipoFotos}"
+                                       var="tipoFoto"
+                                       itemLabel="#{tipoFoto.descricao}"/>
+                    </p:selectOneMenu>-->
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Capturar"
+                            oncomplete="PF('pc').capture(); PF('addFotoCam').hide();"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

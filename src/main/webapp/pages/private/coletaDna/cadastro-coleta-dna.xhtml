@@ -1,0 +1,237 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <h1><b>Cadastro de Coleta Dna</b></h1>
+
+                        <p:panelGrid columns="3"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true" value="#{cadastroColetaDna.coletaDna.pessoa.nome}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Detento"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true" value="#{cadastroColetaDna.rg.numero}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="RG"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true" value="#{cadastroColetaDna.documento.cpf}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="CPF"/>
+                            </h:panelGroup>
+
+
+                        </p:panelGrid>
+                        <p:panelGrid columns="2"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true" value="#{cadastroColetaDna.pai.pessoaParente.nome}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Pai"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true" value="#{cadastroColetaDna.mae.pessoaParente.nome}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Mãe"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputTextarea readonly="true"
+                                                 value="#{cadastroColetaDna.coletaDnaView.incidenciaDescricao.trim()}"
+                                                 style="width: 100%"/>
+                                <h:outputLabel value="Tipificação Criminal"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="3"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu value="#{cadastroColetaDna.detalheColetaDna.irmaoGemeo}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Sim" itemValue="1"/>
+                                    <f:selectItem itemLabel="Não" itemValue="2"/>
+                                    <f:selectItem itemLabel="Talvez" itemValue="3"/>
+                                </p:selectOneMenu>
+                                <h:outputLabel value="Possui Irmão Gêmeo"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+
+                                <p:selectOneMenu value="#{cadastroColetaDna.detalheColetaDna.transfusaoSangue}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Sim" itemValue="1"/>
+                                    <f:selectItem itemLabel="Não" itemValue="2"/>
+                                    <f:selectItem itemLabel="Talvez" itemValue="3"/>
+                                </p:selectOneMenu>
+                                <h:outputLabel value="Transfusão de Sangue"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+
+                                <p:selectOneMenu value="#{cadastroColetaDna.detalheColetaDna.transplante}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Sim" itemValue="1"/>
+                                    <f:selectItem itemLabel="Não" itemValue="2"/>
+                                    <f:selectItem itemLabel="Talvez" itemValue="3"/>
+                                </p:selectOneMenu>
+                                <h:outputLabel value="Transplante"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:separator/>
+                        <h2><b>Informações sobre as coletas</b></h2>
+                        <p:panelGrid columns="5"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputMask value="#{cadastroColetaDna.coletaDna.numeroFormulario}"
+                                             style="width: 100%" mask="9999.99.CO"/>
+                                <h:outputLabel value="Nº Formulário"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText value="#{cadastroColetaDna.detalheColetaDna.numeroCodigoBarraCartao}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Nº Código de Barra Cartão"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar value="#{cadastroColetaDna.coletaDna.dataColeta}" inputStyle="width: 100%"/>
+                                <h:outputLabel value="Data da Coleta"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true"
+                                             value="#{cadastroColetaDna.unidadePrisional.endereco.municipio.descricao}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Cidade da Coleta"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true"
+                                             value="#{cadastroColetaDna.unidadePrisional.descricao}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Unidade Prisional"/>
+                            </h:panelGroup>
+
+                        </p:panelGrid>
+                        <p:panelGrid columns="3"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText readonly="true"
+                                             value="#{cadastroColetaDna.userLogged.usuarioLogado.pessoa.nome}"
+                                             style="width: 100%"/>
+                                <h:outputLabel value="Responsavel pela coleta"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="autoServidor"
+                                                completeMethod="#{cadastroColetaDna.completeServidor}"
+                                                value="#{cadastroColetaDna.servidor1}"
+                                                styleClass="input-auto" var="servidor" itemValue="#{servidor}"
+                                                itemLabel="#{servidor.pessoa.nome}" converter="servidorConverter"
+                                                maxResults="10" minQueryLength="3">
+                                </p:autoComplete>
+                                <p:outputLabel value="Testemunha 1" for="autoServidor"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:autoComplete id="autoServidor2"
+                                                    completeMethod="#{cadastroColetaDna.completeServidor}"
+                                                    value="#{cadastroColetaDna.servidor2}"
+                                                    styleClass="input-auto" var="servidor" itemValue="#{servidor}"
+                                                    itemLabel="#{servidor.pessoa.nome}" converter="servidorConverter"
+                                                    maxResults="10" minQueryLength="3" forceSelection="true">
+                                    </p:autoComplete>
+                                    <p:outputLabel value="Testemunha 2" for="autoServidor2"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+
+                        </p:panelGrid>
+
+                        <h:panelGroup
+                                rendered="#{cadastroColetaDna.coletaDnaView.statusColeta.equals('RECUSA DETENTO')}">
+                            <h2 style="color: #F44336;"><b>RECUSADO PELO DETENTO</b></h2>
+                        </h:panelGroup>
+                        <h:panelGroup id="laudo">
+                            <p:separator/>
+                            <h4>Laudo</h4>
+                            <h:outputText rendered="#{cadastroColetaDna.fileUploaded}" id="lblLaudo"   value="LAUDO CADASTRADO" />
+                            <p:panelGrid columns="1" style="text-align: center;"  styleClass="ui-panelgrid-blank form-group"
+                                         rendered="#{cadastroColetaDna.coletaDna.pathLaudo!=null}">
+                                <h:commandButton action="#{cadastroColetaDna.mostrarPdf(cadastroColetaDna.coletaDna.pathLaudo)}"
+                                                 image="/resources/imagens/pdf.png" style="height: 57px;width: auto; cursor: pointer;"
+                                                 process="@this" onclick="this.form.target='_blank'" ajax="false"/>
+
+                            </p:panelGrid>
+                            <p:panelGrid columns="1"
+                                         rendered="#{cadastroColetaDna.coletaDna.pathLaudo==null}"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:fileUpload  cancelLabel="Cancelar"
+                                               fileUploadListener="#{cadastroColetaDna.uploadDocumentoDetento}"
+                                               uploadLabel="Anexar"
+                                               label="Escolher"
+                                               mode="advanced"
+                                               update="laudo lblLaudo"
+                                               dragDropSupport="false"
+                                               invalidFileMessage="Tipo de arquivo inválido."
+                                               invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                               sizeLimit="#{utilBean.sizeFile}"
+                                               multiple="false" allowTypes="/(\.|\/)(pdf)$/" style="width:100%" />
+
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <br/>
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton value="Salvar" styleClass="green-btn" icon="ui-icon-add"
+                                                 action="#{cadastroColetaDna.salvar}"
+                                                 rendered="#{cadastroColetaDna.renderizaSaveButtons}"/>
+                                <p:commandButton value="Recusa Preso" styleClass="red-btn" icon="ui-icon-close"
+                                                 rendered="#{cadastroColetaDna.renderizaSaveButtons}"
+                                                 action="#{cadastroColetaDna.recusaDetento}"/>
+                            </f:facet>
+                            <f:facet name="right">
+                                <p:commandButton value="Voltar" icon="ui-icon-arrow-back"
+                                                 process="@all"
+                                                 action="pretty:consultaColetaDna"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </div>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

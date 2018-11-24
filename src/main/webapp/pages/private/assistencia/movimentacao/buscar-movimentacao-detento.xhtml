@@ -1,0 +1,225 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <br/>
+                        <h:panelGroup style="color: black">
+                            <p:outputLabel value="Busca de Presos" style="font-size: 24px;font-weight: bold"/>
+                        </h:panelGroup>
+                        <br/>
+                        <br/>
+                        <p:panelGrid id="pgUnidadePavilhaoCela" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itMae"
+                                             value="#{buscaMovimentacaoDetentoBean.unidadePrisional.descricao}"
+                                             readonly="true"
+                                             style="width: 100%;"
+                                             inputStyle="width: 100%;"/>
+                                <p:outputLabel value="Estabelecimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgPavilhao" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somPavilhao"
+                                                 value="#{buscaMovimentacaoDetentoBean.pavilhao}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Pavilhão" itemValue=""/>
+                                    <f:selectItems var="pavilhao" itemLabel="#{pavilhao.descricao}"
+                                                   value="#{buscaMovimentacaoDetentoBean.selectPavilhoes}"/>
+                                    <p:ajax process="@this" update="pgCela"
+                                            listener="#{buscaMovimentacaoDetentoBean.onSelectPavilhoes}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Pavilhão"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgCela" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somCela"
+                                                 value="#{buscaMovimentacaoDetentoBean.cela}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Cela" itemValue=""/>
+                                    <f:selectItems var="cela" itemLabel="#{cela.descricao}"
+                                                   value="#{buscaMovimentacaoDetentoBean.selectCelas}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Cela"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="ipDescricaoCodigoPreso" columns="2"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itDescricao"
+                                             value="#{buscaMovimentacaoDetentoBean.detento.pessoa.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itDescricao" value="Nome do preso"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputNumber id="itCodigoPessoa" styleClass="ui-custom-inputnumber"
+                                               decimalPlaces="0" thousandSeparator=""
+                                               value="#{buscaMovimentacaoDetentoBean.detento.pessoa.id}"
+                                               style="width: 100%;"/>
+                                <p:outputLabel for="itCodigoPessoa" value="Matrícula"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="Buscar"
+                                             actionListener="#{buscaMovimentacaoDetentoBean.buscarDetentos}"
+                                             icon="ui-icon-search" update="hpDetentos"
+                                             process="@form"/>
+                        </f:facet>
+                        <!--<f:facet name="right">
+                            <h:panelGroup id="btnProximo">
+                                <p:commandButton value="Movimentar"
+                                                 rendered="#{!buscaMovimentacaoDetentoBean.detentos.isEmpty()}"
+                                                 action="#{buscaMovimentacaoDetentoBean.onClickMovimentarDetento()}"
+                                                 icon="ui-icon-arrow-forward" process="@this dtDetentos"/>
+                            </h:panelGroup>
+                        </f:facet>-->
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h:panelGroup id="hpDetentos">
+                            <h:panelGroup rendered="#{!buscaMovimentacaoDetentoBean.detentos.isEmpty()}">
+                                <br/>
+                                <h:panelGroup style="color: black">
+                                    <p:outputLabel value="Presos" style="font-size: 24px;font-weight: bold"/>
+                                </h:panelGroup>
+                                <br/>
+                                <br/>
+                                <p:dataTable id="dtDetentos" var="detento"
+                                             value="#{buscaMovimentacaoDetentoBean.detentos}"
+                                             reflow="true"
+                                             rowKey="#{detento.codDetento}"
+                                             paginator="true" rows="30" emptyMessage="Nenhum registro encontrado"
+                                             style="text-align: center">
+                                    <p:column headerText="Foto" style="width: 8%">
+                                        <!--<h:panelGroup
+                                                rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:40px;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <p:graphicImage
+                                                rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                                value="/foto-detento?foto=#{buscaMovimentacaoDetentoBean.encoder(detento.foto)}"
+                                                style="width: 54px;"/>-->
+                                        <h:graphicImage style="max-height:5em;"
+                                                        value="#{fotoBean.getFotoFrontalPath(detento.matricula, 1)}"/>
+                                    </p:column>
+                                    <p:column headerText="Matrícula"
+                                              style="width:60px;text-align: center">
+                                        <h:outputText value="#{buscaMovimentacaoDetentoBean.getMatricula(detento.matricula)}"/>
+                                    </p:column>
+                                    <p:column headerText="Preso"
+                                              style="width:300px;text-align: center">
+
+                                        <h:outputText value="#{detento.nomeDetento}"/>
+                                    </p:column>
+                                    <p:column headerText="Estabelecimento"
+                                              style="width:200px;text-align: center">
+                                        <h:outputText
+                                                value="#{detento.nomeUnidadePrisional}"/>
+                                    </p:column>
+                                    <p:column headerText="Pavilhão"
+                                              style="width:120px;text-align: center">
+                                        <h:outputText value="#{detento.nomePavilhao}"/>
+                                    </p:column>
+                                    <p:column headerText="Cela"
+                                              style="width:80px;text-align: center">
+                                        <h:outputText value="#{detento.nomeCela}"/>
+                                    </p:column>
+                                    <p:column headerText="Opções"
+                                              style="width:60px;text-align: center">
+                                        <p:commandButton
+                                                title="Visualizar"
+                                                icon="ui-icon-remove-red-eye"
+                                                onclick="this.form.target='_blank'"
+                                                ajax="false"
+                                                action="#{buscaMovimentacaoDetentoBean.visualizarDetento()}"
+                                                style="margin:0px 0px 0 0">
+                                            <f:setPropertyActionListener value="#{detento}"
+                                                                         target="#{buscaMovimentacaoDetentoBean.detentoMovimentacao}"/>
+                                        </p:commandButton>
+                                        <span class="ui-separator" style="padding-right: 2px;"/>
+                                        <p:commandButton
+                                            title="Movimentar"
+                                            icon="ui-icon-send"
+                                            action="#{buscaMovimentacaoDetentoBean.onClickMovimentarDetentoCela()}">
+                                            <f:setPropertyActionListener value="#{detento}"
+                                                                         target="#{buscaMovimentacaoDetentoBean.detentoMovimentacao}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,950 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{efetivaAtendimentoSegurancaBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:tabView id="tab">
+                        <p:tab title="Dados">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h2><b>Atendimento Segurança</b></h2>
+                                    <br/>
+                                    <p:panelGrid id="pgsDetentoDataNascimentoIdade" columns="3"
+                                                 columnClasses="ui-grid-col-8, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                            <p:inputText id="itNome"
+                                                         value="#{efetivaAtendimentoSegurancaBean.detento.pessoa.nome}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itNome" value="Nome de Pessoa Presa"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:calendar id="cdNascimento"
+                                                        pattern="dd/MM/yyyy"
+                                                        readonly="true"
+                                                        showOn="none"
+                                                        value="#{efetivaAtendimentoSegurancaBean.detento.pessoa.dataNascimento}"
+                                                        mask="99/99/9999"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdNascimento" value="Data de Nascimento"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itIdade"
+                                                         value="#{efetivaAtendimentoSegurancaBean.calcularIdade()}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itIdade" value="Idade"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdUnidadePrisionalDataIngressoDataAtendimento" columns="3"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgUnidadePrisional" styleClass="md-inputfield">
+                                            <p:inputText id="itUnidadePrisional"
+                                                         value="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.unidadePrisional}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itUnidadePrisional" value="Unidade Prisional"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:calendar
+                                                    id="cdDataEntrada"
+                                                    value="#{efetivaAtendimentoSegurancaBean.detento.dataCadastro}"
+                                                    readonly="true"
+                                                    showOn="none"
+                                                    inputStyle="width: 96%"
+                                                    pattern="dd/MM/yyyy"
+                                                    style="width: 100%"/>
+                                            <p:outputLabel for="cdDataEntrada" value="Data de Ingresso"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataAtendimento"
+                                                      rendered="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                      styleClass="md-inputfield">
+                                            <p:calendar id="cdDataAtendimento"
+                                                        pattern="dd/MM/yyyy HH:mm"
+                                                        mask="99/99/9999 99:99"
+                                                        readonly="true"
+                                                        value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.dataAtendimento}"
+                                                        showOn="none"
+                                                        inputStyle="width: 96%"
+                                                        locale='pt'
+                                                        style="width: 100%">
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                            </p:calendar>
+                                            <p:outputLabel for="cdDataAtendimento" value="Data de Atendimento"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup style="text-align: left">
+                                        <h3><b>Triagem</b></h3>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="3" layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:panelGrid columns="1"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Possui mais de um ciclo"
+                                                                   style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <p:panelGrid columns="1"
+                                                         columnClasses="ui-grid-col-5"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                                      style="color: darkBlue"
+                                                                      disabled="true"
+                                                                      value="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.numeroCiclo > 1}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:panelGrid columns="1"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Repercussao da infraçao criminal na comunidade"
+                                                                   style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <p:panelGrid columns="1"
+                                                         columnClasses="ui-grid-col-5"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                                      style="color: darkBlue"
+                                                                      disabled="true"
+                                                                      value="#{efetivaAtendimentoSegurancaBean.detento.crimeRepercussao == null ? false:efetivaAtendimentoSegurancaBean.detento.crimeRepercussao}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:panelGrid columns="1"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Possui algum disturbio mental agressivo"
+                                                                   style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <p:panelGrid columns="1"
+                                                         columnClasses="ui-grid-col-5"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                                      style="color: darkBlue"
+                                                                      disabled="true"
+                                                                      value="#{efetivaAtendimentoSegurancaBean.possuiDisturbioAgressivo}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdTipoCrimePraticado"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="1. Guia de Acolhimento"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <!-- dataTable com os processos -->
+                                    <h:panelGroup>
+                                        <ui:include src="../../../assistencia/gerenciamentoProcesso/fragments/processo-artigo-datatable.xhtml">
+                                            <ui:param name="tituloFacet" value="Incidência Penal"/>
+                                        </ui:include>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdParticipaFaccao"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="2. Participação em grupo criminoso?"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdParticipaFaccaoSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoSegurancaBean.participaGrupoCriminoso}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpParticipaFaccaoSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpParticipaFaccaoSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdFacao"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.participaGrupoCriminoso}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="soFaccao"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 value="#{efetivaAtendimentoSegurancaBean.perfilDetento.faccao}"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"/>
+                                                    <f:selectItems value="#{efetivaAtendimentoSegurancaBean.faccoes}"
+                                                                   var="faccao"
+                                                                   itemLabel="#{faccao.descricao}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel for="soFaccao" value="Grupo Criminoso"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdPosicaoFaccao"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.participaGrupoCriminoso}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel value="2.1 Qual a posição dentro do grupo criminoso?"
+                                                               style="color: darkBlue;"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdPosicaoFaccaoSo"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.participaGrupoCriminoso}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio layout="responsive" columns="3"
+                                                                  style="color: darkBlue"
+                                                                  disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 2}"
+                                                                  value="#{efetivaAtendimentoSegurancaBean.perfilDetento.cargoFaccao}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoSegurancaBean.cargoFaccoes}"
+                                                            var="cargoFaccao"
+                                                            itemLabel="#{cargoFaccao.descricao}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdPeiculosidade"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.participaGrupoCriminoso}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel value="2.2 Grau de periculosidade?"
+                                                               style="color: darkblue"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdPericulosidadeSo"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.participaGrupoCriminoso}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-9"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio
+                                                        layout="responsive" columns="3"
+                                                        style="color: darkBlue"
+                                                        converter="omnifaces.SelectItemsConverter"
+                                                        disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 2}"
+                                                        value="#{efetivaAtendimentoSegurancaBean.perfilDetento.periculosidade}">
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoSegurancaBean.periculosidades}"
+                                                            var="periculosidade"
+                                                            itemLabel="#{periculosidade.descricao}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdDesavenca"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="3. Há restrição de convivência(desavenças)?"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdDesavencaSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoSegurancaBean.desavenca}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpDesavencaSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpDesavencaSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdDesavencaQual"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.desavenca}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel value="Qual? "
+                                                               style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdDesavencaQualTx"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.desavenca}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="itDesavenca"
+                                                             value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.desavenca}"
+                                                             readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                             style="width: 100%"/>
+                                                <p:outputLabel for="itDesavenca"
+                                                               value="Especifique"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdComportamentoPreso"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="4. Descreva o comportamento do(a) preso(a) nesse período?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdComportamentoPresoTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itComportamentoPreso"
+                                                         value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.comportamento}"
+                                                         readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itComportamentoPreso"
+                                                           value="Observação"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPessoaAspectos"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="5. Classifique a pessoa presa considerando os aspectos"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdCondutaPeriodoTriagem"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="5.1 Quanto a sua conduta com os presos(as) no período da triagem?"
+                                                    style="color: darkBlue;"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdCondutaPeriodoTriagemSo"
+                                                 columnClasses="ui-grid-col-9"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio
+                                                    layout="responsive" columns="3"
+                                                    style="color: darkBlue"
+                                                    converter="omnifaces.SelectItemsConverter"
+                                                    disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.conduta}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSegurancaBean.condutas}"
+                                                        var="conduta"
+                                                        itemLabel="#{conduta.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdCondutaPeriodoTriagemTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itCondutaPeriodoTriagem"
+                                                         value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.observacaoConduta}"
+                                                         maxlength="255"
+                                                         readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itCondutaPeriodoTriagem"
+                                                           value="Observação"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdHigienePessoaPresa"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="5.2 Quanto a higiene pessoal da pessoa presa?"
+                                                    style="color: darkBlue;"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdHigienePessoaPresaSo"
+                                                 columnClasses="ui-grid-col-9"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio
+                                                    layout="responsive" columns="3"
+                                                    style="color: darkBlue"
+                                                    converter="omnifaces.SelectItemsConverter"
+                                                    disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.higiene}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSegurancaBean.higienes}"
+                                                        var="higiene"
+                                                        itemLabel="#{higiene.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdHigienePessoaPresaTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itHigienePessoaPresa"
+                                                         value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.observacaoHigiene}"
+                                                         maxlength="255"
+                                                         readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itHigienePessoaPresa"
+                                                           value="Observação"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup style="text-align: left">
+                                        <h3><b>Vivência</b></h3>
+                                    </h:panelGroup>
+                                    <p:panelGrid id="pgDetentoUnidadePrisional" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgDataInsercaoUp" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataInsercao"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        showOn="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus != 7}"
+                                                        value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.dataConvivio}"
+                                                        inputStyle="width: 96%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataInsercao" value="Data de Inserção ao convívio?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdAspectoArticulacao"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="1. Apresenta algum aspecto de liderança e articulação aos demais?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdAspectoArticulacaoSo"
+                                                 columnClasses="ui-grid-col-9"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio
+                                                    layout="responsive" columns="3"
+                                                    style="color: darkBlue"
+                                                    converter="omnifaces.SelectItemsConverter"
+                                                    disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.aspectoLideranca}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSegurancaBean.aspectosLiderancas}"
+                                                        var="aspectoLideranca"
+                                                        itemLabel="#{aspectoLideranca.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdAspectoArticulacaoTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itAspectoArticulacao"
+                                                         value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.observacaoLideranca}"
+                                                         maxlength="255"
+                                                         readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itAspectoArticulacao"
+                                                           value="Observação"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdCondutaRelacao"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="2. Classifique a conduta do(a) preso(a) em relação aos funcionários do estabelecimento"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdCondutaRelacaoSo"
+                                                 columnClasses="ui-grid-col-9"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio
+                                                    layout="responsive" columns="3"
+                                                    style="color: darkBlue"
+                                                    converter="omnifaces.SelectItemsConverter"
+                                                    disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.condutaPresoFuncionario}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSegurancaBean.condutaPresoFuncionarios}"
+                                                        var="condutaPresoFuncionario"
+                                                        itemLabel="#{condutaPresoFuncionario.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdpgdCondutaRelacaooTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itCondutaRelacao"
+                                                         value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.observacaoCondutaTriagem}"
+                                                         maxlength="255"
+                                                         readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itCondutaRelacao"
+                                                           value="Observação"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup style="text-align: left">
+                                        <h3><b>Disciplina</b></h3>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdNormasVigentes"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="1. A pessoa cumpre normas vigentes na Unidade Prisional?"
+                                                    style="color: black;font-weight: bold;"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdNormasVigentesSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.cumpreNorma}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPunicaoConselho"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="2. Houve punição no Conselho Disciplinar nos últimos 12 meses?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPunicaoConselhoSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoSegurancaBean.punicao}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpPunicaoSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpPunicaoSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdPunicaoArtigoInciso"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.punicao}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="3. Caso haja punição, qual artigo, inciso do conselho disciplinar?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <br/>
+                                        <h:panelGroup id="pgAtendimentoSeguranca">
+                                            <p:panelGrid columns="1"
+                                                         id="pgDtAtendimentoSeguranca"
+                                                         rendered="#{efetivaAtendimentoSegurancaBean.punicao}"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:dataTable id="dtAtendimentoSegurancaArtigos"
+                                                                 var="atendimentoSegurancaArtigo"
+                                                                 value="#{efetivaAtendimentoSegurancaBean.atendimentoSegurancaArtigos}"
+                                                                 reflow="true"
+                                                                 rowKey="#{atendimentoSegurancaArtigo.id}"
+                                                                 paginator="false" rows="5"
+                                                                 emptyMessage="Nenhum registro encontrado"
+                                                                 style="text-align: center">
+                                                        <f:facet name="header">
+                                                            Incidência Penal
+                                                        </f:facet>
+                                                        <p:column style="width: 5px;">
+                                                            <p:rowToggler/>
+                                                        </p:column>
+                                                        <p:column headerText="Lei Disciplina"
+                                                                  style="width:100px;text-align: center">
+                                                            <h:outputText
+                                                                    value="#{efetivaAtendimentoSegurancaBean.onStartLoadDisciplinaLabel(atendimentoSegurancaArtigo)}"/>
+                                                        </p:column>
+                                                        <p:column headerText="Artigo"
+                                                                  style="width:100px;text-align: center">
+                                                            <h:outputText
+                                                                    value=" Art. #{efetivaAtendimentoSegurancaBean.onStartLoadArtigoLabel(atendimentoSegurancaArtigo)}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 5px"
+                                                                  rendered="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus != 7}">
+                                                            <p:commandButton
+                                                                    icon="ui-icon-trash"
+                                                                    style="border-bottom: 10px"
+                                                                    styleClass="red-btn"
+                                                                    title="Remover Incidência Penal"
+                                                                    process="@this"
+                                                                    update="form:tab:pgAtendimentoSeguranca"
+                                                                    actionListener="#{efetivaAtendimentoSegurancaBean.onClickRemoverArtigoDisciplina(atendimentoSegurancaArtigo)}">
+                                                                <f:actionListener
+                                                                        binding="#{efetivaAtendimentoSegurancaBean.carregarAtendimentoSegurancaArtigos()}"/>
+                                                            </p:commandButton>
+                                                        </p:column>
+                                                        <p:rowExpansion>
+                                                            <p:dataTable var="paragrafoDisciplina"
+                                                                         emptyMessage="Sem Parágrafos."
+                                                                         value="#{atendimentoSegurancaArtigo.paragrafoDisciplinaList}">
+                                                                <p:column headerText="Parágrafo(s)"
+                                                                          style="text-align: left;">
+                                                                    <h:outputText
+                                                                            value="#{paragrafoDisciplina.numeroFormatado} #{paragrafoDisciplina.descricao}"/>
+                                                                </p:column>
+                                                                <p:column style="width: 30px"
+                                                                          rendered="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus != 7}">
+                                                                    <p:commandButton
+                                                                            icon="ui-icon-trash"
+                                                                            style="border-bottom: 10px"
+                                                                            styleClass="red-btn"
+                                                                            title="Remover Parágrafo"
+                                                                            process="@this"
+                                                                            update="form:tab:pgAtendimentoSeguranca"
+                                                                            action="#{efetivaAtendimentoSegurancaBean.carregarAtendimentoSegurancaArtigos}">
+                                                                        <f:actionListener
+                                                                                binding="#{efetivaAtendimentoSegurancaBean.onClickRemoverAtendimentoSegurancaArtigoByParagrafo(paragrafoDisciplina, atendimentoSegurancaArtigo)}"/>
+                                                                    </p:commandButton>
+                                                                </p:column>
+                                                            </p:dataTable>
+                                                            <p:dataTable var="incisoDisciplina"
+                                                                         value="#{atendimentoSegurancaArtigo.incisoDisciplinaList}"
+                                                                         emptyMessage="Sem Incisos.">
+                                                                <p:column headerText="Inciso(s)"
+                                                                          style="text-align: left;">
+                                                                    <h:outputText
+                                                                            value="#{incisoDisciplina.paragrafoDisciplina.numeroFormatado} #{incisoDisciplina.numeroFormatado} #{incisoDisciplina.descricao}"/>
+                                                                </p:column>
+                                                                <p:column style="width: 30px"
+                                                                          rendered="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus != 7}">
+                                                                    <p:commandButton
+                                                                            icon="ui-icon-trash"
+                                                                            style="border-bottom: 10px"
+                                                                            styleClass="red-btn"
+                                                                            title="Remover Inciso"
+                                                                            process="@this"
+                                                                            update="form:tab:pgAtendimentoSeguranca"
+                                                                            action="#{efetivaAtendimentoSegurancaBean.carregarAtendimentoSegurancaArtigos}">
+                                                                        <f:actionListener
+                                                                                binding="#{efetivaAtendimentoSegurancaBean.onClickRemoverAtendimentoSegurancaArtigoByInciso(incisoDisciplina, atendimentoSegurancaArtigo)}"/>
+                                                                    </p:commandButton>
+                                                                </p:column>
+                                                            </p:dataTable>
+                                                        </p:rowExpansion>
+                                                    </p:dataTable>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <p:panelGrid columns="1"
+                                                     rendered="#{efetivaAtendimentoSegurancaBean.punicao and efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus != 7}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup style="float: right">
+                                                <p:commandButton id="btnAdicionarIncidenciaPenal"
+                                                                 oncomplete="PF('addIncidenciaPenalAtendimento').show();"
+                                                                 update="form-dialog-incidenciaPenal-atendimento"
+                                                                 action="#{efetivaAtendimentoSegurancaBean.refreshArtigoDisciplina()}"
+                                                                 process="@this"
+                                                                 icon="ui-icon-plus">
+                                                </p:commandButton>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdRegistroOcorrencia"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="4. Registro de ocorrências anteriores"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdRegistroOcorrenciaTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itRegistroOcorrencia"
+                                                         value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.ocorrencia}"
+                                                         readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itRegistroOcorrencia"
+                                                           value="Especifique"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Síntese">
+                            <br/>
+                            <p:panelGrid columns="1"
+                                         id="pgSintese"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputTextarea
+                                            id="itaSintese"
+                                            readonly="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus == 7}"
+                                            value="#{efetivaAtendimentoSegurancaBean.atendimentoSeguranca.sintese}"
+                                            required="true"
+                                            requiredMessage="Informe a síntese para CTC"
+                                            maxlength="255"
+                                            rows="5"
+                                            style="width: 100%"/>
+                                    <p:outputLabel for="itaSintese" value="Síntese para o CTC"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <br/>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{efetivaAtendimentoSegurancaBean.detentoSolicitacaoView.codStatus != 7}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton id="btnSalvar" value="Salvar"
+                                                 action="#{efetivaAtendimentoSegurancaBean.salvar()}"
+                                                 icon="ui-icon-check"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-incidenciaPenal-atendimento.xhtml"/>
+        </ui:insert>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{validarGuiaRecolhimentoBean.voltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Validar Guia de Recolhimento</b></h1>
+
+                        <p:dataTable value="#{validarGuiaRecolhimentoBean.detentoArquivo}" var="detentoArquivo"
+                                     emptyMessage="Nenhum registro encontrado">
+                            <f:facet name="header">Guia de Recolhimento</f:facet>
+                            <p:column headerText="Descrição"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value="#{detentoArquivo.arquivo.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:30px;text-align: center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{utilBean.mostrarPdf(detentoArquivo.arquivo.path)}"
+                                                 onclick="this.form.target='_blank'" ajax="false"
+                                                 icon="ui-icon-remove-red-eye"/>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:spacer/>
+
+                        <h:panelGroup>
+                            <ui:include
+                                    src="../../assistencia/gerenciamentoProcesso/fragments/valida-processo-artigo-datatable.xhtml">
+                                <ui:param name="tituloFacet" value="Incidência Penal"/>
+                            </ui:include>
+                        </h:panelGroup>
+
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup style="float: right">
+                                <p:commandButton id="btnAdicionarIncidenciaPenal"
+                                                 oncomplete="PF('addIncidenciaPenal').show();"
+                                                 update="form-dialog-incidenciaPenal-processo"
+                                                 action="#{incidenciaPenalBean.limparModal()}"
+                                                 rendered="#{incidenciaPenalBean.processo.encaminhado != true}"
+                                                 process="@this"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:spacer/>
+                        <h:panelGroup>
+                            <h3>Crime de repercussão ?</h3>
+                            <p:selectOneRadio id="soRepercussaoCriminal"
+                                              style="color:darkBlue;"
+                                              layout="responsive" columns="3"
+                                              converter="omnifaces.SelectItemsConverter"
+                                              value="#{validarGuiaRecolhimentoBean.detento.crimeRepercussao}">
+                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                            </p:selectOneRadio>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="right">
+                            <p:commandButton value="Encaminhar"
+                                             action="#{validarGuiaRecolhimentoBean.encaminhar()}"
+                                             rendered="#{validarGuiaRecolhimentoBean.processo.encaminhado != true}"
+                                             process="@form" update="@form"
+                                             icon="ui-icon-arrow-forward"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+
+        <ui:insert name="form">
+            <ui:include src="modals/modal-incidenciaPenal-processo.xhtml">
+            </ui:include>
+        </ui:insert>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:panelGroup id="pgIncidenciaPenal">
+        <p:panelGrid columns="1"
+                     id="pgDtIncidenciaPenal"
+                     columnClasses="ui-grid-col-12"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group processo-artigo-panelgrid"
+                     style="border:0 none; background-color:transparent;">
+            <h:panelGroup>
+                <p:dataTable id="dtIncidenciaPenalList" var="incidenciaPenal"
+                             value="#{incidenciaPenalBean.incidenciaPenalList}"
+                             reflow="true"
+                             rowKey="#{incidenciaPenal.id}"
+                             paginator="false" rows="5"
+                             emptyMessage="Nenhum registro encontrado"
+                             style="text-align: center">
+                    <f:facet name="header">
+                        Incidência Penal
+                    </f:facet>
+                    <p:column style="width: 5px;">
+                        <p:rowToggler/>
+                    </p:column>
+                    <p:column headerText="Processo"
+                              style="width:100px;text-align: center">
+                        <h:outputText
+                                value="#{incidenciaPenalBean.incidenciaPenalProcessoHashMap.get(incidenciaPenal).numeroGrande}"/>
+                    </p:column>
+                    <p:column headerText="Status do Processo"
+                              style="width:100px;text-align: center">
+                        <h:outputText
+                                value="#{incidenciaPenalBean.incidenciaPenalProcessoHashMap.get(incidenciaPenal).nomeStatusProcesso}"/>
+                    </p:column>
+                    <p:column headerText="Situação do Preso"
+                              style="width:100px;text-align: center">
+                        <h:outputText
+                                value="#{incidenciaPenalBean.incidenciaPenalProcessoHashMap.get(incidenciaPenal).nomeSituacaoProcesso}"/>
+                    </p:column>
+                    <p:column headerText="Lei Origem"
+                              style="width:100px;text-align: center">
+                        <h:outputText
+                                value="#{incidenciaPenal.leiOrigem.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Artigo"
+                              style="width:100px;text-align: center">
+                        <h:outputText
+                                value="#{incidenciaPenal.descricao}"/>
+                    </p:column>
+                    <p:rowExpansion>
+                        <p:dataTable var="leiParagrafo" emptyMessage="Sem Parágrafos."
+                                     value="#{incidenciaPenalBean.getLeiParagrafoListByIncidenciaPenal(incidenciaPenal)}">
+                            <p:column headerText="Parágrafo(s)"
+                                      style="text-align: left;">
+                                <h:outputText
+                                        value="#{leiParagrafo.numeroFormatado} #{leiParagrafo.descricao}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:dataTable var="inciso" emptyMessage="Sem Incisos."
+                                     value="#{incidenciaPenalBean.getLeiIncisoByIncidenciaPenal(incidenciaPenal)}">
+                            <p:column headerText="Inciso(s)"
+                                      style="text-align: left;">
+                                <h:outputText
+                                        value="#{inciso.leiParagrafo.numeroFormatado} #{inciso.numeroFormatado} #{inciso.descricao}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:rowExpansion>
+                </p:dataTable>
+            </h:panelGroup>
+        </p:panelGrid>
+    </h:panelGroup>
+</ui:composition>

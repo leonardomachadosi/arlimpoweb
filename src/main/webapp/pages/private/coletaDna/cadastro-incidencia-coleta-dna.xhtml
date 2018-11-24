@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <h1><b>Cadastro de Incidencia Coleta Dna</b></h1>
+
+                        <p:panelGrid id="pgLeiOrigemArtigo" columns="2"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup id="pgLeiOrigem" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somLeiOrigem" filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{cadastroIncidenciaColetaDnaBean.leiOrigem}"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems var="leiOrigem" itemLabel="#{leiOrigem.descricao}"
+                                                   itemValue="#{leiOrigem}"
+                                                   value="#{cadastroIncidenciaColetaDnaBean.leiOrigens}"/>
+                                    <p:ajax process="@all"
+                                            update="pgArtigo"
+                                            listener="#{cadastroIncidenciaColetaDnaBean.onSelectLeiOrigens()}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Lei de Origem"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgArtigo" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somIncidenciaPenal" filter="true"
+                                                 filterMatchMode="contains"
+                                                 rendered="#{cadastroIncidenciaColetaDnaBean.renderizaIncidenciaPenal}"
+                                                 value="#{cadastroIncidenciaColetaDnaBean.incidenciaColetaDna.incidenciaPenal}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 autoWidth="true"
+                                                 panelStyle="width: 50%"
+                                                 style="width: 90%;"
+                                >
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems var="incidenciaPenal"
+
+                                                   itemLabel=" Art.#{incidenciaPenal.numero} - #{incidenciaPenal.descricao}"
+                                                   value="#{cadastroIncidenciaColetaDnaBean.incidenciasPenais}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Artigos"
+                                               rendered="#{cadastroIncidenciaColetaDnaBean.renderizaIncidenciaPenal}"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton value="Salvar" icon="ui-icon-plus" update="@form" actionListener="#{cadastroIncidenciaColetaDnaBean.salvar}"/>
+                            </f:facet>
+                        </p:toolbar>
+                        <p:panelGrid columns="1"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:dataTable var="incidencia"
+                                         id="tabela"
+                                         emptyMessage="Sem registros"
+                                         value="#{cadastroIncidenciaColetaDnaBean.incidenciaColetaDnaLazyDataModel}"
+                                         lazy="true"
+                                         border="1" cellpadding="2" cellspacing="0"
+                                         paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         paginator="true" paginatorPosition="bottom" rows="5">
+
+                                <p:column headerText="Lei de Origem" width="15%">
+                                    <h:outputText value="#{incidencia.incidenciaPenal.leiOrigem.descricao}"/>
+                                </p:column>
+                                <p:column headerText="Incidencia Penal">
+                                    <h:outputText value="Artº #{incidencia.incidenciaPenal.numero} #{incidencia.incidenciaPenal.descricao}"/>
+                                </p:column>
+
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style>
+            .pgDadosOcorrencia.ui-panelgrid {
+                border-collapse: unset !important;
+            }
+
+            .pgDadosOcorrencia.ui-panelgrid .ui-widget-header {
+                background-color: transparent !important;
+            }
+
+            .pgDadosOcorrencia .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .pgDadosOcorrencia.ui-grid-row {
+                margin-bottom: 1em;
+            }
+
+            .pgDadosOcorrencia.ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+
+            .pgDadosOcorrencia.ui-panelgrid .ui-panelgrid-cell {
+                border: 0;
+            }
+
+            body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-right .ui-icon, body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-left .ui-icon {
+                display: none !important;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            #{visualizaVideoBean.exibeVideo()}
+        </h:form>
+    </ui:define>
+</ui:composition>

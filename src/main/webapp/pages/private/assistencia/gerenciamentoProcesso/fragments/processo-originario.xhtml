@@ -1,0 +1,398 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <h3>Processo Originário</h3>
+            <br/>
+            <p:panelGrid id="pgEsferaOrigemSecaoSubsecao" columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somEsferaOrigem"
+                                     value="#{processo.esferaOrigem}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Esfera de Origem"
+                                      itemValue=""/>
+                        <f:selectItems var="esferaOrigemEnum"
+                                       itemLabel="#{esferaOrigemEnum.descricao}"
+                                       itemValue="#{esferaOrigemEnum.objeto}"
+                                       value="#{enumBean.esferaDeOrigemEnums}"/>
+                        <f:ajax event="change" execute="@this"
+                                render="hpEstadoComarcaVara pgEsferaOrigemSecaoSubsecao"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Esfera de Origem"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgSecao"
+                              rendered="#{processo.esferaOrigem.id == 2398}"
+                              styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somSecao"
+                                     value="#{bean.secao}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Seção" itemValue=""/>
+                        <f:selectItems var="secaoEnum"
+                                       itemLabel="#{secaoEnum.descricao.toUpperCase()}"
+                                       itemValue="#{secaoEnum.objeto}"
+                                       value="#{enumBean.secaoEnums}"/>
+                        <p:ajax process="@this" update="pgSubsecao"
+                                listener="#{bean.onSelectSecoes}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Seção"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgSubsecao"
+                              rendered="#{processo.esferaOrigem.id == 2398}"
+                              styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somSubsecao"
+                                     value="#{processo.subsecao}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Subseção" itemValue=""/>
+                        <f:selectItems var="subsecao" itemLabel="#{subsecao.descricao}"
+                                       value="#{subsecaoList}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Subseção"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <h:panelGroup id="hpEstadoComarcaVara">
+                <p:panelGrid id="pgEstadoComarcaVara" columns="3"
+                             columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                             rendered="#{processo.esferaOrigem.id == 2399}"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0 none; background-color:transparent;">
+                    <h:panelGroup styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="somEstado"
+                                         value="#{bean.estadoEnum}"
+                                         filter="true"
+                                         filterMatchMode="contains"
+                                         style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione o Estado"
+                                          itemValue=""/>
+                            <f:selectItems var="estadoEnum"
+                                           itemLabel="#{estadoEnum.descricao.toUpperCase()}"
+                                           value="#{enumBean.estadoEnums}"/>
+                            <p:ajax process="@this" update="pgComarca"
+                                    listener="#{bean.onSelectEstados}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Estado"/>
+                    </h:panelGroup>
+                    <h:panelGroup id="pgComarca" styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="somComarca"
+                                         value="#{bean.comarca}"
+                                         filter="true"
+                                         filterMatchMode="contains"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione a Comarca" itemValue=""/>
+                            <f:selectItems var="comarca" itemLabel="#{comarca.descricao}"
+                                           value="#{comarcaList}"/>
+                            <p:ajax process="@this" update="pgVara"
+                                    listener="#{bean.onSelectComarcas}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Comarca"/>
+                    </h:panelGroup>
+                    <h:panelGroup id="pgVara" styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="somVara"
+                                         value="#{processo.vara}"
+                                         filter="true"
+                                         filterMatchMode="contains"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione a Vara" itemValue=""/>
+                            <f:selectItems var="vara" itemLabel="#{vara.descricao}"
+                                           value="#{varaList}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Vara"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+            <br/>
+            <p:panelGrid id="pgProcessoNrUnicaAssunto" columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="inProcesso"
+                                 value="#{processo.numeroPequeno}"
+                                 style="width: 100%;">
+                        <p:keyFilter regEx="/[-0-9-.()/]/i" preventPaste="false"/>
+                    </p:inputText>
+                    <p:outputLabel for="inProcesso" value="Nº Processo Tribunal Local"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="inNrUnica"
+                                 value="#{processo.numeroGrande}"
+                                 style="width: 100%;">
+                        <p:keyFilter regEx="/[-0-9-.()/]/i" preventPaste="false"/>
+                    </p:inputText>
+                    <p:outputLabel for="inNrUnica" value="Nº Processo Pequeno"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectCheckboxMenu style="width: 100%;color: darkgray"
+                                          value="#{bean.selectedAssuntos}"
+                                          converter="omnifaces.SelectItemsConverter"
+                                          filter="true"
+                                          filterMatchMode="contains"
+                                          id="soAssunto"
+                                          panelStyle="width: 250px;"
+                                          label="Assunto">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{assuntoList}"
+                                       var="assunto"
+                                       itemLabel="#{assunto.descricao}"/>
+                    </p:selectCheckboxMenu>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid id="pgClassesCompetenciaProcesso" columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup id="pgClasse" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somCasse"
+                                     value="#{bean.classe}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Classe" itemValue=""/>
+                        <f:selectItems var="classe" itemLabel="#{classe.descricao}"
+                                       value="#{classeList}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Classe"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgCompetenciaProcesso" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somCompetenciaProcesso"
+                                     value="#{processo.competenciaProcesso}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Competência" itemValue=""/>
+                        <f:selectItems var="competenciaProcessoEnum"
+                                       itemLabel="#{competenciaProcessoEnum.descricao}"
+                                       itemValue="#{competenciaProcessoEnum.objeto}"
+                                       value="#{enumBean.competenciaProcessoEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Competência"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgAtoCrime" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somAtoCrime"
+                                     value="#{processo.atoCrime}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Ato do Crime" itemValue=""/>
+                        <f:selectItems var="atoCrime"
+                                       itemLabel="#{atoCrime.descricao}"
+                                       itemValue="#{atoCrime.objeto}"
+                                       value="#{enumBean.atoCrimeEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Ato do Crime"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid id="pgNaturezaCustodiaTipoPrisaoObjetoTutelado" columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somNaturezaCustodia"
+                                     value="#{processoNaturezaCustodia.naturezaCustodia}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Regime"
+                                      itemValue=""/>
+                        <f:selectItems var="naturezaCustodiaEnum"
+                                       itemLabel="#{naturezaCustodiaEnum.descricao}"
+                                       itemValue="#{naturezaCustodiaEnum.objeto}"
+                                       value="#{enumBean.naturezaCustodiaEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Regime"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgTipoPrisao" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somTipoPrisao"
+                                     value="#{processoTipoPrisao.tipoPrisao}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Tipo Prisão" itemValue=""/>
+                        <f:selectItems var="tipoPrisaoEnum"
+                                       itemLabel="#{tipoPrisaoEnum.descricao.toUpperCase()}"
+                                       itemValue="#{tipoPrisaoEnum.objeto}"
+                                       value="#{enumBean.tipoPrisaoEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Tipo Prisão"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgObjetoTutelado" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somObjetoTutelado"
+                                     value="#{processo.objetoTutelado}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Objeto Tutelado" itemValue=""/>
+                        <f:selectItems var="objetoTuteladoEnum"
+                                       itemLabel="#{objetoTuteladoEnum.descricao}"
+                                       itemValue="#{objetoTuteladoEnum.objeto}"
+                                       value="#{enumBean.objetoTuteladoEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Objeto Tutelado"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid id="pgProcessoRespondeTipoCrimeTipoArma" columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somProcessoResponde"
+                                     value="#{situacaoProcesso}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione Processo que Responde em"
+                                      itemValue=""/>
+                        <f:selectItems var="situacaoProcessoEnum"
+                                       itemLabel="#{situacaoProcessoEnum.descricao}"
+                                       itemValue="#{situacaoProcessoEnum.objeto}"
+                                       value="#{enumBean.situacaoProcessoEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Processo que Responde em"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgTipoCrime" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somTipoCrime"
+                                     value="#{processo.tipoCrime}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     required="true"
+                                     requiredMessage="Informe o Tipo de Crime"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Tipo Crime" itemValue=""/>
+                        <f:selectItems var="tipoCrimeEnum"
+                                       itemLabel="#{tipoCrimeEnum.descricao}"
+                                       itemValue="#{tipoCrimeEnum.objeto}"
+                                       value="#{enumBean.tipoCrimeEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Tipo Crime"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgTipoArma" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somTipoArma"
+                                     value="#{processo.tipoArma}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione o Tipo Arma" itemValue=""/>
+                        <f:selectItems var="tipoArmaEnum"
+                                       itemLabel="#{tipoArmaEnum.descricao}"
+                                       itemValue="#{tipoArmaEnum.objeto}"
+                                       value="#{enumBean.tipoArmaEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Tipo Arma"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid columns="3"
+                         id="pdDataAberturaTipoParticipacaoSituacao"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar id="cdDataAbertura"
+                                value="#{processo.dataCadastro}"
+                                maxdate="today"
+                                pattern="dd/MM/yyyy"
+                                mask="99/99/9999"
+                                locale='pt'
+                                style="width: 100%"
+                                inputStyle="width: 100%" navigator="true"/>
+                    <p:outputLabel for="cdDataAbertura" value="Data de distribuição"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgSituacao" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somSituacao"
+                                     value="#{statusProcesso}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Selecione a Situação" itemValue=""/>
+                        <f:selectItems var="statusProcessoEnum"
+                                       itemLabel="#{statusProcessoEnum.descricao}"
+                                       itemValue="#{statusProcessoEnum.objeto}"
+                                       value="#{enumBean.statusProcessoEnums}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Situação"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgSegredoJustica" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somSegredoJustica"
+                                     value="#{processo.segredoJustica}"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                        <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Segredo de Justiça"/>
+                </h:panelGroup>
+
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid columns="1"
+                         id="pgObervacao"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputTextarea
+                            id="itaObservacao"
+                            maxlength="1000"
+                            value="#{processo.observacao}"
+                            rows="3"
+                            style="width: 100%"/>
+                    <p:outputLabel for="itaObservacao" value="Observação"/>
+                </h:panelGroup>
+            </p:panelGrid>
+        </div>
+    </div>
+</ui:composition>

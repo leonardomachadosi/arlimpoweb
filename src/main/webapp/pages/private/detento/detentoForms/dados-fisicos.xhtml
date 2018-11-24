@@ -1,0 +1,388 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:tabView id="tabDadosFisicos">
+        <p:tab title="Características Físicas">
+            <p:spacer/>
+            <p:panelGrid columns="1"
+                         id="pgAlturaPeso"
+                         columnClasses="ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputNumber id="itAltura"
+                                   style="width: 100%"
+                                   decimalSeparator=","
+                                   decimalPlaces="2"
+                                   inputStyle="width: 100%"
+                                   value="#{cadastroDetentoBean.detentoDadoFisico.altura}"/>
+                    <p:outputLabel for="itAltura" value="Altura(em metros)"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:accordionPanel multiple="false">
+                <p:tab title="Deficiência">
+                    <p:selectManyCheckbox
+                            layout="responsive"
+                            value="#{cadastroDetentoBean.selectedTipoDeficiencias}"
+                            columns="3"
+                            converter="omnifaces.SelectItemsConverter">
+                        <f:selectItems var="tipoDeficiencia"
+                                       value="#{cadastroDetentoBean.tipoDeficiencias}"
+                                       itemLabel="#{tipoDeficiencia.descricao}"/>
+                    </p:selectManyCheckbox>
+                </p:tab>
+                <p:tab title="Cutis">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.etnia}">
+                        <f:selectItems var="etnia"
+                                       value="#{cadastroDetentoBean.etnias}"
+                                       itemLabel="#{etnia.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Tipo de Rosto">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.rosto}">
+                        <f:selectItems var="rosto"
+                                       value="#{cadastroDetentoBean.rostos}"
+                                       itemLabel="#{rosto.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+               <!-- <p:tab title="Cor do Cabelo">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.cabelo}">
+                        <f:selectItems var="cabelo"
+                                       value="#{cadastroDetentoBean.cabelos}"
+                                       itemLabel="#{cabelo.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>-->
+                <p:tab title="Testa">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.testa}">
+                        <f:selectItems var="testa"
+                                       value="#{cadastroDetentoBean.testas}"
+                                       itemLabel="#{testa.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Sobrancelhas">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.sobrancelha}">
+                        <f:selectItems var="sobrancelha"
+                                       value="#{cadastroDetentoBean.sobrancelhas}"
+                                       itemLabel="#{sobrancelha.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Cor dos Olhos">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.olho}">
+                        <f:selectItems var="olho"
+                                       value="#{cadastroDetentoBean.olhos}"
+                                       itemLabel="#{olho.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Orelhas">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.orelha}">
+                        <f:selectItems var="orelha"
+                                       value="#{cadastroDetentoBean.orelhas}"
+                                       itemLabel="#{orelha.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Boca">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.boca}">
+                        <f:selectItems var="boca"
+                                       value="#{cadastroDetentoBean.bocas}"
+                                       itemLabel="#{boca.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Lábios">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.labio}">
+                        <f:selectItems var="labio"
+                                       value="#{cadastroDetentoBean.labios}"
+                                       itemLabel="#{labio.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Nariz">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.nariz}">
+                        <f:selectItems var="nariz"
+                                       value="#{cadastroDetentoBean.narizs}"
+                                       itemLabel="#{nariz.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Pescoço">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.pescoco}">
+                        <f:selectItems var="pescoco"
+                                       value="#{cadastroDetentoBean.pescocos}"
+                                       itemLabel="#{pescoco.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+                <p:tab title="Compleição">
+                    <p:selectOneRadio layout="responsive" columns="3"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.detentoDadoFisico.compleicao}">
+                        <f:selectItems var="compleicao"
+                                       value="#{cadastroDetentoBean.compleicaos}"
+                                       itemLabel="#{compleicao.descricao}"/>
+                    </p:selectOneRadio>
+                </p:tab>
+
+            </p:accordionPanel>
+        </p:tab>
+        <p:tab title="Tatuagens" id="tabTatuagem">
+            <p:spacer/>
+            <p:panelGrid columns="3"
+                         id="pgTatuagem"
+                         columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soPosicaoCorporal"
+                                     value="#{cadastroDetentoBean.pessoaTatuagem.posicaoCorporal}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.posicaoCorporals}"
+                                       var="posicaoCorporal"
+                                       itemLabel="#{posicaoCorporal.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soPosicaoCorporal" value="Posição Corporal"/>
+                </h:panelGroup>
+
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soTipoTatuagem"
+                                     value="#{cadastroDetentoBean.tipoTatuagem}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.tipoTatuagems}"
+                                       var="tipoTatuagem"
+                                       itemLabel="#{tipoTatuagem.descricao}"/>
+                        <p:ajax process="@this" update="soTatuagem"
+                                listener="#{cadastroDetentoBean.carregarTatuagens}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soTipoTatuagem" value="Tipo de Tatuagem"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soTatuagem"
+                                     value="#{cadastroDetentoBean.pessoaTatuagem.tatuagem}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.tatuagems}" var="tatuagem"
+                                       itemLabel="#{tatuagem.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soTatuagem" value="Tatuagem"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgDescricaoTatuagem"
+                         columnClasses="ui-grid-col-8"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itDescricaoTatuagem"
+                                 value="#{cadastroDetentoBean.pessoaTatuagem.descricao}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itDescricaoTatuagem" value="Descrição Tatuagem"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgBtnAdicionarSalvar"
+                         columnClasses="ui-grid-col-6,ui-grid-col-6"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <p:splitButton value="Adicionar Imagem" icon="ui-icon-plus" style="float: left">
+                    <p:menuitem value="Carregar Foto"
+                                style="float: right"
+                                update="form-dialog-foto-dado-fisico:dialogFotoDadoFisico"
+                                actionListener="#{cadastroDetentoBean.refreshFotoTatuagem()}"
+                                oncomplete="PF('addFotoDadoFisico').show();"
+                                icon="ui-icon-plus"/>
+                    <p:menuitem title="Tirar Foto"
+                                value="Tirar Foto"
+                                actionListener="#{cadastroDetentoBean.refreshFotoTatuagem()}"
+                                oncomplete="PF('addFotoCamDadoFisico').show();"
+                                icon="ui-icon-photo-camera"/>
+                </p:splitButton>
+            </p:panelGrid>
+            <h:panelGroup id="pgTatuagemDet">
+            <p:panelGrid columns="1"
+                         id="pgDtTatuagem"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         rendered="#{!cadastroDetentoBean.pessoaTatuagems.isEmpty()}"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h2>Tatuagens</h2>
+                <p:dataTable id="dtTatuagem"
+                             var="pessoaTatuagem"
+                             reflow="true"
+                             value="#{cadastroDetentoBean.pessoaTatuagems}"
+                             rows="5"
+                             rendered="true"
+                             emptyMessage=""
+                             style="width: 100%">
+                    <f:facet name="header">Tatuagens</f:facet>
+                    <p:column headerText="Imagem" style="width: 120px; text-align: center">
+                        <p:graphicImage style="width: 120px"
+                                        value="/foto-detento?foto=#{cadastroDetentoBean.enconder(pessoaTatuagem.path)}"/>
+                    </p:column>
+                    <p:column headerText="Tatuagem" style="text-align: center;">
+                        <h:outputText value="#{pessoaTatuagem.tatuagem.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Posição" style="text-align: center;">
+                        <h:outputText value="#{pessoaTatuagem.posicaoCorporal.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Descrição" style="text-align: center;">
+                        <h:outputText value="#{pessoaTatuagem.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Opção" style="width:47px">
+                        <p:commandButton
+                                icon="ui-icon-trash"
+                                style="border-bottom: 10px"
+                                styleClass="red-btn"
+                                action="#{cadastroDetentoBean.removerTatuagem()}"
+                                title="Remover"
+                                update="form:tabDadosFisicos:pgTatuagemDet">
+                            <f:setPropertyActionListener value="#{pessoaTatuagem}"
+                                                         target="#{cadastroDetentoBean.pessoaTatuagem}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+            </h:panelGroup>
+        </p:tab>
+        <p:tab title="Cicatrizes">
+            <p:spacer/>
+            <p:panelGrid columns="3"
+                         id="pgCicatriz"
+                         columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soPosicaoCorporalCicatriz"
+                                     value="#{cadastroDetentoBean.cicatriz.posicaoCorporal}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.posicaoCorporals}"
+                                       var="posicaoCorporal"
+                                       itemLabel="#{posicaoCorporal.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soPosicaoCorporal" value="Posição Corporal"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soTipoCicatriz"
+                                     value="#{cadastroDetentoBean.cicatriz.tipoCicatriz}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.tipoCicatrizs}" var="tipoCicatriz"
+                                       itemLabel="#{tipoCicatriz.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soTipoCicatriz" value="Tipo de Cicatriz"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itDescricaoCicatriz"
+                                 value="#{cadastroDetentoBean.cicatriz.descricao}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itDescricaoTatuagem" value="Descrição Cicatriz"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgBtnAdicionarSalvarCicatriz"
+                         columnClasses="ui-grid-col-6,ui-grid-col-6"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <p:splitButton value="Adicionar Imagem" icon="ui-icon-plus" style="float: left">
+                    <p:menuitem value="Carregar Foto"
+                                style="float: right"
+                                update="form-dialog-foto-dado-fisico:dialogFotoDadoFisico"
+                                actionListener="#{cadastroDetentoBean.refreshFotoCicatriz()}"
+                                oncomplete="PF('addFotoDadoFisico').show();"
+                                icon="ui-icon-plus"/>
+                    <p:menuitem title="Tirar Foto"
+                                value="Tirar Foto"
+                                actionListener="#{cadastroDetentoBean.refreshFotoCicatriz()}"
+                                oncomplete="PF('addFotoCamDadoFisico').show();"
+                                icon="ui-icon-photo-camera"/>
+                </p:splitButton>
+            </p:panelGrid>
+            <h:panelGroup id="pgCicatrizDet">
+            <p:panelGrid columns="1"
+                         id="pgDtCicatriz"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         rendered="#{!cadastroDetentoBean.cicatrizs.isEmpty()}"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup>
+                    <h2>Tatuagens</h2>
+                    <p:dataTable id="dtCicatriz"
+                                 var="cicatriz"
+                                 reflow="true"
+                                 value="#{cadastroDetentoBean.cicatrizs}"
+                                 rows="5"
+                                 rendered="true"
+                                 emptyMessage=""
+                                 style="width: 100%">
+                        <f:facet name="header">Cicatrizes</f:facet>
+                        <p:column headerText="Imagem" style="width: 120px; text-align: center">
+                            <p:graphicImage style="width: 120px"
+                                            value="/foto-detento?foto=#{cadastroDetentoBean.enconder(cicatriz.path)}"/>
+                        </p:column>
+                        <p:column headerText="Tipo" style="text-align: center">
+                            <h:outputText value="#{cicatriz.tipoCicatriz.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Posição" style="text-align: center">
+                            <h:outputText value="#{cicatriz.posicaoCorporal.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Descrição" style="text-align: center;">
+                            <h:outputText value="#{cicatriz.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Opção" style="width:47px;text-align: center">
+                            <p:commandButton
+                                    icon="ui-icon-trash"
+                                    style="border-bottom: 10px"
+                                    styleClass="red-btn"
+                                    action="#{cadastroDetentoBean.removerCicatriz()}"
+                                    title="Remover"
+                                    update="form:tabDadosFisicos:pgCicatrizDet">
+                                <f:setPropertyActionListener value="#{cicatriz}"
+                                                             target="#{cadastroDetentoBean.cicatriz}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </p:panelGrid>
+            </h:panelGroup>
+        </p:tab>
+    </p:tabView>
+</ui:composition>

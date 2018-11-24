@@ -1,0 +1,725 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinBar() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinArea() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#FFC107', '#4CAF50'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinBubble() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BubbleRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinZoom() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinPie() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77',
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    renderer: $.jqplot.PieRenderer,
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinDonut() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77',
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    renderer: $.jqplot.DonutRenderer,
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinBarAndLine() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#03A9F4', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 5,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+
+            function skinMeterGauge() {
+                this.cfg.title = '';
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 5,
+                    renderer: $.jqplot.MeterGaugeRenderer,
+                    rendererOptions: {
+                        shadow: false,
+                        min: 100,
+                        max: 800,
+                        intervals: [200, 300, 400, 500, 600, 700, 800],
+                        intervalColors: ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107', '#03A9F4', '#E91E63', '#4CAF50']
+                    }
+                }
+            }
+
+            function skinMultiAxis() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    borderWidth: 0.1,
+                    borderColor: 'bdbdbd',
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    renderer: $.jqplot.BarRenderer,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+        </script>
+        <style type="text/css">
+            .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
+                color: #757575;
+            }
+
+            table.jqplot-table-legend {
+                background-color: #ffffff;
+                color: #757575;
+                border-color: #bdbdbd;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{visualizaCelaBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:tabView id="tab">
+                            <p:tab title="Cela">
+                                <h:panelGroup style="text-align: left; font-weight: bold">
+                                    <h1>Cela</h1>
+                                </h:panelGroup>
+                                <p:panelGrid id="pgUnidadePavilhaoTipoCela" columns="4"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup id="pgUnidade" styleClass="md-selectonemenu">
+                                        <p:inputText id="itUnidadePrisional"
+                                                     value="#{visualizaCelaBean.cela.pavilhao.unidadePrisional.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel value="Estabelecimento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pgPavilhao" styleClass="md-selectonemenu">
+                                        <p:inputText id="itPavilhao"
+                                                     value="#{visualizaCelaBean.cela.pavilhao.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel value="Pavilhão"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pgComposicaoCela" styleClass="md-selectonemenu">
+                                        <p:inputText id="itComposicaoCela"
+                                                     value="#{visualizaCelaBean.cela.composicaoCela.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel value="Composição da Cela"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pgTipoCela" styleClass="md-selectonemenu">
+                                        <p:inputText id="itTipoCela"
+                                                     value="#{visualizaCelaBean.cela.tipoCela.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel value="Tipo da Cela"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid id="ipDescricaoCapacidadeEfetiva" columns="3"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itCela"
+                                                     value="#{visualizaCelaBean.cela.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itCela" value="Nome da cela"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber id="inCapacidade" styleClass="ui-custom-inputnumber"
+                                                       decimalPlaces="0" thousandSeparator=""
+                                                       value="#{visualizaCelaBean.cela.capacidade}"
+                                                       readonly="true"
+                                                       style="width: 100%;"/>
+                                        <p:outputLabel for="inCapacidade" value="Capacidade"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber id="inCapacidadeEfetiva"
+                                                       styleClass="ui-custom-inputnumber"
+                                                       decimalPlaces="0" thousandSeparator=""
+                                                       value="#{visualizaCelaBean.cela.capacidadeEfetiva}"
+                                                       readonly="true"
+                                                       style="width: 100%;"/>
+                                        <p:outputLabel for="inCapacidadeEfetiva"
+                                                       value="Capacidade efetiva"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid id="ipSituacao" columns="1"
+                                             columnClasses="ui-grid-col-6" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  rendered="#{visualizaCelaBean.cela.id != null}">
+                                        <p:inputText id="itSituacao"
+                                                     value="#{visualizaCelaBean.situacaoCela.descricao}"
+                                                     readonly="true"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel value="Situação"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Perfil">
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <h:panelGroup id="hpPerfilCela">
+                                            <p:panelGrid columns="4"
+                                                         id="pgTipoDetentoSexoOrientacaoTxt"
+                                                         columnClasses="ui-grid-col-3, ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.tipoDetento}">
+                                                    <p:outputLabel for="smTipoDetento"
+                                                                   style="color: darkblue; font-weight: bold"
+                                                                   value="Tipo Preso"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.sexo}">
+                                                    <p:outputLabel for="smSexo"
+                                                                   style="color: darkblue; font-weight: bold"
+                                                                   value="Sexo"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.orientacaoSexual}">
+                                                    <p:outputLabel for="smOrientacaoSexual"
+                                                                   style="color: darkblue; font-weight: bold"
+                                                                   value="Orientação Sexual"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.tipoDeficiencia}">
+                                                    <p:outputLabel for="smTipoDeficiencia"
+                                                                   style="color: darkblue; font-weight: bold"
+                                                                   value="Tipo Deficiência"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid id="ipsPerfilCela1" columns="4"
+                                                         columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.tipoDetento}">
+                                                    <p:selectManyMenu id="smTipoDetento"
+                                                                      showCheckbox="true"
+                                                                      style="width: 100%;"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{visualizaCelaBean.selectedTipoDetentos}">
+                                                        <f:selectItems value="#{visualizaCelaBean.tipoDetentos}"
+                                                                       var="tipoDetento"
+                                                                       itemLabel="#{tipoDetento.descricao}"
+                                                                       itemValue="#{tipoDetento}"
+                                                                       itemDisabled="true"/>
+                                                    </p:selectManyMenu>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.sexo}">
+                                                    <p:selectManyMenu id="smSexo"
+                                                                      showCheckbox="true"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{visualizaCelaBean.selectedSexos}"
+                                                                      style="width: 100%;">
+                                                        <f:selectItems value="#{visualizaCelaBean.sexos}"
+                                                                       var="sexo"
+                                                                       itemLabel="#{sexo.descricao}"
+                                                                       itemValue="#{sexo}"
+                                                                       itemDisabled="true"/>
+                                                    </p:selectManyMenu>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.orientacaoSexual}">
+                                                    <p:selectManyMenu id="smOrientacaoSexual"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{visualizaCelaBean.selectedOrientacaoSexuais}"
+                                                                      showCheckbox="true"
+                                                                      style="width: 100%">
+                                                        <f:selectItems value="#{visualizaCelaBean.orientacaoSexuais}"
+                                                                       var="orientacaoSexual"
+                                                                       itemLabel="#{orientacaoSexual.descricao}"
+                                                                       itemValue="#{orientacaoSexual}"
+                                                                       itemDisabled="true"/>
+                                                    </p:selectManyMenu>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.tipoDeficiencia}">
+                                                    <p:selectManyMenu id="smTipoDeficiencia"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{visualizaCelaBean.selectedTipoDeficiencias}"
+                                                                      showCheckbox="true"
+                                                                      style="width: 100%;">
+                                                        <f:selectItems value="#{visualizaCelaBean.tipoDeficiencias}"
+                                                                       var="tipoDeficiencia"
+                                                                       itemLabel="#{tipoDeficiencia.descricao}"
+                                                                       itemValue="#{tipoDeficiencia}"
+                                                                       itemDisabled="true"/>
+                                                    </p:selectManyMenu>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid columns="2"
+                                                         id="pgFaccaoNaturezaCustodiaTxt"
+                                                         columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.grupoGriminoso}">
+                                                    <p:outputLabel for="smFaccao"
+                                                                   style="color: darkblue; font-weight: bold"
+                                                                   value="Grupo Criminoso"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.naturezaCustodia}">
+                                                    <p:outputLabel for="smNaturezaCustodia"
+                                                                   style="color: darkblue; font-weight: bold"
+                                                                   value="Natureza Custódia"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid id="ipsPerfilCela2" columns="2"
+                                                         columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.grupoGriminoso}">
+                                                    <p:selectManyMenu id="smFaccao"
+                                                                      showCheckbox="true"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{visualizaCelaBean.selectedFaccoes}"
+                                                                      style="width: 100%; height: 200px">
+                                                        <f:selectItems value="#{visualizaCelaBean.faccoes}"
+                                                                       var="faccao"
+                                                                       itemLabel="#{faccao.descricao}"
+                                                                       itemValue="#{faccao}"
+                                                                       itemDisabled="true"/>
+                                                    </p:selectManyMenu>
+                                                </h:panelGroup>
+                                                <h:panelGroup styleClass="ui-selectmanymenu"
+                                                              rendered="#{visualizaCelaBean.naturezaCustodia}">
+                                                    <p:selectManyMenu id="smNaturezaCustodia"
+                                                                      showCheckbox="true"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{visualizaCelaBean.selectedNaturezaCustodias}"
+                                                                      style="width: 100%; height: 200px">
+                                                        <f:selectItems value="#{visualizaCelaBean.naturezaCustodias}"
+                                                                       var="naturezaCustodia"
+                                                                       itemLabel="#{naturezaCustodia.descricao}"
+                                                                       itemValue="#{naturezaCustodia}"
+                                                                       itemDisabled="true"/>
+                                                    </p:selectManyMenu>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <h:panelGroup style="text-align: left;font-weight: bold;color: darkblue">
+                                            <p:outputLabel value="Grau de Periculosidade"/>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <br/>
+                                        <p:panelGrid columns="1" layout="grid"
+                                                     columnClasses="ui-grid-col-4"
+                                                     styleClass="form-group ui-panelgrid-blank">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="itPericulosidade"
+                                                             style="width: 100%"
+                                                             readonly="true"
+                                                             value="#{visualizaCelaBean.perfilCela.periculosidade.descricao}" />
+                                                <p:outputLabel for="itPericulosidade" value="Periculosidade"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </div>
+                                </div>
+
+                            </p:tab>
+                        </p:tabView>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!--Gráficos-->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1 class="centerText">Entradas de presos em #{visualizaCelaBean.ano}</h1>
+                        <br/>
+                        <h:panelGroup rendered="#{!visualizaCelaBean.entradas.isEmpty()}">
+                            <p:chart id="date2" type="bar" model="#{visualizaCelaBean.barModelEntrada}"
+                                     responsive="false"/>
+                            <br/>
+                        </h:panelGroup>
+
+                        <p:panelGrid columns="1"
+                                     id="pgEntrada"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup style="float: right;">
+                                <p:commandButton id="btnEntrada"
+                                                 title="Filtrar"
+                                                 oncomplete="PF('addFiltroEntradaPreso').show();"
+                                                 icon="ui-icon-edit"/>
+
+                                <p:commandButton id="btnExportEntrada"
+                                                 title="Exportar"
+                                                 rendered="#{!visualizaCelaBean.detentoCelas.isEmpty()}"
+                                                 action="#{visualizaCelaBean.exportarGraficoEntrada()}"
+                                                 ajax="false"
+                                                 icon="ui-icon-get-app"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1 class="centerText">Saída de presos em #{visualizaCelaBean.anoSaidaGeral}</h1>
+                        <br/>
+                        <h:panelGroup rendered="#{!visualizaCelaBean.saidasGerais.isEmpty()}">
+                            <p:chart id="barSaidageral" type="bar"
+                                     model="#{visualizaCelaBean.barModelSaidaGeral}"
+                                     responsive="false"/>
+                            <br/>
+                        </h:panelGroup>
+
+                        <p:panelGrid columns="1"
+                                     id="pgSaidageral"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup style="float: right;">
+                                <p:commandButton id="btnSaidaGeral"
+                                                 title="Filtrar"
+                                                 onclick="PF('addFiltroSaidaGeral').show();"
+                                                 icon="ui-icon-edit"/>
+
+                                <p:commandButton id="btnSaidageral"
+                                                 rendered="#{!visualizaCelaBean.detentoCelasSaidas.isEmpty()}"
+                                                 title="Exportar"
+                                                 action="#{visualizaCelaBean.exportarGraficoSaidageral()}"
+                                                 ajax="false"
+                                                 icon="ui-icon-get-app"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+        <h:form id="form-dialog">
+
+            <p:dialog id="dlFiltroEntradaPreso" header="Selecionar Ano"
+                      widgetVar="addFiltroEntradaPreso" modal="true" width="400" showEffect="fade" hideEffect="fade">
+                <p:panelGrid id="pgObservacao" columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+
+                    <h:panelGroup styleClass="md-selectonemenu">
+
+
+                        <p:selectOneMenu id="soAno"
+                                         style="width: 100%"
+                                         value="#{visualizaCelaBean.ano}"
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="" itemValue=""/>
+                            <f:selectItems
+                                    value="#{visualizaCelaBean.anosEntradas}"
+                                    var="ano"
+                                    itemLabel="#{ano}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Ano" for="soAno"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton
+                                value="Confirmar" icon="ui-icon-done"
+                                update="@form :form"
+                                action="#{visualizaCelaBean.graficoEntradas}"
+                                oncomplete="PF('addFiltroEntradaPreso').hide();"
+                        />
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+
+            <p:dialog id="dlFiltroSaidaGeral" header="Selecionar Ano"
+                      widgetVar="addFiltroSaidaGeral" modal="true" width="400" showEffect="fade" hideEffect="fade">
+                <p:panelGrid id="pgFiltroSaidaGeral" columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+
+                    <h:panelGroup styleClass="md-selectonemenu">
+
+
+                        <p:selectOneMenu id="soAnoSaidaGeral"
+                                         style="width: 100%"
+                                         value="#{visualizaCelaBean.anoSaidaGeral}"
+                                         converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="" itemValue=""/>
+                            <f:selectItems
+                                    value="#{visualizaCelaBean.anosEntradas}"
+                                    var="anoSaidageral"
+                                    itemLabel="#{anoSaidageral}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Ano" for="soAnoSaidaGeral"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton
+                                value="Confirmar" icon="ui-icon-done"
+                                update="@form :form"
+                                action="#{visualizaCelaBean.graficoSaidageral}"
+                                oncomplete="PF('addFiltroSaidaGeral').hide();"
+                        />
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

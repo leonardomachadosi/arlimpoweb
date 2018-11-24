@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="modelo-siisp" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d63b36a-ee68-4c8f-8e54-04cd9b0e0fe5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiispAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="StyleSubRelatorio">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></conditionExpression>
+			<style mode="Opaque" forecolor="rgba(0, 0, 0, 0.9019608)" backcolor="#3B444A" fill="Solid"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="tblProcesso" uuid="4d30602f-c42d-4f20-bdb2-e9704b7c7976">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="unidadePrisional" class="java.lang.String"/>
+	<parameter name="naturezaCustodia" class="java.lang.String"/>
+	<parameter name="dataPrisao" class="java.lang.String"/>
+	<parameter name="nomeDetento" class="java.lang.String"/>
+	<parameter name="alcunha" class="java.lang.String"/>
+	<parameter name="dataNascimento" class="java.lang.String"/>
+	<parameter name="naturalidade" class="java.lang.String"/>
+	<parameter name="nomeMae" class="java.lang.String"/>
+	<parameter name="nomePai" class="java.lang.String"/>
+	<parameter name="matricula" class="java.lang.String"/>
+	<parameter name="imagem_seap" class="java.awt.image.BufferedImage"/>
+	<parameter name="dataProgressao" class="java.lang.String"/>
+	<parameter name="dataLivramento" class="java.lang.String"/>
+	<parameter name="codigoPessoa" class="java.lang.Long"/>
+	<parameter name="previsaoProgressao" class="java.lang.String"/>
+	<parameter name="previsaoLivramento" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="listaProcessos" class="java.util.List"/>
+	<parameter name="listaProcessosTramite" class="java.util.List"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<title>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement x="122" y="20" width="370" height="20" uuid="cb42afa4-98ce-4bbf-b9e9-52921aedd96f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[ESTADO DO MARANHÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="0" width="370" height="20" uuid="ec936083-de73-4f63-b439-074f27e36724"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA DE ESTADO DE ADMINISTRAÇÃO PENITENCIÁRIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="40" width="370" height="20" uuid="5da3652b-c830-4be0-8fdd-b95c2f93fcc7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[SECRETARIA ADJUNTA DE ATENDIMENTO E HUMANIZAÇÃO PENITENCIÁRIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="60" width="370" height="20" uuid="84846f7b-585b-4fcd-b209-5144a483f923"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[SUPERVISÃO DE ASSISTÊNCIA JURÍDICA - SAJ / CTC]]></text>
+			</staticText>
+			<image evaluationTime="Page">
+				<reportElement x="1" y="0" width="79" height="80" uuid="03f2b31f-d341-4ac5-800a-78b9887e71e4"/>
+				<imageExpression><![CDATA[$P{imagem_seap}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="175">
+			<staticText>
+				<reportElement x="0" y="48" width="110" height="13" uuid="c736cce7-b9c2-4c0f-9c90-96911c57a676"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[UNIDADE PRISIONAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="62" width="130" height="12" uuid="56e76407-4af3-4619-aeb6-4b88152b4a9f"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NATUREZA DA CUSTÓDIA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="48" width="88" height="13" uuid="49b1f057-ba14-48b5-9c3a-20da28f58ca9"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[DATA DA PRISÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="61" width="60" height="13" uuid="f9d88d7b-eab4-44c9-8d6e-8e0c49c2dd78"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NOME:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="74" width="60" height="13" uuid="9b8981ec-1c67-4f0e-ad1c-a909d18728b1"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[ALCUNHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="48" width="32" height="12" uuid="0fc945ae-d41f-420d-a99a-070e0bf2aee1"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[SIISP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="15" uuid="2f2e79e3-e48f-4761-a83b-0e893b5769bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CÓDIGO LOCALIZADOR: POP-08]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="15" width="555" height="20" backcolor="#E0CFCE" uuid="06a2a4aa-3511-4a27-99c7-b17d6370641b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[FICHA DE RESUMO PROCESSUAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="75" width="30" height="12" uuid="dc88262f-e2cc-4a51-8843-f6cc2334eb68"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[D.N:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="75" width="86" height="12" uuid="0de77084-087c-4cd7-b103-602a6377b9cd"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NATURALIDADE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="87" width="60" height="13" uuid="be1ed1cb-fcb3-4b73-9e36-943405910e16"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[MÃE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="60" height="13" uuid="3afa6b97-54c4-4e5c-9f93-2767a2552d8e"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[PAI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="118" width="150" height="13" uuid="727e2617-88ab-4a5c-b7d4-25bc3d897b3a"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[POSSUI CÁLCULO DE PENA?]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="157" y="119" width="11" height="11" uuid="36f507b0-6837-4862-b512-5d78e559684b"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="168" y="118" width="26" height="13" uuid="5401bd0c-4237-44fd-8f13-18bfcdb911c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[SIM]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="207" y="119" width="11" height="11" uuid="3f20f43e-d4f5-4662-aed2-9e5127363822"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="218" y="118" width="28" height="13" uuid="e2e706a8-1469-493a-8304-083b7ad03cd2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="120" width="180" height="13" uuid="fb67a36f-a886-42a0-9c17-9e1be2824309"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NECESSITA DE PERFIL GENÉTICO?]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="467" y="121" width="11" height="11" uuid="d2e05811-ee8f-4537-be3e-f88ddd7b9c0c"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="478" y="120" width="26" height="13" uuid="5ab66c6a-9bc0-41fc-9b1d-2cd0d3ef1740"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[SIM]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="517" y="121" width="11" height="11" uuid="c5c6b2f7-bab0-4286-ba41-2535a725804e"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="528" y="120" width="27" height="13" uuid="9fb8e431-a6e9-442a-a7f2-63f742ae435b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NÃO]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="112" y="48" width="128" height="12" uuid="470df7a1-5d38-403e-9b41-baa8771a1ecc"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{unidadePrisional}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="393" y="62" width="161" height="12" uuid="8b57c723-5eab-42ad-b4fd-d80af83abb78"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{naturezaCustodia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="502" y="48" width="52" height="12" uuid="7a86f58d-d2d3-4c7b-a991-718b9406f027"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataPrisao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="61" width="178" height="13" uuid="d28257f9-bede-4ed4-a1d4-b9ef60983fae"/>
+				<textElement>
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomeDetento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="48" width="62" height="12" uuid="1297d408-b15f-4b26-a089-1ea20458b16b"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{matricula}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="74" width="178" height="13" uuid="085e93f6-db04-4d62-9b93-1f046c153c06"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{alcunha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="292" y="75" width="88" height="12" uuid="769e38f4-aebd-48b4-bba7-daec611e0370"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataNascimento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="456" y="75" width="98" height="12" uuid="ad8f5fdc-6a10-4295-be61-8d9775e57486"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{naturalidade}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="87" width="178" height="13" uuid="e8e99440-2d4c-483a-952d-ad533adf54f8"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomeMae}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="100" width="178" height="13" uuid="da54ef89-3c9a-4aa9-96bf-e2b9dc92e391"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomePai}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="206" y="135" width="63" height="14" uuid="9a14b255-97e4-405f-bb7e-81465036f0fa"/>
+				<textFieldExpression><![CDATA[$P{dataProgressao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="501" y="135" width="54" height="14" uuid="3eb8238b-0cce-4466-a327-cb4b1afd176c"/>
+				<textFieldExpression><![CDATA[$P{dataLivramento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="PREVISÃO DE PROGRESSÃO DE PENA:" isBlankWhenNull="true">
+				<reportElement x="1" y="135" width="200" height="14" uuid="1089b090-baa0-43f1-9918-384cb06f792d"/>
+				<textFieldExpression><![CDATA[$P{previsaoProgressao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="PREVISÃO DE LIVRAMENTO CONDICIONAL:" isBlankWhenNull="true">
+				<reportElement x="280" y="135" width="212" height="14" uuid="9b3067c5-0826-4672-857f-bfa05b64239e"/>
+				<textFieldExpression><![CDATA[$P{previsaoLivramento}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="2" width="555" height="20" uuid="e9a760a3-1840-4014-a411-3ece2a829563"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUMPRINDO PENA PELO(S) SEGUINTE(S) PROCESSO(S)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="24" width="130" height="13" uuid="a679b6dd-e1c3-4e05-aa78-00c4dceb9e38"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NÚMERO DE EXECUÇÃO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="24" width="160" height="13" uuid="d59dc0ba-c60f-4e21-b9f2-554d51d38dc2"/>
+				<textElement>
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VARA DE EXECUÇÕES PENAIS:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="303" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="128" width="555" height="20" uuid="e2c57d41-0272-4411-8f87-6e1ad984439c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESSO(S) EM TRÂMITE]]></text>
+			</staticText>
+			<subreport>
+				<reportElement style="StyleSubRelatorio" x="0" y="0" width="555" height="120" uuid="80b24cb2-c978-4fa3-8a6e-0c01d6e3c0fa"/>
+				<subreportParameter name="listaProcessos">
+					<subreportParameterExpression><![CDATA[$P{listaProcessos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{listaProcessos})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sub_processosDetento.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement style="StyleSubRelatorio" x="0" y="152" width="555" height="120" uuid="b734b526-52d5-494a-b6b8-d98d46f60651"/>
+				<subreportParameter name="listaProcessosTramite">
+					<subreportParameterExpression><![CDATA[$P{listaProcessosTramite}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{listaProcessosTramite})]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}  + "sub_ProcessosTramite.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="181" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="35" width="150" height="13" uuid="95accdc2-1b7a-41bf-aba4-878f04b90ed3"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[HOUVE EMPREGO DE ARMA?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="35" width="28" height="13" uuid="882dc3b3-d03e-40d3-a4c7-4a1c45d86190"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[NÃO]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="209" y="36" width="11" height="11" uuid="58f76596-7ddd-4fd8-9a07-4947211e46df"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="170" y="35" width="26" height="13" uuid="bd54a349-f7b5-4a9d-a667-f9f00b6ca665"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[SIM]]></text>
+			</staticText>
+			<ellipse>
+				<reportElement x="159" y="36" width="11" height="11" uuid="26f36a8a-b3cd-44b7-a308-f881f6c128da"/>
+			</ellipse>
+			<staticText>
+				<reportElement x="0" y="126" width="554" height="43" uuid="6295e612-36e7-415d-855d-8795e56071ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Em consulta aos sistemas JurisConsult e Sentinela do TJ/MA, VEP/CNJ, SIISP/SEAP, SIGO E BNMP/CNJ, não foram localizadados outros processos em tramitação e mandados de prisão não cumpridos em desfavor da referida pessoa presa até a presente data.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

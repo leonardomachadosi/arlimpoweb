@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Monitoramento Eletrônico</b></h1>
+                        <p:panelGrid id="pgDetento" columns="1"
+                                     columnClasses="ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{gerenciamentoSMEBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                value="#{gerenciamentoSMEBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                itemValue="#{detentoView}">
+                                    <p:column style="width: 15%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"
+                                                style="width: 80%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText style="font-weight: bold" value="Nome: "/>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText style="font-weight: bold" value="Mãe: "
+                                                      rendered="#{detentoView.nomeMae != null and detentoView.nomeMae != ''}"/>
+                                        <h:outputText value="#{detentoView.nomeMae}"
+                                                      rendered="#{detentoView.nomeMae != null and detentoView.nomeMae != ''}"/>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText style="font-weight: bold" value="Pai: "
+                                                      rendered="#{detentoView.nomePai != null and detentoView.nomePai != ''}"/>
+                                        <h:outputText value="#{detentoView.nomePai}"
+                                                      rendered="#{detentoView.nomePai != null and detentoView.nomePai != ''}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{gerenciamentoSMEBean.buscarDadosMonitoramento()}"
+                                            update="@form"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Presos"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDetentoView" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup id="hpDetentoView">
+                                <ui:include src="../detento/fragments/dados-pessoais-panelgrid.xhtml">
+                                    <ui:param name="detentoView"
+                                              value="#{gerenciamentoSMEBean.detentoView}"/>
+                                    <ui:param name="exibeDetalhes"
+                                              value="true"/>
+                                </ui:include>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{gerenciamentoSMEBean.detentoView.codDetento != null }">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h:panelGroup id="pgMonitoramento">
+                                <p:column>
+                                    <p:commandButton title="Novo" icon="ui-icon-plus" styleClass="pull-right"
+                                                     onclick="PF('cadMonitoramento').show();"/>
+                                    <h2>Dados Monitoramento</h2>
+                                </p:column>
+                                <p:dataTable id="dtMonitoramento"
+                                             var="tornozeleira"
+                                             reflow="true"
+                                             value="#{gerenciamentoSMEBean.tornozeleiras}"
+                                             rows="5"
+                                             rendered="true"
+                                             emptyMessage=""
+                                             style="width: 100%">
+                                    <f:facet name="header">Tornozeleiras</f:facet>
+                                    <p:column headerText="Numero" style="text-align: center">
+                                        <h:outputText value="#{tornozeleira.numero}"/>
+                                    </p:column>
+                                    <p:column headerText="Data início" style="text-align: center">
+                                        <h:outputText value="#{tornozeleira.dataInicio}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Data fim" style="text-align: center;">
+                                        <h:outputText value="#{tornozeleira.dataFim}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <p:dialog header="Cadastrar tornozeleira" id="dialogCadastrarTornozeleira" widgetVar="cadMonitoramento"
+                      modal="true"
+                      width="600" responsive="true" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="1"
+                             id="pgTornozeleira"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputMask id="itNumero" mask="9?999999999"
+                                     value="#{gerenciamentoSMEBean.detentoTornozeleira.numero}"
+                                     style="width: 100%;"/>
+                        <p:outputLabel for="itNumero" value="Número"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar id="tbBtn">
+                    <f:facet name="left">
+                        <p:commandButton
+                                value="Salvar"
+                                id="btnInserir"
+                                process="@form"
+                                update="form:dtMonitoramento"
+                                actionListener="#{gerenciamentoSMEBean.save()}"
+                                oncomplete="PF('cadMonitoramento').hide();"
+                                icon="ui-icon-done">
+                            <p:confirm header="Confirmação"
+                                       message="Deseja realmente inserir um novo registro de tonozeleira eletrônica?"
+                                       icon="ui-icon-alert"/>
+                        </p:commandButton>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

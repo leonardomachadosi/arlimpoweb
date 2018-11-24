@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:outputLabel value="Fotos" styleClass="customLabel"/>
+    <p:accordionPanel multiple="false">
+        <c:forEach items="#{visualizaDetentoBean.detentoList}" var="detento">
+            <p:tab title="Ciclo #{detento.numeroCiclo}">
+                <p:commandButton
+                        title="Cadastrar Foto e Biometria"
+                        icon="ui-icon-pencil"
+                        process="@this"
+                        action="#{visualizaDetentoBean.cadastrarFotoBiometria()}"
+                        rendered="#{visualizaDetentoBean.renderizarBotaoEditarFoto(detento)}"
+                        onclick="this.form.target='_blank'" ajax="false"
+                        style="margin:24px 12px 0 0; float: right">
+                </p:commandButton>
+                <h:panelGrid style="margin: 0 auto;">
+                    <p:repeat value="#{visualizaDetentoBean.getFotosPorCiclo(detento)}" var="foto">
+                        <p:panelGrid columns="1" style="text-align: center;float: left;">
+                            <p:lightBox styleClass="imagebox">
+                                <h:outputLink
+                                        value="/SIISP/foto-detento?foto=#{visualizaDetentoBean.enconder(foto.path)}">
+                                    <p:graphicImage
+                                            value="/foto-detento?foto=#{visualizaDetentoBean.enconder(foto.path)}"
+                                            style="height: 100px; width: auto; margin-right: 10px;"/>
+                                </h:outputLink>
+                            </p:lightBox>
+                            <h:outputText value="#{foto.tipoFoto.descricao}"/>
+                        </p:panelGrid>
+                    </p:repeat>
+                </h:panelGrid>
+
+
+                <p:spacer/>
+                <p:outputLabel value="Tatuagens" styleClass="customLabel"
+                               rendered="#{visualizaDetentoBean.pessoaTatuagemList.size() > 0}"/>
+                <h:panelGrid style="margin: 0 auto;">
+                    <p:repeat value="#{visualizaDetentoBean.pessoaTatuagemList}" var="tatuagem">
+                        <p:panelGrid columns="1" style="text-align: center;float: left;">
+                            <p:lightBox styleClass="imagebox">
+                                <h:outputLink
+                                        value="/SIISP/foto-detento?foto=#{visualizaDetentoBean.enconder(tatuagem.path)}">
+                                    <p:graphicImage
+                                            value="/foto-detento?foto=#{visualizaDetentoBean.enconder(tatuagem.path)}"
+                                            style="height: 100px; width: auto; margin-right: 10px;"/>
+                                </h:outputLink>
+                            </p:lightBox>
+                            <h:outputText style="font-size: 13px;" value="#{tatuagem.tatuagem.descricao}"/>
+                            <h:outputText style="font-size: 13px;" value="#{tatuagem.descricao}"/>
+                        </p:panelGrid>
+                    </p:repeat>
+                </h:panelGrid>
+
+                <p:spacer/>
+                <p:outputLabel value="Cicatrizes" styleClass="customLabel"
+                               rendered="#{visualizaDetentoBean.cicatrizList.size() > 0}"/>
+                <h:panelGrid style="margin: 0 auto;">
+                    <p:repeat value="#{visualizaDetentoBean.cicatrizList}" var="cicatriz">
+                        <p:panelGrid columns="1" style="text-align: center;float: left;">
+                            <p:lightBox styleClass="imagebox">
+                                <h:outputLink
+                                        value="/SIISP/foto-detento?foto=#{visualizaDetentoBean.enconder(cicatriz.path)}">
+                                    <p:graphicImage
+                                            value="/foto-detento?foto=#{visualizaDetentoBean.enconder(cicatriz.path)}"
+                                            style="height: 100px; width: auto; margin-right: 10px;"/>
+                                </h:outputLink>
+                            </p:lightBox>
+                            <h:outputText value="#{cicatriz.descricao}"/>
+                        </p:panelGrid>
+                    </p:repeat>
+                </h:panelGrid>
+            </p:tab>
+        </c:forEach>
+    </p:accordionPanel>
+</ui:composition>

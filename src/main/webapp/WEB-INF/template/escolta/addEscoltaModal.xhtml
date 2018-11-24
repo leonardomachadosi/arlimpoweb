@@ -1,0 +1,186 @@
+<ui:composition xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgAddEscolta" widgetVar="modalEscolta" header="Adicionar Escolta" modal="true" width="900"
+              height="500" resizable="false" style="overflow:auto;">
+
+        <h:panelGroup layout="block" id="formAddEscolta">
+            <p:panelGrid layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6" columns="2"
+                         styleClass="ui-panelgrid-blank form-group">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somTipoEscolta" styleClass="input-auto"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{escoltaBean.escolta.tipoEscolta}"
+                                     required="true" requiredMessage="Selecione o tipo de escolta">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{escoltaBean.tipoEscoltaList}"
+                                var="tipoEscolta"
+                                itemValue="#{tipoEscolta}"
+                                itemLabel="#{tipoEscolta.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Tipo de Escolta" for="somTipoEscolta"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar style="width: 100%"
+                                inputStyle="width: 60%"
+                                value="#{escoltaBean.dataPrevistaChegada}"
+                                pattern="dd/MM/yyyy HH:mm"
+                                locale="pt"
+                                id="cdDataTransferenciaChegadaPrevista"/>
+                    <p:outputLabel for="cdDataTransferenciaChegadaPrevista" value="Data e Hora Prevista de Chegada"/>
+                </h:panelGroup>
+            </p:panelGrid>
+
+
+            <p:panelGrid layout="grid" columnClasses="ui-grid-col-12" columns="1"
+                         styleClass="ui-panelgrid-blank form-group">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:autoComplete id="autoServidor" completeMethod="#{escoltaBean.completeServidor}"
+                                    styleClass="input-auto" var="servidor" itemValue="#{servidor}"
+                                    itemLabel="#{servidor.pessoa.nome}" converter="servidorConverter" maxResults="10"
+                                    minQueryLength="3" forceSelection="true">
+                        <p:column>
+                            <p:outputLabel value = "#{servidor.pessoa.nome} - #{servidor.cargo.descricao}" />
+                        </p:column>
+                        <p:ajax event="itemSelect" listener="#{escoltaBean.onSelectServidor}"
+                                update="autoServidor tblServidorSelecionado" resetValues="true"/>
+                    </p:autoComplete>
+                    <p:outputLabel value="Servidor" for="autoServidor"/>
+                </h:panelGroup>
+            </p:panelGrid>
+
+            <p:dataTable id="tblServidorSelecionado" value="#{escoltaBean.escolta.escoltaServidores}"
+                         var="escoltaServidors"
+                         emptyMessage="Nenhum servidor adicionado"
+                         style="margin-top: 20px; margin-left: 10px; margin-right: 10px;text-align: center">
+                <f:facet name="header">Servidores Selecionados</f:facet>
+                <p:column headerText="Nome" >
+                    <h:outputText value="#{escoltaServidors.servidor.pessoa.nome}"/>
+                </p:column>
+                <p:column headerText="Cargo" style="width: 40%; text-align: center;">
+                    <h:outputText value="#{escoltaServidors.servidor.cargo.descricao}"/>
+                </p:column>
+                <p:column headerText="Ações" style="width: 10%; text-align: center;">
+                    <p:commandButton icon="ui-icon-trash"
+                                     process="@this"
+                                     action="#{escoltaBean.onClickRemoverServidor(escoltaServidors)}"
+                                     update="form:tblServidorSelecionado"/>
+                </p:column>
+            </p:dataTable>
+
+            <p:panelGrid layout="grid" columns="5"
+                         columnClasses="ui-grid-col-3, ui-grid-col-2, ui-grid-col-3, ui-grid-col-3, ui-grid-col-1"
+                         styleClass="ui-panelgrid-blank form-group" style="margin-top: 20px">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somTipoEquipamento" styleClass="input-auto"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{escoltaBean.tipoEquipamentoSelected}">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{escoltaBean.tipoEquipamentoList}"
+                                var="tipoEquipamento"
+                                itemValue="#{tipoEquipamento}"
+                                itemLabel="#{tipoEquipamento.descricao}"/>
+                        <p:ajax event="itemSelect" listener="#{escoltaBean.onChangeTipoEquipamento}"
+                                update="somEquipamento"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="somTipoEquipamento" value="Tipo de Equipamento"/>
+                </h:panelGroup>
+
+                <h:panelGroup styleClass="md-selectonemenu" style="text-align: center;">
+
+                    <!--<p:inputSwitch label="Letal?" onLabel="#{true}" offLabel="#{false}" value="#{escoltaBean.letal}">
+                        <p:ajax listener="#{escoltaBean.onChangeLetal}" update="somEquipamento"/>
+                    </p:inputSwitch>-->
+                    <p:selectOneMenu id="soLetal"
+                                     style="width: 100%"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{escoltaBean.letal}">
+                        <f:selectItem noSelectionOption="true" />
+                        <f:selectItem itemLabel="Sim" itemValue="#{true}" />
+                        <f:selectItem itemLabel="Não" itemValue="#{false}" />
+                        <p:ajax listener="#{escoltaBean.onChangeLetal}" update="somEquipamento"/>
+                    </p:selectOneMenu>
+                    <h:outputLabel value="Letal?" style="padding-right: 10px;"/>
+                </h:panelGroup>
+
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somEquipamento" converter="omnifaces.SelectItemsConverter"
+                                     styleClass="input-auto" value="#{escoltaBean.escoltaEquipamento.equipamento}"
+                                     required="true" requiredMessage="Selecione o equipamento">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{escoltaBean.equipamentoList}"
+                                var="equipamento"
+                                itemLabel="#{equipamento.descricao}"
+                                itemValue="#{equipamento}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="somEquipamento" value="Equipamento"/>
+                </h:panelGroup>
+
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputNumber value="#{escoltaBean.escoltaEquipamento.quantidade}" id="itEscoltaEquipamento"
+                                   required="true" requiredMessage="Informe a quantidade de equipamentos"
+                                   decimalPlaces="0" thousandSeparator=".">
+                    </p:inputNumber>
+                    <p:outputLabel value="Quantidade" for="itEscoltaEquipamento"/>
+                </h:panelGroup>
+
+                <p:commandButton icon="ui-icon-add" action="#{escoltaBean.onClickAddEscoltaEquipamento}"
+                                 process="@this itEscoltaEquipamento somEquipamento"
+                                 update="tblEquipamentoSelecionados itEscoltaEquipamento somEquipamento"/>
+            </p:panelGrid>
+
+            <p:dataTable id="tblEquipamentoSelecionados" value="#{escoltaBean.escolta.escoltaEquipamentos}"
+                         var="escoltaEquipamento"
+                         style="margin-top: 20px; margin-left: 10px; margin-right: 10px;"
+                         emptyMessage="Nenhum equipamento adicionado.">
+                <f:facet name="header">Equipamentos adicionados</f:facet>
+                <p:column headerText="Tipo de Equipamento">
+                    <h:outputText value="#{escoltaEquipamento.equipamento.tipoEquipamento.descricao}"/>
+                </p:column>
+                <p:column headerText="Descrição">
+                    <h:outputText value="#{escoltaEquipamento.equipamento.descricao}"/>
+                </p:column>
+                <p:column headerText="Quantidade" style="width: 20%; text-align: center;">
+                    <h:outputText value="#{escoltaEquipamento.quantidade}"/>
+                </p:column>
+                <p:column headerText="Ações" style="width: 10%; text-align: center;">
+                    <p:commandButton icon="ui-icon-trash"
+                                     process="@this"
+                                     action="#{escoltaBean.onClickRemoverEscoltaEquipamento(escoltaEquipamento)}"
+                                     update="form:tblEquipamentoSelecionados"/>
+                </p:column>
+            </p:dataTable>
+
+            <p:dataTable value="#{visualizaSolicitacaoTransferenciaNecBean.detentoQuePodeTerEscoltaList}"
+                         var="detentoSolicitacao" id="tblDetentoAdicionados"
+                         rowKey="#{detentoSolicitacao.id}" selection="#{escoltaBean.detentoParaEscoltaList}"
+                         style="margin-top: 20px; margin-left: 10px; margin-right: 10px;">
+
+                <f:facet name="header">Presos</f:facet>
+
+                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+
+                <p:column headerText="Nome">
+                    <h:outputText value="#{detentoSolicitacao.detento.pessoa.nome}"/>
+                </p:column>
+
+            </p:dataTable>
+        </h:panelGroup>
+
+        <p:toolbar style="margin-top: 20px; margin-left: 10px; margin-right: 10px;">
+            <f:facet name="right">
+                <p:commandButton value="Criar escolta" actionListener="#{escoltaBean.onClickCriarEscolta}"
+                                 action="#{visualizaSolicitacaoTransferenciaNecBean.atualizarDetentosQuePodemTerEscolta}"
+                                 process="@this tblDetentoAdicionados somTipoEscolta cdDataTransferenciaChegadaPrevista"
+                                 oncomplete="handleAddEscoltaRequest(args)"
+                                 update="formAddEscolta :form:pnlBtnNotificar pnlBtnAdicionarEscolta pnlBtnNotificar"/>
+            </f:facet>
+        </p:toolbar>
+    </p:dialog>
+
+</ui:composition>

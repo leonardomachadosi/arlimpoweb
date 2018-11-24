@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-unidadePrisional-atendimento-terapiaOcupacional">
+        <p:dialog header="Adicionar Unidade Prisional" id="dialogUnidadePrisionalAtendimentoTerapiaOcupacional" widgetVar="addUnidadePrisional"
+                  modal="true"
+                  width="1000" height="120" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgUnidadePrisional"
+                         columnClasses="ui-grid-col-8"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgUnidadePrisionalList">
+                    <p:selectCheckboxMenu id="soUnidadesPrisionais"
+                                          value="#{efetivaAtendimentoTerapiaOcupacionalBean.selectedUnidadesPrisionais}"
+                                          converter="omnifaces.SelectItemsConverter"
+                                          filter="true"
+                                          filterMatchMode="startsWith"
+                                          label="Unidades Prisionais"
+                                          style="width: 100%;color: darkgray">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{efetivaAtendimentoTerapiaOcupacionalBean.unidadesPrisionais}"
+                                var="unidadePrisional"
+                                itemLabel="#{unidadePrisional.descricao}"/>
+                    </p:selectCheckboxMenu>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            id="btnInserir"
+                            update="form:tab:dtUnidadesPrisionais"
+                            oncomplete="PF('addUnidadePrisional').hide();"
+                            actionListener="#{efetivaAtendimentoTerapiaOcupacionalBean.adicionarUnidadesPrisionais()}"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

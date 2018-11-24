@@ -1,0 +1,1472 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{cadastroPipBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:tabView id="tab">
+                        <p:tab title="Qualificação">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <br/>
+                                    <p:panelGrid id="pgdDetentoDataNascimentoIdadeNumeroSissp" columns="4"
+                                                 columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                            <p:inputText id="itNome"
+                                                         value="#{cadastroPipBean.detento.pessoa.nome}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itNome" value="Nome Preso"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataNascimento" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataNascimento"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        value="#{cadastroPipBean.detento.pessoa.dataNascimento}"
+                                                        readonly="true"
+                                                        showOn="false"
+                                                        inputStyle="width: 96%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataNascimento" value="Data de Nascimento"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgIdade" styleClass="md-inputfield">
+                                            <p:inputText id="itIdade"
+                                                         value="#{cadastroPipBean.calcularIdade()}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itIdade" value="Idade"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgNumeroSiisp" styleClass="md-inputfield">
+                                            <p:inputText id="itNumeroSissp"
+                                                         value="#{cadastroPipBean.detento.pessoa.matricula}"
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itNumeroSissp" value="Nº SIISP"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdMaePai" columns="2"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgMae" styleClass="md-inputfield">
+                                            <p:inputText id="itMae"
+                                                         value="#{cadastroPipBean.pessoaMae.nome}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itMae" value="Mãe"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgPai" styleClass="md-inputfield">
+                                            <p:inputText id="itPai"
+                                                         value="#{cadastroPipBean.pessoaPai.nome}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itPai" value="Pai"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdAlcunha" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgAlcunha" styleClass="md-inputfield">
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Alcunhas"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:dataTable
+                                                    id="dtAlcunhas"
+                                                    value="#{cadastroPipBean.alcunhas}"
+                                                    var="alcunha"
+                                                    type="unordered"
+                                                    itemType="none"
+                                                    emptyMessage="Nenhum registro encontrado"
+                                                    style="text-align: center"
+                                                    paginator="false"
+                                                    rows="10">
+                                                <f:facet name="header">
+                                                    Alcunhas
+                                                </f:facet>
+                                                <p:column headerText="Descrição" style="text-align: center">
+                                                    <h:outputText
+                                                            value="#{alcunha.nome}">
+                                                    </h:outputText>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdNacionalidadeNaturalidadeEstadoCivil" columns="3"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgNacionalidade" styleClass="md-inputfield">
+                                            <p:inputText id="itNacionalidade"
+                                                         value="#{cadastroPipBean.detento.pessoa.nacionalidade.descricao}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itNacionalidade" value="Nacionalidade"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgNaturalidade" styleClass="md-inputfield">
+                                            <p:inputText id="itNaturalidade"
+                                                         value="#{cadastroPipBean.detento.pessoa.municipioNascimento.descricao}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itNaturalidade" value="Naturalidade"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgEstadoCivil" styleClass="md-inputfield">
+                                            <p:inputText id="itEstadoCivil"
+                                                         value="#{cadastroPipBean.detento.pessoa.estadoCivil.descricao}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itEstadoCivil" value="Estado Civil"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdReligiaoEscolaridadeProfissao" columns="3"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgReligiao" styleClass="md-inputfield">
+                                            <p:inputText id="itReligiao"
+                                                         value="#{cadastroPipBean.detento.pessoa.religiao.descricao}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itReligiao" value="Religião"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgEscolaridade" styleClass="md-inputfield">
+                                            <p:inputText id="itEscolaridade"
+                                                         value="#{cadastroPipBean.pessoaEscolaridade.escolaridade.descricao}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itEscolaridade" value="Escolaridade"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgProfissao" styleClass="md-inputfield">
+                                            <p:inputText id="itProfissao"
+                                                         value="#{cadastroPipBean.pessoaProfissao.profissao.descricao}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itProfissao" value="Profissão"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdDataInclusaoPipAtualizacao" columns="4"
+                                                 columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgDataInclusao" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataInclusao"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataInclusao" value="Data de Inclusão"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataPip" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataPip"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataPip" value="Data do PIP"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataAtualizacaoPip1" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataAtualizacaoPip1"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataAtualizacaoPip1"
+                                                           value="Data da 1ª Atualização do PIP"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataAtualizacaoPip2" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataAtualizacaoPip2"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataAtualizacaoPip2"
+                                                           value="Data da 2ª Atualização do PIP"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdDataInicioPenaProgressaoPenaLivramento" columns="4"
+                                                 columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgDataInicioPena" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataInicioPena"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataInicioPena" value="Início da Pena"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataProvavelProgressao" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataProvavelProgressao"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataProvavelProgressao"
+                                                           value="Data Provável da Progressão"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataTerminoPena" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataTerminoPena"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataTerminoPena"
+                                                           value="Data Provável p/ Término da Pena"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataLivramentoCondicional" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataLivramentoCondicional"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        readonly="true"
+                                                        
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataLivramentoCondicional"
+                                                           value="Data Provável do Livramento Condicional"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+
+                        <p:tab title="Perfil">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <br/>
+                                    <p:panelGrid id="pgdUnidadePrisionalIncidencialPenalSituacao" columns="3"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgUnidadePrisional" styleClass="md-inputfield">
+                                            <p:inputText id="itUnidadePrisional"
+                                                         
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itUnidadePrisional"
+                                                           value="Unidade Prisional de Origem"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgSituacaoProcessual" styleClass="md-inputfield">
+                                            <p:inputText id="itSituacaoProcessual"
+                                                         
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itSituacaoProcessual"
+                                                           value="Situação Processual"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgIncidenciaPenal" styleClass="md-inputfield">
+                                            <p:inputText id="itIncidenciaPenal"
+                                                         
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itIncidenciaPenal" value="Incidência Penal"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdReincidente" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Reincidente(Art. 63 do CP)?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdReincidenteSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgReincidenteSn">
+                                            <p:selectOneRadio id="sorReincidenteSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              >
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdTipoCrimeNaturezaCrimeEmpregoArma" columns="3"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgTipoCrime" styleClass="md-inputfield">
+                                            <p:inputText id="itTipoCrime"
+                                                         
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itTipoCrime" value="Tipo de Crime"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgNaturezaCrime" styleClass="md-inputfield">
+                                            <p:inputText id="itNaturezaCrime"
+                                                         
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itNaturezaCrime" value="Natureza do Crime"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgEmpregoArma" styleClass="md-inputfield">
+                                            <p:inputText id="itEmpregoArma"
+                                                         
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itEmpregoArma" value="Emprego de Arma"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdAtoCrimeIdadeCrimeAno" columns="3"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgAtoCrime" styleClass="md-inputfield">
+                                            <p:inputText id="itAtoCrime"
+                                                         
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itAtoCrime" value="Ato do Crime"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgIdadeCrime" styleClass="md-inputfield">
+                                            <p:inputText id="itIdadeCrime"
+                                                         
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itIdadeCrime" value="Idade do 1º Crime"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgAno" styleClass="md-inputfield">
+                                            <p:inputText id="itAno"
+                                                         
+                                                         readonly="true"
+                                                         maxlength="10"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itAno" value="Ano"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgIdeiaCrime"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaIdeiaCrime"
+                                                    readonly=""
+                                                    
+                                                    rows="1"
+                                                    style="width: 100%"/>
+                                            <p:outputLabel for="itaIdeiaCrime" value="Ideia que o preso faz do crime"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgCondutaDisciplinar"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaCondutaDisciplinar"
+                                                    readonly=""
+                                                    
+                                                    rows="1"
+                                                    style="width: 100%"/>
+                                            <p:outputLabel for="itaCondutaDisciplinar"
+                                                           value="Conduta disciplinar do Indivíduo na UP"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdParticipaFaccao"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="Situação em Grupos Criminosos"
+                                                           style="color: darkblue;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdParticipaFaccaoSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.perfilDetento.cargoFaccao}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItems value="#{cadastroPipBean.cargoFaccoes}"
+                                                               var="cargoFaccao"
+                                                               itemLabel="#{cargoFaccao.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdFacao"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="soFaccao"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             value="#{cadastroPipBean.perfilDetento.faccao}"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"/>
+                                                <f:selectItems value="#{cadastroPipBean.faccoes}"
+                                                               var="faccao"
+                                                               itemLabel="#{faccao.descricao}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel for="soFaccao" value="Grupo Criminoso"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Tratamento Penitenciário">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h:panelGroup style="text-align: left">
+                                        <h3>Tratamento Peniteniário(Síntese dos Atendimentos)</h3>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <h:panelGroup id="pgJuridico">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Jurídico"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgJuridicoTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaJuridico"
+                                                    readonly=""
+                                                    
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="pgDirecaoSeguranca">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Direção de Segurança"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgDirecaoSegurancaTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaDirecaoSeguranca"
+                                                    readonly=""
+                                                    value="#{cadastroPipBean.atendimentoSeguranca.sintese}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="pgEnfermagem">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Enfermagem"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgEnfermagemTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaEnfermagem"
+                                                    readonly=""
+                                                    value="#{cadastroPipBean.atendimentoEnfermagem.sintese}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="pgServicoSocial">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Serviço Social"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgServicoSocialTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaServicoSocial"
+                                                    readonly=""
+                                                    value="#{cadastroPipBean.atendimentoSocial.sintese}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="pgPsicologia">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Psicologia"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgPsicologiaTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaPsicologia"
+                                                    readonly=""
+                                                    value="#{cadastroPipBean.atendimentoPsicologico.sintese}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="pgPedagogia">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Pedagogia"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgPedagogiaTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaPedagogia"
+                                                    readonly=""
+                                                    value="#{cadastroPipBean.atendimentoPedagogico.sintese}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="pgTerapiaOcupacional">
+                                        <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                       value="Terapia Ocupacional"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgTerapiaOcupacionalTxt"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaTerapiaOcupacional"
+                                                    readonly=""
+                                                    value="#{cadastroPipBean.atendimentoTerapiaOcupacional.sintese}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Observações">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h:panelGroup style="text-align: left">
+                                        <h3>Observações</h3>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgObservacoes"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 style="margin-bottom:20px">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaObservacoes"
+                                                    readonly=""
+                                                    
+                                                    rows="4"
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Proposta de Individualização">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdDesavenca"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="Possui Restrição de Convivência?"
+                                                           style="color:darkBlue;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdDesavencaSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.desavenca}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpDesavencaSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpDesavencaSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdDesavencaQual"
+                                                     rendered="#{cadastroPipBean.desavenca}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel value="Com quem? "
+                                                               style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <br/>
+                                        <p:panelGrid id="pgDetento"
+                                                     rendered="#{cadastroPipBean.desavenca}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:autoComplete id="acDetento"
+                                                                style="width: 100%;"
+                                                                inputStyle="width: 100%;"
+                                                                completeMethod="#{cadastroPipBean.completeDetentoView}"
+                                                                converter="detentoViewConverter"
+                                                                value="#{cadastroPipBean.detentoRestricao}"
+                                                                var="detentoRestricao"
+                                                                itemLabel="#{detentoRestricao.nomeDetento}"
+                                                                itemValue="#{detentoRestricao}">
+                                                    <p:column style="width: 15%; text-align: center">
+                                                        <h:panelGroup
+                                                                rendered="#{detentoRestricao.foto == null or detentoRestricao.foto == '' or detentoRestricao.foto.contains('\\')}">
+                                                            <i class="ui-icon ui-icon-person"
+                                                               style="font-size:60px;color:#757575;">
+                                                            </i>
+                                                        </h:panelGroup>
+                                                        <p:graphicImage
+                                                                rendered="#{detentoRestricao.foto != null and detentoRestricao.foto != '' and !detentoRestricao.foto.contains('\\')}"
+                                                                value="/foto-detento?foto=#{buscaDetentoBean.enconder(detentoRestricao.foto)}"
+                                                                style="width: 110%;"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputText value="#{detentoRestricao.nomeDetento}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputText value="#{detentoRestricao.nomeUnidadePrisional}"/>
+                                                    </p:column>
+                                                    <p:ajax event="itemSelect"
+                                                            listener="#{cadastroPipBean.adicionarDetentoRestricao()}"
+                                                            update="pgDetento pgDtPessoasRestricao" process="@this"/>
+                                                </p:autoComplete>
+                                                <p:outputLabel for="acDetento" value="Presos"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid columns="1"
+                                                     id="pgDtPessoasRestricao"
+                                                     rendered="#{cadastroPipBean.desavenca}"
+                                                     columnClasses="ui-grid-col-12" layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:dataTable id="dtPessoasRestricao"
+                                                             reflow="true"
+                                                             var="detento"
+                                                             value="#{cadastroPipBean.detentosView}"
+                                                             rows="15"
+                                                             paginator="false"
+                                                             emptyMessage=""
+                                                             style="width: 100%">
+                                                    <f:facet name="header">
+                                                        Presos
+                                                    </f:facet>
+                                                    <p:column headerText="Foto" style="width: 15%; text-align: center">
+                                                        <h:panelGroup
+                                                                rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                                            <i class="ui-icon ui-icon-person"
+                                                               style="font-size:10px;color:#757575;">
+                                                            </i>
+                                                        </h:panelGroup>
+                                                        <p:graphicImage
+                                                                rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                                                value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                                                style="width: 25%;"/>
+                                                    </p:column>
+                                                    <p:column headerText="Nome" style="text-align: center">
+                                                        <h:outputText value="#{detento.nomeDetento}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Unidade Prisional" style="text-align: center">
+                                                        <h:outputText value="#{detento.nomeUnidadePrisional}">
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Opções" style="width: 60px;text-align: center"
+                                                    >
+                                                        <p:commandButton title="Remover"
+                                                                         icon="ui-icon-trash"
+                                                                         styleClass="red-btn"
+                                                                         action="#{cadastroPipBean.removerPessoaRestricao()}"
+                                                                         update="dtPessoasRestricao" process="@this">
+                                                            <f:setPropertyActionListener value="#{detento}"
+                                                                                         target="#{cadastroPipBean.detentoView}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+
+                                    <p:panelGrid id="pgdEmissaoDocumento" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Necessita de Emissão de Documentação?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdEmissaoDocumentoSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgEmissaoDocumentoSn">
+                                            <p:selectOneRadio id="sorEmissaoDocumentoSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.emissaoDocumento}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+
+                                                        execute="@this" render="hpEmissaoDocumentoSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpEmissaoDocumentoSim">
+                                        <p:panelGrid id="pgdEmissaoDocumentoSim" columns="1"
+                                                     rendered="#{cadastroPipBean.emissaoDocumento}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                               value="Qual(is)?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgdEmissaoDocumentoSm" columns="1"
+                                                     rendered="#{cadastroPipBean.emissaoDocumento}"
+                                                     columnClasses="ui-grid-col-10"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <p:selectManyCheckbox id="sorEmissaoDocumentoSim"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive"
+                                                                  columns="3"
+                                                                  disabled=""
+                                                                  value="#{cadastroPipBean.selectedTipoArquivos}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItems
+                                                        value="#{cadastroPipBean.tipoArquivos}"
+                                                        var="tipoArquivo"
+                                                        itemLabel="#{tipoArquivo.descricao}"/>
+                                            </p:selectManyCheckbox>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <h:panelGroup style="text-align: left">
+                                        <h3>Local de Vivência</h3>
+                                    </h:panelGroup>
+                                    <p:panelGrid id="pgVinculoFamiliar" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Vínculo Familiar "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgVinculoFamiliarSn" columns="1"
+                                                 columnClasses="ui-grid-col-8"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorVinculoFamiliarSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.atendimentoSocial.situacaoFamiliar}">
+                                                <f:selectItems
+                                                        value="#{cadastroPipBean.situacaoFamiliares}"
+                                                        var="situacaoFamiliar"
+                                                        itemLabel="#{situacaoFamiliar.descricao}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpVinculoFamiliar"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpVinculoFamiliar">
+                                        <p:panelGrid id="pgVinculoFamiliarSim" columns="1"
+
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itVinculoFamiliarSim"
+                                                        readonly=""
+                                                        
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itVinculoFamiliarSim"
+                                                               value="Por quê? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgdEncaminhamentoDpe" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Necessita Encaminhamento a Dpe?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdEncaminhamentoDpeSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgEncaminhamentoDpeSn">
+                                            <p:selectOneRadio id="sorEncaminhamentoDpeSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.encaminhaDpe}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+
+                                                        execute="@this" render="hpEncaminhamentoDpeSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpEncaminhamentoDpeSim">
+                                        <p:panelGrid id="pgdEncaminhamentoDpeSim" columns="1"
+                                                     rendered="#{cadastroPipBean.encaminhaDpe}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                               value="Qual(is)?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgdEncaminhamentoDpeSm" columns="1"
+                                                     rendered="#{cadastroPipBean.encaminhaDpe}"
+                                                     columnClasses="ui-grid-col-9"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <p:selectManyCheckbox id="sorEncaminhamentoDpeSim"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive"
+                                                                  columns="3"
+                                                                  disabled=""
+                                                                  value="#{checkboxView.selectedConsoles}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Reconhecimento de Paternidade"
+                                                              itemValue="Xbox One"/>
+                                                <f:selectItem itemLabel="Constituição de Advogado Público"
+                                                              itemValue="PS4"/>
+                                                <f:selectItem itemLabel="Outro" itemValue="Wii U"/>
+                                                <f:selectItems
+                                                        
+                                                        var="patologia"
+                                                        itemLabel=""/>
+                                            </p:selectManyCheckbox>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgRecomendacaoSaude" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Recomendação de Saúde"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgRecomendacaoSaudeSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorRecomendacaoSaudeSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.recomendacaoSaude}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpRecomendacaoSaude"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpRecomendacaoSaude">
+                                        <p:panelGrid id="pgRecomendacaoSaudeSim" columns="1"
+                                                     rendered="#{cadastroPipBean.recomendacaoSaude}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itRecomendacaoSaudeSim"
+                                                        readonly=""
+                                                        
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itRecomendacaoSaudeSim"
+                                                               value="Qual(is)? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgAcompanhamentoSaude" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Acompanhamento de Saúde"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgAcompanhamentoSaudeSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorAcompanhamentoSaudeSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.acompanhamentoSaude}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpAcompanhamentoSaude"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpAcompanhamentoSaude">
+                                        <p:panelGrid id="pgAcompanhamentoSaudeSim" columns="1"
+                                                     rendered="#{cadastroPipBean.acompanhamentoSaude}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itAcompanhamentoSaudeSim"
+                                                        readonly=""
+                                                        
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itAcompanhamentoSaudeSim"
+                                                               value="Qual(is)? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgAcompanhamentoPsicologico" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Acompanhamento Psicologico"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgAcompanhamentoPsicologicoSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorAcompanhamentoPsicologicoSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.acompanhamentoPsicologico}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpAcompanhamentoPsicologico"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpAcompanhamentoPsicologico">
+                                        <p:panelGrid id="pgAcompanhamentoPsicologicoSim" columns="1"
+                                                     rendered="#{cadastroPipBean.acompanhamentoPsicologico}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itAcompanhamentoPsicologicoSim"
+                                                        readonly=""
+                                                        
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itAcompanhamentoPsicologicoSim"
+                                                               value="Qual(is)? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgdAtividadeEducacional" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Inserção a atividade educacional"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdAtividadeEducacionalSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgAtividadeEducacionalSn">
+                                            <p:selectOneRadio id="sorAtividadeEducacionalSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.atividadeEducacional}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+
+                                                        execute="@this" render="hpAtividadeEducacionalSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpAtividadeEducacionalSim">
+                                        <p:panelGrid id="pgdAtividadeEducacionalSim" columns="1"
+                                                     rendered="#{cadastroPipBean.atividadeEducacional}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                               value="Qual(is)?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgdAtividadeEducacionalSm" columns="1"
+                                                     columnClasses="ui-grid-col-8"
+                                                     rendered="#{cadastroPipBean.atividadeEducacional}"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <p:selectManyCheckbox id="sorAtividadeEducacionalSim"
+
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive"
+                                                                  columns="3"
+                                                                  disabled=""
+                                                                  value="#{checkboxView.selectedConsoles}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="EJA"
+                                                              itemValue="Xbox One"/>
+                                                <f:selectItem itemLabel="Rumo Certo"
+                                                              itemValue="PS4"/>
+                                                <f:selectItems
+                                                        
+                                                        var="patologia"
+                                                        itemLabel=""/>
+                                            </p:selectManyCheckbox>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgdAtividadeLaboral" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                           value="Inserção a atividade laboral"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdAtividadeLaboralSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgAtividadeLaboralSn">
+                                            <p:selectOneRadio id="sorAtividadeLaboralSn"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              disabled=""
+                                                              value="#{cadastroPipBean.atividadeLaboral}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+
+                                                        execute="@this" render="hpAtividadeLaboralSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpAtividadeLaboralSim">
+                                        <p:panelGrid id="pgdAtividadeLaboralSim" columns="1"
+                                                     rendered="#{cadastroPipBean.atividadeLaboral}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                               value="Qual(is)?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgdAtividadeLaboralSm" columns="1"
+                                                     columnClasses="ui-grid-col-12"
+                                                     rendered="#{cadastroPipBean.atividadeLaboral}"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <p:selectManyCheckbox id="sorAtividadeLaboralSim"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive"
+                                                                  columns="4"
+                                                                  disabled=""
+                                                                  value="#{cadastroPipBean.selectedAtividadesLaborais}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItems
+                                                        value="#{cadastroPipBean.atividadesLaborais}"
+                                                        var="atividadeLaboral"
+                                                        itemLabel="#{atividadeLaboral.descricao}"/>
+                                            </p:selectManyCheckbox>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid id="pgdDirSegurancaEspJuridico" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itDirSeguranca"
+                                                           value="Nome Diretor de Segurança"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itEspJuridico"
+                                                           value="Nome Esp. Jurídico"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdDirSegurancaEspJuridicoTxt" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itDirSeguranca"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itEspJuridico"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdEspEnfermeiroEspServicoSocial" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itEspEnfermeiro"
+                                                           value="Nome Esp. Enfermeiro"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itEspServicoSocial"
+                                                           value="Nome Esp. Serviço Social"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdEspEnfermeiroEspServicoSocialTxt" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itEspEnfermeiro"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itEspServicoSocial"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdEspPsicologoEspTerapeutaOcupacional" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itEspPsicologo"
+                                                           value="Nome Esp. Psicologo"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itEspTerapeutaOcupacional"
+                                                           value="Nome Esp. Terapeuta Ocupacional"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdEspPsicologoEspTerapeutaOcupacionalTxt" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itEspPsicologo"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itEspTerapeutaOcupacional"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdEspPedagogoEspDiretorGeral" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itEspPedagogo"
+                                                           value="Nome Esp. Pedagogo"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel for="itDiretorGeral"
+                                                           value="Nome Esp. Diretor Geral"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgdEspPedagogoDiretorGeralTxt" columns="2"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itEspPedagogo"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itDiretorGeral"
+                                                    readonly=""
+                                                    
+                                                    style="width: 100%"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                    </p:tabView>
+
+                    <h:panelGroup>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <p:toolbar>
+                                    <f:facet name="left">
+                                        <p:commandButton id="btnSalvarPip" value="Salvar"
+                                                         process="@this"
+                                                         action="#{cadastroPipBean.salvarPip()}"
+                                                         icon="ui-icon-check"/>
+                                    </f:facet>
+                                </p:toolbar>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

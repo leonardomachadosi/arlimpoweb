@@ -1,0 +1,364 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{cadastroCelaBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:tabView id="tab">
+                            <p:tab title="Cela">
+                                <h:panelGroup style="text-align: left; font-weight: bold">
+                                    <h1>Cadastro de Cela</h1>
+                                </h:panelGroup>
+
+                                <p:panelGrid id="pgUnidadePavilhaoTipoCela" columns="4"
+                                             columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup id="pgUnidade" styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="somUnidadePrisional"
+                                                         value="#{cadastroCelaBean.cela.pavilhao.unidadePrisional}"
+                                                         filter="true"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione o Estabelecimento" itemValue=""/>
+                                            <f:selectItems var="unidadePrisional"
+                                                           itemLabel="#{unidadePrisional.descricao}"
+                                                           value="#{cadastroCelaBean.unidadePrisionais}"/>
+                                            <p:ajax process="@this"
+                                                    update="pgPavilhao hpPerfilCela pnlUnidadeCapacidade"
+                                                    listener="#{cadastroCelaBean.onSelectUnidadesPrisionais()}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Estabelecimento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pgPavilhao" styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="somPavilhao"
+                                                         value="#{cadastroCelaBean.cela.pavilhao}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione o Pavilhão" itemValue=""/>
+                                            <f:selectItems var="pavilhao"
+                                                           itemLabel="#{pavilhao.descricao}"
+                                                           value="#{cadastroCelaBean.pavilhoesSelect}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Pavilhão"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pgComposicaoCela" styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="somComposicaoCela"
+                                                         value="#{cadastroCelaBean.cela.composicaoCela}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione a Composição da Cela" itemValue=""/>
+                                            <f:selectItems var="composicaoCela"
+                                                           itemLabel="#{composicaoCela.descricao}"
+                                                           value="#{cadastroCelaBean.composicaoCelas}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Composição da Cela"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup id="pgTipoCela" styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="somTipoCela"
+                                                         value="#{cadastroCelaBean.cela.tipoCela}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione o Tipo de Cela" itemValue=""/>
+                                            <f:selectItems var="tipoCela"
+                                                           itemLabel="#{tipoCela.descricao}"
+                                                           value="#{cadastroCelaBean.tipoCelas}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Tipo da Cela"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid id="ipDescricaoCapacidadeEfetiva" columns="3"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itCela"
+                                                     value="#{cadastroCelaBean.cela.descricao}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itCela" value="Nome da cela"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber id="inCapacidade" styleClass="ui-custom-inputnumber"
+                                                       decimalPlaces="0" thousandSeparator=""
+                                                       value="#{cadastroCelaBean.cela.capacidade}"
+                                                       style="width: 100%;">
+                                            <p:ajax process="@this" event="blur"/>
+                                        </p:inputNumber>
+                                        <p:outputLabel for="inCapacidade" value="Capacidade"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber id="inCapacidadeEfetiva"
+                                                       styleClass="ui-custom-inputnumber"
+                                                       decimalPlaces="0" thousandSeparator=""
+                                                       value="#{cadastroCelaBean.cela.capacidadeEfetiva}"
+                                                       style="width: 100%;">
+                                            <p:ajax event="change" process="@this" listener="#{cadastroCelaBean.tratarCapacidade}" update=":form:messages"/>
+                                        </p:inputNumber>
+                                        <p:outputLabel for="inCapacidadeEfetiva"
+                                                       value="Capacidade efetiva"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid id="ipSituacao" columns="1"
+                                             columnClasses="ui-grid-col-6" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  rendered="#{cadastroCelaBean.cela.id != null}">
+                                        <p:selectOneMenu id="somSituacao"
+                                                         value="#{cadastroCelaBean.situacaoCela}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione a Situação" itemValue=""/>
+                                            <f:selectItems var="situacaoCela"
+                                                           itemLabel="#{situacaoCela.descricao}"
+                                                           value="#{cadastroCelaBean.situacaoCelas}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Situação"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+
+                                <h:panelGroup id="pnlUnidadeCapacidade">
+                                    <p:panel rendered="#{cadastroCelaBean.cela.pavilhao.unidadePrisional != null}" style="width: 500px">
+                                        <f:facet name="header">Unidade Selecionada</f:facet>
+                                        <div style="margin: 10px;">
+                                            <h:outputText value="Capacidade:" style="font-weight: bold; margin-right: 5px;"/>
+                                            <h:outputText value="#{cadastroCelaBean.cela.pavilhao.unidadePrisional.capacidade}"/>
+                                        </div>
+
+                                        <div style="margin: 10px;">
+                                            <h:outputText value="Capacidade Efetiva:" style="font-weight: bold; margin-right: 5px;"/>
+                                            <h:outputText value="#{cadastroCelaBean.cela.pavilhao.unidadePrisional.capacidadeEfetiva}"/>
+                                        </div>
+
+                                        <div style="margin: 10px;">
+                                            <h:outputText value="Capacidade Usada:" style="font-weight: bold; margin-right: 5px;"/>
+                                            <h:outputText value="#{cadastroCelaBean.unidadeCapacidadeEfetivaOcupada}"/>
+                                        </div>
+                                    </p:panel>
+                                </h:panelGroup>
+                            </p:tab>
+                            <p:tab title="Perfil">
+                                <h:panelGroup id="hpPerfilCela">
+                                    <p:panelGrid columns="4"
+                                                 id="pgTipoDetentoSexoOrientacaoTxt"
+                                                 columnClasses="ui-grid-col-3, ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.tipoDetento}">
+                                            <p:outputLabel for="smTipoDetento"
+                                                           style="color: darkblue; font-weight: bold"
+                                                           value="Tipo Preso"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.sexo}">
+                                            <p:outputLabel for="smSexo"
+                                                           style="color: darkblue; font-weight: bold"
+                                                           value="Sexo"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.orientacaoSexual}">
+                                            <p:outputLabel for="smOrientacaoSexual"
+                                                           style="color: darkblue; font-weight: bold"
+                                                           value="Orientação Sexual"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.tipoDeficiencia}">
+                                            <p:outputLabel for="smTipoDeficiencia"
+                                                           style="color: darkblue; font-weight: bold"
+                                                           value="Tipo Deficiência"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="ipsPerfilCela1" columns="4"
+                                                 columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.tipoDetento}">
+                                            <p:selectManyMenu id="smTipoDetento"
+                                                              showCheckbox="true"
+                                                              style="width: 100%; color: darkblue"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroCelaBean.selectedTipoDetentos}">
+                                                <f:selectItems value="#{cadastroCelaBean.tipoDetentos}"
+                                                               var="tipoDetento"
+                                                               itemLabel="#{tipoDetento.descricao}"
+                                                               itemValue="#{tipoDetento}"/>
+                                            </p:selectManyMenu>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.sexo}">
+                                            <p:selectManyMenu id="smSexo"
+                                                              showCheckbox="true"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroCelaBean.selectedSexos}"
+                                                              style="width: 100%; color: darkblue">
+                                                <f:selectItems value="#{cadastroCelaBean.sexos}"
+                                                               var="sexo"
+                                                               itemLabel="#{sexo.descricao}"
+                                                               itemValue="#{sexo}"/>
+                                            </p:selectManyMenu>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.orientacaoSexual}">
+                                            <p:selectManyMenu id="smOrientacaoSexual"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroCelaBean.selectedOrientacaoSexuais}"
+                                                              showCheckbox="true"
+                                                              style="width: 100%; color: darkblue">
+                                                <f:selectItems value="#{cadastroCelaBean.orientacaoSexuais}"
+                                                               var="orientacaoSexual"
+                                                               itemLabel="#{orientacaoSexual.descricao}"
+                                                               itemValue="#{orientacaoSexual}"/>
+                                            </p:selectManyMenu>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.tipoDeficiencia}">
+                                            <p:selectManyMenu id="smTipoDeficiencia"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroCelaBean.selectedTipoDeficiencias}"
+                                                              showCheckbox="true"
+                                                              style="width: 100%;color: darkblue">
+                                                <f:selectItems value="#{cadastroCelaBean.tipoDeficiencias}"
+                                                               var="tipoDeficiencia"
+                                                               itemLabel="#{tipoDeficiencia.descricao}"
+                                                               itemValue="#{tipoDeficiencia}"/>
+                                            </p:selectManyMenu>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="2"
+                                                 id="pgFaccaoNaturezaCustodiaTxt"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.grupoGriminoso}">
+                                            <p:outputLabel for="smFaccao"
+                                                           style="color: darkblue; font-weight: bold"
+                                                           value="Grupo Criminoso"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.naturezaCustodia}">
+                                            <p:outputLabel for="smNaturezaCustodia"
+                                                           style="color: darkblue; font-weight: bold"
+                                                           value="Natureza Custódia"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="ipsPerfilCela2" columns="2"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.grupoGriminoso}">
+                                            <p:selectManyMenu id="smFaccao"
+                                                              showCheckbox="true"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroCelaBean.selectedFaccoes}"
+                                                              style="width: 100%; height: 200px; color: darkblue">
+                                                <f:selectItems value="#{cadastroCelaBean.faccoes}"
+                                                               var="faccao" itemLabel="#{faccao.descricao}"
+                                                               itemValue="#{faccao}"/>
+                                            </p:selectManyMenu>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="ui-selectmanymenu"
+                                                      rendered="#{cadastroCelaBean.naturezaCustodia}">
+                                            <p:selectManyMenu id="smNaturezaCustodia"
+                                                              showCheckbox="true"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroCelaBean.selectedNaturezaCustodias}"
+                                                              style="width: 100%; height: 200px; color: darkblue">
+                                                <f:selectItems value="#{cadastroCelaBean.naturezaCustodias}"
+                                                               var="naturezaCustodia"
+                                                               itemLabel="#{naturezaCustodia.descricao}"
+                                                               itemValue="#{naturezaCustodia}"/>
+                                            </p:selectManyMenu>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                                <br/>
+                                <h:panelGroup style="text-align: left;font-weight: bold;color: darkblue">
+                                    <p:outputLabel value="Grau de Periculosidade"/>
+                                </h:panelGroup>
+                                <br/>
+                                <br/>
+                                <p:panelGrid columns="1" layout="grid"
+                                             columnClasses="ui-grid-col-4"
+                                             styleClass="form-group ui-panelgrid-blank">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soPericulosidade"
+                                                         style="width: 100%"
+                                                         value="#{cadastroCelaBean.perfilCela.periculosidade}"
+                                                         converter="omnifaces.SelectItemsConverter" >
+                                            <f:selectItem noSelectionOption="true" />
+                                            <f:selectItem itemLabel="" />
+                                            <f:selectItems value="#{cadastroCelaBean.periculosidades}"
+                                                           var="periculosidade"
+                                                           itemLabel="#{periculosidade.descricao}" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soPericulosidade" value="Periculosidade" />
+                                    </h:panelGroup>
+                                </p:panelGrid>
+
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton id="btnSalvarCela" value="Salvar"
+                                                     process="@form" update="@form"
+                                                     action="#{cadastroCelaBean.saveCela()}" icon="ui-icon-check"/>
+                                    <span class="ui-separator" style="padding-right: 5px;"/>
+                                    <p:commandButton id="btnNovaCela" value="Novo" process="@this"
+                                                     update="@form"
+                                                     actionListener="#{cadastroCelaBean.refreshCela()}"
+                                                     icon="ui-icon-refresh"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

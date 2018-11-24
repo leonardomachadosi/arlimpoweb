@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style>
+            .pgDadosOcorrencia.ui-panelgrid {
+                border-collapse: unset !important;
+            }
+
+            .pgDadosOcorrencia.ui-panelgrid .ui-widget-header {
+                background-color: transparent !important;
+            }
+
+            .pgDadosOcorrencia .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .pgDadosOcorrencia.ui-grid-row {
+                margin-bottom: 1em;
+            }
+
+            .pgDadosOcorrencia.ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+
+            .pgDadosOcorrencia.ui-panelgrid .ui-panelgrid-cell {
+                border: 0;
+            }
+
+            body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-right .ui-icon, body .ui-lightbox .ui-lightbox-content-wrapper .ui-lightbox-nav-left .ui-icon {
+                display: none !important;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             ajax="false"
+                                             action="/pages/private/ocorrencia/acompanha-ocorrencia.xhtml?faces-redirect=true"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton
+                                    styleClass="btnEmiteComunicado"
+                                    value="Emitir Comunicado"
+                                    ajax="false"
+                                    onclick="this.form.target='_blank'"
+                                    action="#{visualizaOcorrenciaBean.emitirComunicado()}"
+                                    icon="ui-icon-file-download"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="card card-w-title">
+                    <h1>Visualizar Ocorrência</h1>
+                    <div class="ui-g-12">
+                        <ui:include src="fragments/dados-ocorrencia-panelgrid.xhtml">
+                            <ui:param name="ocorrenciaSetor" value="#{visualizaOcorrenciaBean.ocorrenciaSetor}"/>
+                            <ui:param name="ocorrencia" value="#{visualizaOcorrenciaBean.ocorrencia}"/>
+                        </ui:include>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Situação da Ocorrência" styleClass="customLabel"
+                                       rendered="#{visualizaOcorrenciaBean.historicoOcorrenciaList.size() > 0}"/>
+                        <ui:include src="fragments/situacao-ocorrencia-step.xhtml">
+                            <ui:param name="historicoOcorrenciaList"
+                                      value="#{visualizaOcorrenciaBean.historicoInverseOcorrenciaList}"/>
+                        </ui:include>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Galeria" styleClass="customLabel"/>
+                        <ui:include src="fragments/galeria-ocorrencia-panelgrid.xhtml">
+                            <ui:param name="ocorrenciaArquivoList"
+                                      value="#{visualizaOcorrenciaBean.ocorrenciaArquivoList}"/>
+                        </ui:include>
+
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Envolvidos" styleClass="customLabel"/>
+                        <ui:include src="fragments/envolvidos-ocorrencia-panelgrid.xhtml">
+                            <ui:param name="envolvidoList"
+                                      value="#{visualizaOcorrenciaBean.envolvidoList}"/>
+                        </ui:include>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Ocorrência" styleClass="customLabel"/>
+                        <p:panel style="height: 300px;overflow-y: scroll;">
+                            <h:outputText value="#{visualizaOcorrenciaBean.ocorrencia.descricao}" escape="false"/>
+                        </p:panel>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Pareceres" styleClass="customLabel"
+                        rendered="#{visualizaOcorrenciaBean.parecerOcorrenciaList.size() > 0}"/>
+                        <ui:include src="fragments/pareceres-ocorrencia-panelgrid.xhtml">
+                            <ui:param name="parecerOcorrenciaList"
+                                      value="#{visualizaOcorrenciaBean.parecerOcorrenciaList}"/>
+                        </ui:include>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

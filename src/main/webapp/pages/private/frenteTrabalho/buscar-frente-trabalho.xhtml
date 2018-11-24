@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Busca de Frente de Trabalho</h1>
+                        <p:panelGrid id="pgNomeSiglaTipoFrenteTrabalho" columns="2"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itFrenteTrabalho"
+                                             value="#{buscaFrenteTrabalhoBean.frenteTrabalho.descricao}"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itFrenteTrabalho" value="Frente Trabalho"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soTipo"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{buscaFrenteTrabalhoBean.frenteTrabalho.tipoFrenteTrabalho}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{buscaFrenteTrabalhoBean.tiposFrenteTrabalho}"
+                                                   var="tipoFrenteTrabalho"
+                                                   itemLabel="#{tipoFrenteTrabalho.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soTipo" value="Tipo de Frente de Trabalho"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton
+                                    value="Cadastrar"
+                                    action="#{buscaFrenteTrabalhoBean.cadastrarFrenteTrabalho}"
+                                    icon="ui-icon-plus"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton value="Buscar"
+                                             icon="ui-icon-search"
+                                             action="#{buscaFrenteTrabalhoBean.buscarFrentesTrabalho()}"
+                                             id="btnBuscarFrenteTrabalho"
+                                             update="@form"
+                                             process="@form"/>
+                            <p:defaultCommand target="btnBuscarFrenteTrabalho"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid id="pgDtFrenteTrabalho" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:dataTable id="dtFrenteTrabalho"
+                                         value="#{buscaFrenteTrabalhoBean.frentesTrabalho}"
+                                         var="frenteTrabalho"
+                                         rows="10"
+                                         paginator="#{buscaFrenteTrabalhoBean.frentesTrabalho.size() > 10}"
+                                         paginatorPosition="bottom"
+                                         reflow="true"
+                            >
+                                <f:facet name="header">
+                                    <h:outputText value="Frentes de Trabalho"/>
+                                </f:facet>
+                                <p:column headerText="Código" style="text-align: center; width: 10%">
+                                    <h:outputText value="#{frenteTrabalho.id}"/>
+                                </p:column>
+                                <p:column headerText="Nome da Frente de Trabalho" style="text-align: center;">
+                                    <h:outputText value="#{frenteTrabalho.descricao}"/>
+                                </p:column>
+                                <p:column headerText="Tipo da Frente de Trabalho" style="text-align: center;">
+                                    <h:outputText value="#{frenteTrabalho.tipoFrenteTrabalho.descricao}"/>
+                                </p:column>
+                                <p:column headerText="Ações" style="text-align: center; width: 10%">
+                                    <p:commandButton
+                                            title="Visualizar"
+                                            process="@this"
+                                            action="#{buscaFrenteTrabalhoBean.onClickVisualizar()}"
+                                            icon="ui-icon-remove-red-eye">
+                                        <f:setPropertyActionListener value="#{frenteTrabalho}"
+                                                                     target="#{buscaFrenteTrabalhoBean.frenteTrabalho}"/>
+                                    </p:commandButton>
+                                    <p:commandButton title="Editar"
+                                                     process="@this"
+                                                     update="@form"
+                                                     action="#{buscaFrenteTrabalhoBean.onClickEditar()}"
+                                                     icon="ui-icon-edit">
+                                        <f:setPropertyActionListener value="#{frenteTrabalho}"
+                                                                     target="#{buscaFrenteTrabalhoBean.frenteTrabalho}"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

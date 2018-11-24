@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog header="Editar RG" id="dialogEdicaoEnderecos" widgetVar="addEdicaoEndereco" modal="true"
+              width="1200" responsive="true" showEffect="fade" hideEffect="fade">
+        <p:panelGrid columns="3"
+                     id="pgEstadoMunicipio"
+                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-selectonemenu">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soEstado"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     filter="true"
+                                     value="#{visualizaDetentoBean.estado}"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{visualizaDetentoBean.estadosEnum}"
+                                       var="estado"
+                                       itemValue="#{estado.objeto}"
+                                       itemLabel="#{estado.descricao}"/>
+                        <p:ajax process="@this" update="soMunicipio"
+                                listener="#{visualizaDetentoBean.carregarMunicipios()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soEstado" value="Estado"/>
+                </h:panelGroup>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-selectonemenu">
+                <p:selectOneMenu id="soMunicipio"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 value="#{visualizaDetentoBean.endereco.municipio}"
+                                 filter="true"
+                                 style="width: 100%;">
+                    <f:selectItem noSelectionOption="true"/>
+                    <f:selectItems value="#{visualizaDetentoBean.municipios}"
+                                   var="municipio"
+                                   itemLabel="#{municipio.descricao}"/>
+                </p:selectOneMenu>
+                <p:outputLabel for="soMunicipio" value="Município"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText
+                        id="itBairro"
+                        value="#{visualizaDetentoBean.endereco.bairro}"
+                        style="width: 100%"
+                />
+                <p:outputLabel for="itBairro" value="Bairro"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid columns="3"
+                     id="pgCepLogradouroNumero"
+                     columnClasses="ui-grid-col-4, ui-grid-col-6, ui-grid-col-2"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itCep"
+                             value="#{visualizaDetentoBean.endereco.cep}"
+                             mask="99999-999"
+                             style="width: 100%"/>
+                <p:outputLabel for="itCep" value="CEP"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itLogradouro"
+                             value="#{visualizaDetentoBean.endereco.logradouro}"
+                             style="width: 100%;"/>
+                <p:outputLabel for="itLogradouro" value="Logradouro"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itNumero"
+                             value="#{visualizaDetentoBean.endereco.numero}"
+                             style="width: 100%;"/>
+                <p:outputLabel for="itNumero" value="Número"/>
+            </h:panelGroup>
+
+        </p:panelGrid>
+        <p:panelGrid columns="2"
+                     id="pgReferencia"
+                     columnClasses="ui-grid-col-8,ui-grid-col-4"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itReferencia"
+                             value="#{visualizaDetentoBean.endereco.referencia}"
+                             style="width: 100%;"/>
+                <p:outputLabel for="itReferencia" value="Referência"/>
+            </h:panelGroup>
+            <h:panelGroup>
+                <p:commandButton
+                        actionListener="#{visualizaDetentoBean.adicionarEndereco()}"
+                        update="pgEnderecoEditList pgCepLogradouroNumero pgEstadoMunicipio pgReferencia"
+                        icon="ui-icon-plus"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid id="pgEnderecoEditList" columns="1"
+                     columnClasses="ui-grid-col-12" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <p:dataTable value="#{visualizaDetentoBean.enderecoList}" style="text-align: center"
+                         var="endereco" rows="10" paginatorPosition="bottom" emptyMessage="Nenhum registro encontrado">
+                <f:facet name="header">
+                    Endereços
+                </f:facet>
+                <p:column headerText="Municipio">
+                    <h:outputText value="#{endereco.endereco.municipio.descricao}"/>
+                </p:column>
+                <p:column headerText="Bairro">
+                    <h:outputText value="#{endereco.endereco.bairro}"/>
+                </p:column>
+                <p:column headerText="CEP">
+                    <h:outputText value="#{endereco.endereco.cep}"/>
+                </p:column>
+                <p:column headerText="Logradouro">
+                    <h:outputText value="#{endereco.endereco.logradouro}"/>
+                </p:column>
+                <p:column headerText="Referência">
+                    <h:outputText value="#{endereco.endereco.referencia}"/>
+                </p:column>
+                <p:column headerText="Número">
+                    <h:outputText value="#{endereco.endereco.numero}"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton
+                            actionListener="#{visualizaDetentoBean.removerEndereco(endereco)}"
+                            update="pgEnderecoEditList"
+                            styleClass="red-btn"
+                            icon="ui-icon-trash"/>
+                </p:column>
+            </p:dataTable>
+        </p:panelGrid>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="btnSalvarEnderecos" value="Salvar"
+                                         process="@this" update="@form"
+                                         action="#{visualizaDetentoBean.salvarEnderecos()}" icon="ui-icon-check"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

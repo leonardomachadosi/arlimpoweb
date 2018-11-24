@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .pgUnidadePrisionalRecomendada .ui-panelgrid-content {
+                border: none;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{detalhaSolicitacaoTransferenciaNecBean.voltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <ui:include src="../../../../WEB-INF/template/transferencia/detalhar-solicitacao-transferencia.xhtml"/>
+            <h:panelGroup id="hpEstabelecimentoRecomendadoDestino"
+                          rendered="#{detalhaSolicitacaoTransferenciaSupervisaoBean.renderizarPanelUnidadeDestino(detalhaSolicitacaoTransferenciaBean.historicoDetentoSolicitacaoTransferencia)}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:panelGrid id="pgUnidadePrisional" columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                                <h1>Estabelecimento de Destino</h1>
+                                <p:dataTable id="dtUnidadePrisional" var="unidadePrisional"
+                                             value="#{detalhaSolicitacaoTransferenciaNecBean.unidadePrisionalDestino(detalhaSolicitacaoTransferenciaBean.historicoDetentoSolicitacaoTransferencia.detentoSolicitacaoTransferencia)}"
+                                             reflow="true"
+                                             rows="10"
+                                             emptyMessage="" style="text-align:center">
+                                    <f:facet name="header">
+                                        Estabelecimentos
+                                    </f:facet>
+                                    <p:column headerText="Estabelecimento" style="text-align: center">
+                                        <h:outputText value="#{unidadePrisional.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Município" style="text-align: center">
+                                        <h:outputText
+                                                value="#{unidadePrisional.endereco.municipio.descricao.toUpperCase()}"/>
+                                    </p:column>
+                                    <p:column headerText="Capacidade Efetiva" style="text-align: center">
+                                        <h:outputText value="#{unidadePrisional.capacidadeEfetiva}"/>
+                                    </p:column>
+                                    <p:column headerText="Número de Vagas" style="text-align: center">
+                                        <h:outputText
+                                                style="#{detalhaSolicitacaoTransferenciaNecBean.carregarCSSTexto(unidadePrisional.vagas)}"
+                                                value="#{unidadePrisional.vagas}"/>
+                                    </p:column>
+                                    <p:column headerText="Ação" style="text-align: center; width: 15%">
+                                        <p:commandButton
+                                                title="Visualizar"
+                                                process="@this"
+                                                onclick="this.form.target='_blank'" ajax="false"
+                                                action="#{detalhaSolicitacaoTransferenciaNecBean.onClickVisualizarUnidadePrisional()}"
+                                                icon="ui-icon-remove-red-eye">
+                                            <f:setPropertyActionListener value="#{unidadePrisional}"
+                                                                         target="#{detalhaSolicitacaoTransferenciaNecBean.unidadePrisional}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

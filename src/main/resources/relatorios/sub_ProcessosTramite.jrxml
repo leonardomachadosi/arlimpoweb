@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_ProcessosTramite" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="87ff81f5-4cd9-42a1-b0f0-c022eaad10c1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiispAdapter.xml"/>
+	<parameter name="listaProcessoTramite" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="numeroGrande" class="java.lang.String"/>
+	<field name="numeroPequeno" class="java.lang.String"/>
+	<field name="nomeVara" class="java.lang.String"/>
+	<field name="nomeComarca" class="java.lang.String"/>
+	<field name="dataProcesso" class="java.util.Date"/>
+	<field name="nomeSituacaoProcesso" class="java.lang.String"/>
+	<field name="nomeSubsecao" class="java.lang.String"/>
+	<field name="nomeSecao" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="18" uuid="3ed6fc4d-5a29-45e3-8483-61f80e7c545d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="38c1fc2d-3622-4372-9426-43c504d30085"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NUMERAÇÃO ÚNICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="80" height="18" uuid="836f0dc4-74d7-4fe4-83e8-c7c5c8266bdc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d2fe8097-31a5-47d7-916e-f253cb7633c7"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Nº PROCESSO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="100" height="18" uuid="1b79e6a3-93b0-433b-8f3d-ebeabd3ebebc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="736abd56-da1d-4322-970b-351cb8235180"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[COMARCA/SEÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="0" width="90" height="18" uuid="66221c3a-3bc3-4b80-ab44-13c1fd93725a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32f97550-b2e5-465b-bc50-bfda2d0de808"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[VARA/SUBSEÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="45" height="18" uuid="cc2d3200-28e5-407f-80f1-b9f29333c55b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aced3c4e-5744-472f-9553-788a88988682"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DATA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="445" y="0" width="110" height="18" uuid="cc2d3200-28e5-407f-80f1-b9f29333c55b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aced3c4e-5744-472f-9553-788a88988682"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[SITUAÇÃO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="130" height="17" uuid="bfa49589-b8e2-48b8-bb66-a6284fc22341">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="38c1fc2d-3622-4372-9426-43c504d30085"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{numeroGrande}.substring(0, 7) + "-" + $F{numeroGrande}.substring(7, 9) + "." + $F{numeroGrande}.substring(9, 13) + "." + $F{numeroGrande}.substring(13, 14) + "." + $F{numeroGrande}.substring(14, 16) + "." + $F{numeroGrande}.substring(16, 20))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="80" height="17" uuid="50f158f1-9c10-4836-b706-e405dcefacad">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d2fe8097-31a5-47d7-916e-f253cb7633c7"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{numeroPequeno}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="210" y="0" width="100" height="17" uuid="de6a40da-19d6-44cd-a58d-aad11310ae86">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="736abd56-da1d-4322-970b-351cb8235180"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{nomeComarca} == null ? "" : $F{nomeComarca}) + ($F{nomeSecao} == null ? "" : $F{nomeSecao})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="310" y="0" width="90" height="17" uuid="ad5ae359-5346-44b5-9f03-43d86ac022c5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32f97550-b2e5-465b-bc50-bfda2d0de808"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{nomeVara} == null ? "" : $F{nomeVara}) + ($F{nomeSubsecao} == null ? "" : $F{nomeSubsecao})]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="45" height="17" uuid="48a0bc20-be8b-40bb-aa2d-5ad959a0a7cf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="adb2e667-5a77-4fa4-8b3e-4baeadddacff"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{dataProcesso}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="445" y="0" width="110" height="17" uuid="e2055fa2-90ef-478e-8663-f73800185e9d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0618eae6-bfd4-4da1-b0dd-62afbb3b029c"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nomeSituacaoProcesso}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

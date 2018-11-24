@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dataList value="#{List}"
+                rendered="#{List.size() > 0}"
+                var="item"
+                type="unordered" itemType="none" paginator="true" paginatorPosition="bottom"
+                rows="5"
+                style="width: 80%"
+                styleClass="cars-datalist">
+        <f:facet name="header">
+            Vinculos
+        </f:facet>
+        <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+            <div class="car-details">
+                <p:graphicImage
+                        value="#{fotoBean.getFotoFrontalPath(tipo == 'detento' ? item.codPessoaDetento : item.codPessoaVisitante, tipo == 'detento' ? 1 : 2)}"
+                        style="width: 78px; margin:24px;"/>
+            </div>
+            <div class="car-details" style="max-width: 250px;">
+                <h:outputText value="#{item.nomeDetento}" rendered="#{tipo == 'detento'}"/>
+                <h:outputText value="#{item.nomeVisitante}" rendered="#{tipo == 'visitante'}"/>
+                <p style="color:#757575">Vínculo: #{item.parentesco}</p>
+                <p style="color:#757575">Situação Vínculo: <h:outputText
+                        value="#{item.vinculo}"
+                        styleClass="#{utilBean.addStyleByStatus(item.vinculo)}"/>
+                </p>
+            </div>
+        </div>
+    </p:dataList>
+</ui:composition>

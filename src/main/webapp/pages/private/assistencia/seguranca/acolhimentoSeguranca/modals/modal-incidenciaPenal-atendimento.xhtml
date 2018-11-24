@@ -1,0 +1,117 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-incidenciaPenal-atendimento">
+        <p:dialog header="Adicionar Incidência Penal" id="dialogIncidenciaPenalAtendimento"
+                  widgetVar="addIncidenciaPenalAtendimento"
+                  modal="true" width="1000" height="500"
+                  responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid id="pgLeiDisciplinaArtigo" columns="2"
+                         columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgLeiDisciplina" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somLeiDisciplina" filter="true"
+                                     filterMatchMode="contains"
+                                     value="#{efetivaAtendimentoSegurancaBean.leiDisciplina}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems var="leiDisciplina"
+                                       itemLabel="#{leiDisciplina.descricao}"
+                                       value="#{efetivaAtendimentoSegurancaBean.leiDisciplinas}"/>
+                        <p:ajax process="@this"
+                                update="pgArtigo plParagrafoDisciplina"
+                                listener="#{efetivaAtendimentoSegurancaBean.onSelectLeiDisciplinas()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Lei Disciplina"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgArtigo" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somIncidenciaPenal" filter="true"
+                                     filterMatchMode="contains"
+                                     rendered="#{efetivaAtendimentoSegurancaBean.renderizaInsercao}"
+                                     value="#{efetivaAtendimentoSegurancaBean.artigoDisciplina}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems var="artigoDisciplina"
+                                       itemLabel=" Art. #{artigoDisciplina.descricao}"
+                                       value="#{efetivaAtendimentoSegurancaBean.selectedArtigosDisciplinas}"/>
+                        <p:ajax process="@this"
+                                update="pgParagrafoDisciplina plParagrafoDisciplina pgIncisoDisciplina plIncisoDisciplina pgBtnAdcionarArtigo"
+                                listener="#{efetivaAtendimentoSegurancaBean.onSelectParagrafosDisciplinas()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Artigo"
+                                   rendered="#{efetivaAtendimentoSegurancaBean.renderizaInsercao}"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <h:panelGroup id="pgParagrafoDisciplina">
+                <p:panelGrid id="ipsParagrafoDisciplina"
+                             rendered="#{efetivaAtendimentoSegurancaBean.renderizaInsercao}"
+                             columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h3>Parágrafos</h3>
+                    <p:pickList id="plParagrafoDisciplina"
+                                converter="paragrafoDisciplinaPickListConverter"
+                                value="#{efetivaAtendimentoSegurancaBean.dualListModelParagrafoDisciplina}"
+                                var="paragrafoDisciplina"
+                                itemLabel="#{paragrafoDisciplina.numeroFormatado} #{paragrafoDisciplina.descricao}"
+                                itemValue="#{paragrafoDisciplina}"
+                                showSourceControls="true" showTargetControls="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true" responsive="true">
+                        <f:facet name="sourceCaption">Parágrafos </f:facet>
+                        <f:facet name="targetCaption">Parágrafos Selecionados</f:facet>
+                        <p:ajax event="transfer" listener="#{efetivaAtendimentoSegurancaBean.onTransfer}"
+                                update="plIncisoDisciplina"/>
+                    </p:pickList>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="pgIncisoDisciplina">
+                <p:panelGrid id="ipsIncisoDisciplina"
+                             rendered="#{efetivaAtendimentoSegurancaBean.renderizaInsercao}"
+                             columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h3>Incisos</h3>
+                    <p:pickList id="plIncisoDisciplina"
+                                value="#{efetivaAtendimentoSegurancaBean.dualListModelIncisoDisciplina}"
+                                converter="incisoDisciplinaPickListConverter"
+                                var="incisoDisciplina"
+                                itemLabel="#{incisoDisciplina.paragrafoDisciplina.numeroFormatado} #{incisoDisciplina.numeroFormatado} #{incisoDisciplina.descricao}"
+                                itemValue="#{incisoDisciplina}"
+                                showSourceControls="true" showTargetControls="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true" responsive="true">
+                        <f:facet name="sourceCaption">Incisos</f:facet>
+                        <f:facet name="targetCaption">Incisos Selecionados</f:facet>
+                    </p:pickList>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="pgBtnAdcionarArtigo">
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <p:toolbar id="tbBtn"
+                               rendered="#{efetivaAtendimentoSegurancaBean.renderizaInsercao}">
+                        <f:facet name="right">
+                            <p:commandButton id="btnAdcionarArtigo" value="Adicionar"
+                                             update="form:tab:dtAtendimentoSegurancaArtigos"
+                                             oncomplete="PF('addIncidenciaPenalAtendimento').hide();"
+                                             action="#{efetivaAtendimentoSegurancaBean.adicionarArtigoDisciplina()}"
+                                             icon="ui-icon-plus"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:panelGrid>
+            </h:panelGroup>
+        </p:dialog>
+    </h:form>
+</ui:composition>

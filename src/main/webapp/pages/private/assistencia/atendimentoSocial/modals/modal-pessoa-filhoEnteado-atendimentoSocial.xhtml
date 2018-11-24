@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-pessoa-filhoEnteado-atendimentoSocial">
+        <p:dialog header="Adicionar Pessoa" id="dialogPessoaFilhoEnteadoAtendimentoSocial" widgetVar="addPessoa"
+                  modal="true"
+                  width="1000" height="300" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="2"
+                         id="pgPessoaParentescos"
+                         columnClasses="ui-grid-col-8, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itNomePesquisa"
+                                 value="#{efetivaAtendimentoSocialBean.pessoaPesquisa.nome}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itNomePesquisa" value="Nome"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgDataNascimento" styleClass="md-inputfield">
+                    <p:calendar id="itDataNascimento"
+                                value="#{efetivaAtendimentoSocialBean.pessoaPesquisa.dataNascimento}"
+                                rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"
+                                mask="99/99/9999"
+                                pattern="dd/MM/yyyy"
+                                inputStyle="width: 96%"
+                                locale='pt'
+                                style="width: 100%;"/>
+                    <p:outputLabel for="itDataNascimento" value="Data de Nascimento"
+                                   rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"/>
+                </h:panelGroup>
+
+            </p:panelGrid>
+            <h:panelGroup id="hpBeneficioSocialParentesco">
+                <p:panelGrid id="pgBeneficioSocialParentesco" columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;"
+                             cellpadding="5">
+                    <h:panelGroup id="pgBeneficioSocial"
+                                  styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soBeneficioSocial"
+                                         value="#{efetivaAtendimentoSocialBean.pessoaPesquisa.beneficioSocial}"
+                                         rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         style="width: 100%">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione o Benefício Social"
+                                          itemValue=""/>
+                            <f:selectItems value="#{efetivaAtendimentoSocialBean.beneficioSociais}"
+                                           var="beneficioSocial"
+                                           itemLabel="#{beneficioSocial.descricao}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="soBeneficioSocial" value="Benefício Social"
+                                       rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"/>
+                    </h:panelGroup>
+                    <h:panelGroup id="pgParentesco"
+                                  styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soParentescos"
+                                         value="#{efetivaAtendimentoSocialBean.pessoaParentesco.parentesco}"
+                                         rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         style="width: 100%">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione o Parentesco"
+                                          itemValue=""/>
+                            <f:selectItems value="#{efetivaAtendimentoSocialBean.parentescoFilhosEnteados}"
+                                           var="parentesco"
+                                           itemLabel="#{parentesco.descricao}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="soParentescos" value="Parentesco"
+                                       rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="hpRegistrado">
+                <p:panelGrid id="pgResgistrado" columns="2"
+                             columnClasses="ui-grid-col-2, ui-grid-col-5"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;"
+                             cellpadding="5">
+                    <h:panelGroup>
+                        <p:outputLabel style="color:darkGray;" value="Registrado: "
+                                       rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"/>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:selectOneRadio id="sorRegistrado"
+                                          style="color:darkGray;"
+                                          layout="responsive" columns="3"
+                                          value="#{efetivaAtendimentoSocialBean.pessoaParentesco.registrado}"
+                                          rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"
+                                          converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                            <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                        </p:selectOneRadio>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton value="Buscar"
+                                     id="btnbuscar"
+                                     icon="ui-icon-search"
+                                     action="#{efetivaAtendimentoSocialBean.buscaPessoasParentescoByNome()}"
+                                     update="dtPessoaParentescos,
+                                      pgDataNascimento,
+                                      hpBeneficioSocialParentesco,
+                                      hpRegistrado
+                                      tbBtn"
+                                     process="@form"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                    <p:commandButton
+                            value="Inserir Novo"
+                            id="btnInserir"
+                            update="form:tab:dtPessoasParentescoFilhosEnteados"
+                            actionListener="#{efetivaAtendimentoSocialBean.adicionarPessoaParentescoFilhoEnteado()}"
+                            rendered="#{efetivaAtendimentoSocialBean.renderizaInsercao}"
+                            icon="ui-icon-done"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+
+                </f:facet>
+            </p:toolbar>
+            <p:spacer/>
+            <p:dataTable
+                    id="dtPessoaParentescos" paginator="true" rows="10"
+                    paginatorPosition="bottom"
+                    value="#{efetivaAtendimentoSocialBean.pessoasParentescoFilhoEnteado}"
+                    var="pessoaParentesco"
+                    emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                <f:facet name="header">
+                    Pessoas
+                </f:facet>
+                <p:column headerText="Nome">
+                    <h:outputText value="#{pessoaParentesco.pessoaParente.nome}"/>
+                </p:column>
+                <p:column headerText="Data de Nascimento">
+                    <h:outputText value="#{pessoaParentesco.pessoaParente.dataNascimento}">
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Registrado">
+                    <h:outputText value="#{pessoaParentesco.registrado? 'Sim': 'Não'}"/>
+                </p:column>
+                <p:column headerText="Benefício Social">
+                    <h:outputText value="#{pessoaParentesco.pessoaParente.beneficioSocial.descricao}"/>
+                </p:column>
+                <p:column headerText="Parentesco">
+                    <h:outputText value="#{pessoaParentesco.parentesco.descricao}"/>
+                </p:column>
+                <p:column style="width: 30px;">
+                    <p:commandButton title="Adicionar Pessoa"
+                                     icon="ui-icon-check"
+                                     update="form:tab:dtPessoasParentescoFilhosEnteados"
+                                     oncomplete="PF('addPessoa').hide();"
+                                     action="#{efetivaAtendimentoSocialBean.adicionarPessoaParentescoFilhoEnteado()}"
+                                     process="@this">
+                        <f:setPropertyActionListener value="#{pessoaParentesco.pessoaParente}"
+                                                     target="#{efetivaAtendimentoSocialBean.pessoaPesquisa}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </h:form>
+</ui:composition>

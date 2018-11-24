@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jstl/core">
+
+    <p:outputLabel value="Dados Pessoais" styleClass="customLabel"/>
+    <ui:include src="dados-pessoais-panelgrid.xhtml">
+        <ui:param name="detentoView"
+                  value="#{visualizaDetentoBean.detentoView}"/>
+    </ui:include>
+
+    <p:outputLabel value="Outros Nomes" styleClass="customLabel"
+                   rendered="#{visualizaDetentoBean.nomesFalsos.size() > 0}"/>
+    <p:dataTable value="#{visualizaDetentoBean.nomesFalsos}" emptyMessage="Nenhum registro encontrado"
+                 var="nomesFalsos" style="text-align: center; margin-top: 1em;margin-bottom: 2em; width: 50%;"
+                 rendered="#{visualizaDetentoBean.nomesFalsos.size() > 0}">
+        <f:facet name="header">
+            Outros Nomes
+        </f:facet>
+        <p:column headerText="Nome">
+            <h:outputText value="#{nomesFalsos.nome}"/>
+        </p:column>
+        <p:column headerText="Tipo">
+            <h:outputText value="#{nomesFalsos.tipoNome.descricao}"/>
+        </p:column>
+    </p:dataTable>
+
+    <p:spacer/>
+    <p:outputLabel value="Dados Prisionais" styleClass="customLabel"/>
+    <p:accordionPanel multiple="false" prependId="false">
+        <c:forEach items="#{visualizaDetentoBean.detentoCelaList}" var="detentoCela">
+            <p:tab title="Ciclo #{detentoCela.detento.numeroCiclo}">
+                <ui:include src="dados-prisionais-panelgrid.xhtml">
+                    <ui:param name="detentoCela"
+                              value="#{detentoCela}"/>
+                    <ui:param name="detentoSituacao"
+                              value="#{visualizaDetentoBean.getSituacaoPorCiclo(detentoCela.detento)}"/>
+                    <ui:param name="detentoTipoPrisao"
+                              value="#{visualizaDetentoBean.getTipoPrisaoPorCiclo(detentoCela.detento)}"/>
+                </ui:include>
+
+                <p:outputLabel value="Natureza de Custodia" styleClass="customLabel"/>
+                <ui:include src="natureza-custodia-step.xhtml">
+                    <ui:param name="detentoNaturezaCustodiaList"
+                              value="#{visualizaDetentoBean.getNaturezaCustodiaPorCiclo(detentoCela.detento)}"/>
+                </ui:include>
+
+                <p:outputLabel value="Monitoramento Eletrônico" styleClass="customLabel" rendered="#{!visualizaDetentoBean.detentoTornozeleiras.isEmpty()}"/>
+                <h:panelGroup id="pgMonitoramentoEletronico" rendered="#{!visualizaDetentoBean.detentoTornozeleiras.isEmpty()}">
+                    <p:panelGrid columns="1"
+                                 id="pgMonitoramento"
+                                 columnClasses="ui-grid-col-12"
+                                 layout="grid"
+                                 styleClass="ui-panelgrid-blank form-group"
+                                 style="border:0 none; background-color:transparent;">
+                        <p:dataTable id="dtMonitoramento" var="tornozeleira"
+                                     value="#{visualizaDetentoBean.detentoTornozeleiras}"
+                                     reflow="true"
+                                     rowKey="#{tornozeleira.id}"
+                                     paginator="false" rows="5"
+                                     emptyMessage="Nenhum registro encontrado"
+                                     style="text-align: center">
+                            <f:facet name="header">
+                                Tornozeleira Eletrônica
+                            </f:facet>
+                            <p:column headerText="Número"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value="#{tornozeleira.numero}"/>
+                            </p:column>
+                            <p:column headerText="Data inicial"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value="#{tornozeleira.dataInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Data final"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value="#{tornozeleira.dataFim}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panelGrid>
+                </h:panelGroup>
+            </p:tab>
+        </c:forEach>
+    </p:accordionPanel>
+
+    <p:outputLabel value="Incidência Penal" styleClass="customLabel"/>
+    <h:panelGroup id="pgProcessoArtigo" >
+        <p:panelGrid columns="1"
+                     id="pgDtProcessoArtigo"
+                     columnClasses="ui-grid-col-12"
+                     layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0 none; background-color:transparent;">
+            <h:panelGroup>
+                <ui:include src="../../assistencia/gerenciamentoProcesso/fragments/processo-artigo-datatable.xhtml">
+                    <ui:param name="tituloFacet" value="Incidência Penal"/>
+                </ui:include>
+            </h:panelGroup>
+        </p:panelGrid>
+    </h:panelGroup>
+
+</ui:composition>

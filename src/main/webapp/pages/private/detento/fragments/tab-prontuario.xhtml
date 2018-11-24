@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <p:outputLabel value="Prontuario" styleClass="customLabel"/>
+    <!--<h:panelGrid style="margin: 0 auto;">
+        <p:repeat value="#{visualizaDetentoBean.detentoArquivoList}" var="arquivo">
+            <p:panelGrid columns="1" style="text-align: center;float: left;">
+                <h:commandButton action="#{visualizaDetentoBean.mostrarPdf(arquivo.arquivo.path)}"
+                                 image="/resources/imagens/pdf.png" style="height: 57px;width: auto; cursor: pointer;"
+                                 process="@this" onclick="this.form.target='_blank'" ajax="false"/>
+                <h:outputText value="#{arquivo.arquivo.tipoArquivo.descricao}"/>
+            </p:panelGrid>
+        </p:repeat>
+    </h:panelGrid>-->
+    <p:accordionPanel multiple="false">
+        <c:forEach items="#{visualizaDetentoBean.detentoList}" var="detento">
+            <p:tab title="Ciclo #{detento.numeroCiclo}">
+                <p:commandButton style="float: right"
+                                 process="@this"
+                                 rendered="#{visualizaDetentoBean.renderizarBotaoEditar(detento)}"
+                                 actionListener="#{visualizaDetentoBean.editarArquivosDetento(detento)}"
+                                 update="dialogEdicaoProntuario"
+                                 oncomplete="PF('addEdicaoProntuario').show();"  icon="ui-icon-pencil"/>
+                <h:panelGrid style="margin: 0 auto;">
+                    <!--<p:repeat value="#{detentoArquivoList = visualizaDetentoBean.getDetentoArquivoPorCiclo(detento)}" var="arquivo">
+                        <p:panelGrid columns="1" style="text-align: center;float: left;">
+                            <h:commandButton action="#{visualizaDetentoBean.mostrarPdf(arquivo.arquivo.path)}"
+                                             image="/resources/imagens/pdf.png" style="height: 57px;width: auto; cursor: pointer;"
+                                             process="@this" onclick="this.form.target='_blank'" ajax="false"/>
+                            <h:outputText value="#{arquivo.arquivo.tipoArquivo.descricao}"/>
+                        </p:panelGrid>
+                    </p:repeat>-->
+                    <p:dataTable
+                         id="dtDetentoArquivo"
+                         value="#{detentoArquivoList = visualizaDetentoBean.getDetentoArquivoPorCiclo(detento)}"
+                         style="width: 100%; text-align: center"
+                         var="arquivo" >
+                        <p:column headerText="Descrição">
+                            <h:outputText value="#{arquivo.arquivo.descricao}" />
+                        </p:column>
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{arquivo.arquivo.tipoArquivo.descricao}" />
+                        </p:column>
+                        <p:column headerText="Data">
+                            <h:outputText value="#{arquivo.arquivo.dataInicio}">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 15%">
+                            <h:commandButton action="#{visualizaDetentoBean.downloadPdf(arquivo.arquivo.path,arquivo.arquivo.descricao)}"
+                                             image="/resources/imagens/pdf.png" style="height: 2em;width: auto; cursor: pointer;"
+                                             process="@this" ajax="false"/>
+                        </p:column>
+                    </p:dataTable>
+                         
+                    <h:outputText rendered="#{detentoArquivoList.isEmpty()}" value="Nenhum documento cadastrado para este ciclo."/>
+                </h:panelGrid>
+            </p:tab>
+        </c:forEach>
+    </p:accordionPanel>
+</ui:composition>

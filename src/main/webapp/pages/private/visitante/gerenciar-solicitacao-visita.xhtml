@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Gerenciar Solicitações de Visita</b></h1>
+                        <p:panelGrid id="pgGrauParentesco" columns="4"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-2, ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu
+                                        label="Estabelecimento"
+                                        id="soLotacao"
+                                        converter="omnifaces.SelectItemsConverter"
+                                        filter="true"
+                                        value="#{gerenciaSolicitacaoVisitaBean.selectedUnidadesPrisionais}"
+                                        style="width: 100%;color: darkgray">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{gerenciaSolicitacaoVisitaBean.unidadesPrisionais}"
+                                                   var="unidadePrisisonal"
+                                                   itemLabel="#{unidadePrisisonal.descricao}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itFuncionario"
+                                             style="width: 100%"
+                                             readonly="true"
+                                             value="#{gerenciaSolicitacaoVisitaBean.usuario.pessoa.nome}"/>
+                                <p:outputLabel for="itFuncionario" value="Funcionário"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar
+                                        id="cdDataInicial"
+                                        pattern="dd/MM/yyyy"
+                                        mask="99/99/9999"
+                                        value="#{gerenciaSolicitacaoVisitaBean.dataInicial}"
+                                        locale='pt'
+                                        inputStyle="width: 100%"/>
+                                <p:outputLabel for="cdDataInicial" value="Data Inicial"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar
+                                        id="cdDataFinal"
+                                        pattern="dd/MM/yyyy"
+                                        mask="99/99/9999"
+                                        value="#{gerenciaSolicitacaoVisitaBean.dataFinal}"
+                                        locale='pt'
+                                        inputStyle="width: 100%"/>
+                                <p:outputLabel for="cdDataFinal" value="Data Final"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu" style="margin-top: 1em;">
+                                <p:selectOneMenu
+                                        id="soSituacao"
+                                        converter="omnifaces.SelectItemsConverter"
+                                        value="#{gerenciaSolicitacaoVisitaBean.situacaoSolicitacaoVisitante}"
+                                        style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems
+                                            value="#{gerenciaSolicitacaoVisitaBean.situacoesSolicitacaoVisitante}"
+                                            var="situacaoSolicitacaoVisitante"
+                                            itemLabel="#{situacaoSolicitacaoVisitante.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soSituacao" value="Situação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVincularVisitante" value="Buscar"
+                                             process="@form" update="@form"
+                                             action="#{gerenciaSolicitacaoVisitaBean.buscarHistoricoSolicitacoes()}"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{!gerenciaSolicitacaoVisitaBean.historicosSolicitacaoVisitante.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:panelGrid id="pgListaSolicitacao" columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:dataTable id="dtListaHistoricoSolicitacao"
+                                             value="#{gerenciaSolicitacaoVisitaBean.historicosSolicitacaoVisitante}"
+                                             var="historicoSolicitacaoVisitante"
+                                             paginator="true"
+                                             paginatorPosition="bottom"
+                                             rows="10"
+                                >
+                                    <f:facet name="header">
+                                        Solicitações
+                                    </f:facet>
+                                    <p:column headerText="Código" style="text-align: center; width: 10%">
+                                        <h:outputText value="#{historicoSolicitacaoVisitante.solicitacaoVisitante.numeroFormatado}"/>
+                                    </p:column>
+                                    <p:column headerText="Nome do Preso" style="text-align: center">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoVisitante.solicitacaoVisitante.pessoaParentesco.pessoa.nome}"/>
+                                    </p:column>
+                                    <p:column headerText="Estabelecimento" style="text-align: center">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoVisitante.solicitacaoVisitante.unidadePrisional.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Data da Solicitação" style="text-align: center">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoVisitante.solicitacaoVisitante.dataSolicitacao}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Situação" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoVisitante.situacaoSolicitacaoVisitante.descricao}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 5%">
+                                        <p:commandButton title="Visualizar" process="@this"
+                                                         action="#{gerenciaSolicitacaoVisitaBean.visualizarSolicitacaoVisita}"
+                                                         onclick="this.form.target='_blank'" ajax="false"
+                                                         icon="ui-icon-remove-red-eye">
+                                            <f:setPropertyActionListener value="#{historicoSolicitacaoVisitante}"
+                                                                         target="#{gerenciaSolicitacaoVisitaBean.historicoSolicitacaoVisitante}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

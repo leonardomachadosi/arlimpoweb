@@ -1,0 +1,149 @@
+.ui-datatable.custom-table {
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+}
+
+.ui-datatable.custom-table tbody tr {
+    background-color: transparent !important;
+}
+
+.ui-datatable.custom-table th, .ui-datatable.custom-table td {
+    padding: 0 !important;
+}
+
+.ui-datatable.custom-table, .ui-datatable.custom-table th, .ui-datatable.custom-table td {
+    border: none !important;
+}
+
+.ui-datatable.custom-table {
+    width: 100% !important;
+    display: table !important;
+}
+
+.ui-datatable.custom-table thead {
+    border-bottom: 1px solid #d0d0d0 !important;
+}
+
+.ui-datatable.custom-table td, .ui-datatable.custom-table th {
+    padding: 15px 5px !important;
+    display: table-cell !important;
+    text-align: left !important;
+    vertical-align: middle !important;
+    border-radius: 2px !important;
+}
+
+.ui-datatable.custom-table tbody {
+    border: none !important;
+}
+
+/* Materialize classes for dataTable */
+.ui-datatable.custom-table.bordered tr {
+    border-bottom: 1px solid #d0d0d0 !important;
+}
+
+.ui-datatable.custom-table.striped tr:nth-child(odd) {
+    background-color: #f2f2f2 !important;
+}
+
+.ui-datatable.custom-table.striped td {
+    border-radius: 0 !important;
+}
+
+.ui-datatable.custom-table.highlight tr {
+    -webkit-transition: background-color .25s ease !important;
+    transition: background-color .25s ease !important;
+}
+
+.ui-datatable.custom-table.highlight tr:hover {
+    background-color: #f2f2f2 !important;
+}
+
+.ui-datatable.custom-table.centered th,
+.ui-datatable.custom-table.centered td {
+    text-align: center !important;
+}
+
+.ui-datatable.custom-table.rightered th,
+.ui-datatable.custom-table.rightered td {
+    text-align: right !important;
+}
+
+/* Clean sub-dataTable */
+.ui-datatable.custom-table.bordered tr .ui-datatable.custom-table,
+.ui-datatable.custom-table.bordered tr .ui-datatable.custom-table thead,
+.ui-datatable.custom-table.bordered tr .ui-datatable.custom-table tbody,
+.ui-datatable.custom-table.bordered tr .ui-datatable.custom-table tr,
+.ui-datatable.custom-table.bordered tr .ui-datatable.custom-table th,
+.ui-datatable.custom-table.bordered tr .ui-datatable.custom-table td {
+    border: none !important;
+}
+
+.ui-datatable.custom-table.striped tr:nth-child(odd) .ui-datatable.custom-table thead tr,
+.ui-datatable.custom-table.striped tr:nth-child(odd) .ui-datatable.custom-table thead th,
+.ui-datatable.custom-table.striped tr:nth-child(odd) .ui-datatable.custom-table tbody tr,
+.ui-datatable.custom-table.striped tr:nth-child(odd) .ui-datatable.custom-table tbody td {
+    background-color: #f2f2f2 !important;
+}
+
+.ui-datatable.custom-table.highlight tr .ui-datatable.custom-table thead tr,
+.ui-datatable.custom-table.highlight tr .ui-datatable.custom-table thead th,
+.ui-datatable.custom-table.highlight tr .ui-datatable.custom-table tbody tr,
+.ui-datatable.custom-table.highlight tr .ui-datatable.custom-table tbody td {
+    -webkit-transition: background-color .25s ease !important;
+    transition: background-color .25s ease !important;
+}
+
+.ui-datatable.custom-table.highlight tr:hover .ui-datatable.custom-table thead tr,
+.ui-datatable.custom-table.highlight tr:hover .ui-datatable.custom-table thead th,
+.ui-datatable.custom-table.highlight tr:hover .ui-datatable.custom-table tbody tr,
+.ui-datatable.custom-table.highlight tr:hover .ui-datatable.custom-table tbody td {
+    background-color: #f2f2f2 !important;
+}
+
+.ui-datatable.custom-table .ui-expanded-row-content .ui-datatable.custom-table tbody tr {
+    background-color: transparent !important;
+}
+
+/* Custom Sub-classes for dataTable */
+.ui-datatable.custom-table tr .ui-datatable.custom-table.bordered tr {
+    border-bottom: 1px solid #d0d0d0 !important;
+}
+
+.ui-datatable.custom-table tr .ui-datatable.custom-table.striped tr:nth-child(odd) {
+    background-color: #f2f2f2 !important;
+}
+
+.ui-datatable.custom-table tr .ui-datatable.custom-table.striped td {
+    border-radius: 0 !important;
+}
+
+.ui-datatable.custom-table tr .ui-datatable.custom-table.highlight tr {
+    -webkit-transition: background-color .25s ease !important;
+    transition: background-color .25s ease !important;
+}
+
+.ui-datatable.custom-table tr .ui-datatable.custom-table.highlight tr:hover {
+    background-color: #f2f2f2 !important;
+}
+
+.ui-datatable.custom-table tr .ui-datatable.custom-table.centered th,
+.ui-datatable.custom-table tr .ui-datatable.custom-table.centered td {
+    text-align: center !important;
+}
+
+/* Header and footer on dataTable */
+/*.ui-datatable.custom-table .ui-datatable-header {
+    border: none !important;
+    background-color: transparent !important;
+    color: black !important;
+}
+
+.ui-datatable.custom-table .ui-datatable-footer {
+    border: none !important;
+    background-color: transparent !important;
+    color: black !important;
+}*/
+
+.btn-table {
+    margin-right: 5px;
+}

@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+        </style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"  />
+            <p:remoteCommand name="setResponse" process="@this" update="@form"
+                             actionListener="#{buscaVisitanteBean.fingerPrint}"/>
+            <p:blockUI block="form" trigger="btnBuscarDetento" />
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Visitante</b></h1>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-4, ui-grid-col-8"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputMask id="itCpf"
+                                             mask="999.999.999-99"
+                                             value="#{buscaVisitanteBean.cpf}"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itCpf" value="CPF"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeVisitante"
+                                             value="#{buscaVisitanteBean.pessoa.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomeVisitante" value="Matrícula/Nome"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2" columnClasses="ui-grid-col-8"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento" style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{buscaVisitanteBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                value="#{buscaVisitanteBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                                itemValue="#{detentoView}">
+                                    <p:column style="width: 10%; text-align: center">
+                                        <p:graphicImage value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"
+                                                        style="width: 90%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                    </p:column>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Detento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="Buscar"
+                                             icon="ui-icon-search"
+                                             id="btnBuscarDetento"
+                                             action="#{buscaVisitanteBean.buscarVisitantes()}"
+                                             update="@form"
+                                             process="@form"/>
+                            <p:defaultCommand target="btnBuscarDetento"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton title="Buscar detento"
+                                             icon="ui-icon-fingerprint"
+                                             type="button"
+                                             id="btnBuscar"
+                                             onclick="PF('dialogBusca').show();"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{!buscaVisitanteBean.visitantesView.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1><b>Visitantes</b></h1>
+                            <p:dataList value="#{buscaVisitanteBean.visitantesView}"
+                                        id="dtDetentos"
+                                        var="visitante"
+                                        type="unordered" itemType="none" paginator="true" paginatorPosition="bottom"
+                                        rows="10"
+                                        styleClass="cars-datalist">
+                                <f:facet name="header">
+                                    Visitantes
+                                </f:facet>
+                                <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                    <div class="car-details">
+                                        <p:graphicImage value="#{fotoBean.getFotoFrontalPath(visitante.codPessoa, 2)}"
+                                                        style="width: 78px; margin:24px;"/>
+                                    </div>
+                                    <div class="car-details">
+                                        <p><strong>#{visitante.nome}</strong></p>
+                                        <p style="color:#757575">Matrícula: #{utilBean.formataCodigo(visitante.codPessoa)}</p>
+                                        <p style="color:#757575"><h:outputText
+                                                styleClass="#{utilBean.addStyleByStatus(visitante.situacaoVisitante)}"
+                                                value="#{(visitante.codSituacaoVisitante != null)?
+                                            visitante.situacaoVisitante :
+                                           'PRÉ-CADASTRADO'}"/></p>
+                                    </div>
+                                    <p:commandButton
+                                            title="Editar Visitante" icon="ui-icon-edit"
+                                            action="#{buscaVisitanteBean.cadastrar()}"
+                                            rendered="#{buscaVisitanteBean.renderizarBotaoEditar(visitante)}"
+                                            style="margin:24px 12px 0 0">
+                                        <f:setPropertyActionListener value="#{visitante}"
+                                                                     target="#{buscaVisitanteBean.visitanteView}"/>
+                                    </p:commandButton>
+                                    <p:commandButton
+                                            title="Detalhes do Visitante" icon="ui-icon-remove-red-eye"
+                                            onclick="this.form.target='_blank'" ajax="false"
+                                            action="#{buscaVisitanteBean.visualizarDetalhes()}"
+                                            rendered="#{visitante.codVisitante != null}"
+                                            style="margin:24px 12px 0 0">
+                                        <f:setPropertyActionListener value="#{visitante}"
+                                                                     target="#{buscaVisitanteBean.visitanteView}"/>
+                                    </p:commandButton>
+                                </div>
+                            </p:dataList>
+
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <p:dialog header="Busca por biometria" id="dialogBusca" widgetVar="dialogBusca" modal="true" width="50%">
+                <h:inputText id="jsonrequest" value="#{buscaVisitanteBean.jsonRequest}" style="display: none"/>
+
+                <div class="ui-g-12">
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                 layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="selectSexo" value="#{buscaVisitanteBean.sexo}"
+                                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                <f:selectItem itemLabel="Selecione o sexo" noSelectionOption="true"/>
+                                <f:selectItems value="#{buscaVisitanteBean.sexos}" var="sexo"
+                                               itemValue="#{sexo}" itemLabel="#{sexo.descricao}"/>
+                                <p:ajax event="change" process="@this"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Sexo"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="selectMao" value="#{buscaVisitanteBean.mao}"
+                                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                <f:selectItem itemLabel="Selecione a mão" noSelectionOption="true"/>
+                                <f:selectItems value="#{buscaVisitanteBean.maos}" var="mao"
+                                               itemValue="#{mao}" itemLabel="#{mao.descricao}"/>
+                                <p:ajax event="change" listener="#{buscaVisitanteBean.onSelectMao()}" process="@this"
+                                        update="selectPosicao"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Mão"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="selectPosicao" value="#{buscaVisitanteBean.posicao}"
+                                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                <f:selectItem itemLabel="Selecione a posição" noSelectionOption="true"/>
+                                <f:selectItems value="#{buscaVisitanteBean.posicoes}" var="posicao"
+                                               itemValue="#{posicao}" itemLabel="#{posicao.descricao}"/>
+                                <p:ajax event="change" listener="#{buscaVisitanteBean.refreshPosicao()}"
+                                        process="@this" update="jsonrequest btnBuscarBio"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Posição"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+
+                    <div class="ui-g" style="margin-top: -13px;">
+                        <div class="ui-g-12">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <span class="ui-separator" style="padding-right: 5px;"/>
+                                    <p:commandButton id="btnBuscarBio" value="Buscar" icon="ui-icon-search"
+                                                     type="button" onclick="compareFinger($('#jsonrequest').val())"
+                                                     oncomplete="PF('dialogBusca').hide();"
+                                                     disabled="#{!buscaVisitanteBean.renderBotaoBuscarBiometria}"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </div>
+                    </div>
+
+                </div>
+            </p:dialog>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

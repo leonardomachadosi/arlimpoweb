@@ -1,0 +1,360 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-panelgrid {
+                border-collapse: unset !important;
+            }
+
+            .ui-panelgrid .ui-widget-header {
+                background-color: transparent !important;
+            }
+
+            .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .ui-grid-row {
+                margin-bottom: 1em;
+            }
+
+            .ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+
+            .ui-panelgrid .ui-panelgrid-cell {
+                border: 0;
+            }
+
+            .outputMask {
+                border: 0 !important;
+                opacity: 1 !important;
+            }
+
+            .dlDeficiencia .ui-widget-content{
+                border: 0;
+            }
+
+        </style>
+        <script>
+            var $elements = $(".parentescoDlg");
+            var clientIds = [];
+
+            $.each($elements, function (index, element) {
+                if (element.id) {
+                    clientIds.push(":" + element.id);
+                }
+            });
+            var newUpdate = clientIds.join(" ");
+
+            PrimeFaces.widget.Dialog.prototype.applyFocus = function () {
+                var firstInput = this.jq.find(':not(:submit):not(:button):input:visible:enabled:first');
+                if (!firstInput.hasClass('hasDatepicker')) {
+                    firstInput.focus();
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             ajax="false"
+                                             action="/pages/private/visitante/buscar-visitante.xhtml?faces-redirect=true"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Visualização de Visitante</b></h1>
+                        <p:tabView prependId="false">
+                            <p:tab title="Visitante">
+                                <p:outputLabel value="Dados Pessoais" styleClass="customLabel"/>
+                                <p:panelGrid style="margin-bottom:10px;width: 100%;">
+                                    <p:row>
+                                        <p:column>
+                                            <h:graphicImage style="max-width: 20em;"
+                                                            value="#{fotoBean.getFotoFrontalPath(detalhesVisitanteBean.visitanteView.codPessoa, 2)}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:panelGrid>
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel value="Código do visitante: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.getMatricula(detalhesVisitanteBean.visitanteView.codPessoa)}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputLabel value="Nome: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitanteView.nome}"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel value="Nome do pai: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitanteView.pai}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputLabel value="Nome da mãe: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitanteView.mae}"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel value="RG: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitanteView.rg}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputLabel value="CPF: "/>
+                                                        <p:inputMask mask="999.999.999-99" disabled="true"
+                                                                     styleClass="outputMask"
+                                                                     value="#{detalhesVisitanteBean.visitanteView.cpf}"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel value="Estado Civil: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitante.pessoa.estadoCivil.descricao}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputLabel value="Data de nascimento: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitanteView.nascimento}">
+                                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel value="Certidão de nascimento: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.documentos.certidaoNascimento}"/>
+                                                    </p:column>
+                                                    <p:column>
+                                                        <h:outputLabel value="Certidão de casamento: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.documentos.certidaoCasamento}"/>
+                                                    </p:column>
+                                                </p:row>
+                                                <p:row>
+                                                    <p:column>
+                                                        <h:outputLabel value="Tipo de Visitante: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitanteView.tipoVisitante}"/>
+                                                    </p:column>
+                                                    <p:column
+                                                            rendered="#{detalhesVisitanteBean.visitante.instituicao != null}">
+                                                        <h:outputLabel value="Instituição: "/>
+                                                        <h:outputText
+                                                                value="#{detalhesVisitanteBean.visitante.instituicao.nomeFantasia}"/>
+                                                    </p:column>
+                                                </p:row>
+                                            </p:panelGrid>
+                                            <p:dataList value="#{detalhesVisitanteBean.pessoaDeficienciaList}"
+                                                        var="deficiencia" type="unordered" itemType="none"
+                                                        rendered="#{detalhesVisitanteBean.pessoaDeficienciaList.size() > 0}"
+                                                        paginator="false"
+                                                        styleClass="cars-datalist dlDeficiencia">
+                                                <p:panelGrid>
+                                                    <p:row>
+                                                        <p:column>
+                                                            <h:outputLabel value="Deficiência: "/>
+                                                            <h:outputText
+                                                                    value="#{deficiencia.deficiencia.descricao}"/>
+                                                        </p:column>
+                                                        <p:column>
+                                                            <h:outputLabel value="Acompanhante: "/>
+                                                            <h:outputText
+                                                                    value="#{detalhesVisitanteBean.visitante.visitanteAcompanhante.pessoa.nome}"/>
+                                                        </p:column>
+                                                    </p:row>
+                                                </p:panelGrid>
+                                            </p:dataList>
+
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+
+                                <p:outputLabel value="Situação" styleClass="customLabel"
+                                               rendered="#{detalhesVisitanteBean.historicoSituacaoVisitanteList.size() > 0}"/>
+                                <ui:include src="fragments/historico-situacao-visitante-step.xhtml">
+                                    <ui:param name="historicoList"
+                                              value="#{detalhesVisitanteBean.historicoSituacaoVisitanteList}"/>
+                                </ui:include>
+
+                                <p:outputLabel value="Endereços" styleClass="customLabel"
+                                               rendered="#{detalhesVisitanteBean.enderecoPessoaList.size() > 0}"/>
+                                <p:dataTable value="#{detalhesVisitanteBean.enderecoPessoaList}" var="endereco"
+                                             rendered="#{detalhesVisitanteBean.enderecoPessoaList.size() > 0}">
+                                    <f:facet name="header">Endereços</f:facet>
+                                    <p:column headerText="Município">
+                                        <h:outputText value="#{endereco.endereco.municipio.descricao}"/>
+                                    </p:column>
+
+                                    <p:column headerText="CEP">
+                                        <p:inputMask mask="99999-999" disabled="true" styleClass="outputMask"
+                                                     value="#{endereco.endereco.cep}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Logradouro">
+                                        <h:outputText value="#{endereco.endereco.logradouro}"/>
+                                    </p:column>
+
+                                    <p:column headerText="Número">
+                                        <h:outputText value="#{endereco.endereco.numero}"/>
+                                    </p:column>
+                                </p:dataTable>
+
+                                <p:outputLabel value="Telefones" styleClass="customLabel"
+                                               rendered="#{detalhesVisitanteBean.telefoneList.size() > 0}"/>
+                                <p:dataTable value="#{detalhesVisitanteBean.telefoneList}" var="telefone"
+                                             rendered="#{detalhesVisitanteBean.telefoneList.size() > 0}"
+                                             paginator="#{detalhesVisitanteBean.telefoneList.size() > 10}"
+                                             rows="10" paginatorPosition="bottom"
+                                             style="text-align: center;width: 30%;">
+                                    <f:facet name="header">Telefones</f:facet>
+                                    <p:column headerText="Número">
+                                        <p:inputMask mask="(99) 9999-9999?9" disabled="true" styleClass="outputMask"
+                                                     value="#{telefone.descricao}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab title="Vínculos">
+                                <p:outputLabel value="Presos" styleClass="customLabel"/>
+                                <p:dataList value="#{detalhesVisitanteBean.visitanteDetentosView}"
+                                            id="dtDetentos"
+                                            var="detento"
+                                            type="unordered" itemType="none"
+                                            emptyMessage="Nenhum registro encontrado"
+                                            paginator="#{detalhesVisitanteBean.visitanteDetentosView.size() > 10}"
+                                            rows="10"
+                                            paginatorPosition="bottom"
+                                            styleClass="cars-datalist">
+                                    <f:facet name="header">Presos</f:facet>
+                                    <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                        <ui:include
+                                                src="../detento/fragments/visitanteDetentoView-dados-basicos-panelgroup.xhtml">
+                                            <ui:param name="detento"
+                                                      value="#{detento}"/>
+                                            <ui:param name="historicoPessoaParentesco"
+                                                      value="#{detalhesVisitanteBean.getHistorico(detento)}"/>
+                                        </ui:include>
+                                        <p:commandButton
+                                                title="Visualizar"
+                                                icon="ui-icon-remove-red-eye"
+                                                action="#{detalhesVisitanteBean.visualizarDetento()}"
+                                                style="margin:24px 12px 0 0">
+                                            <f:setPropertyActionListener value="#{detento}"
+                                                                         target="#{detalhesVisitanteBean.visitanteDetentoView}"/>
+                                        </p:commandButton>
+                                    </div>
+                                </p:dataList>
+
+                                <p:outputLabel value="Solicitação de Visita Assistida" styleClass="customLabel"
+                                               rendered="#{detalhesVisitanteBean.visitaAssistidaList.size() > 0}"/>
+                                <ui:include src="fragments/visualiza-visita-assistida-datalist.xhtml">
+                                    <ui:param name="list" value="#{detalhesVisitanteBean.visitaAssistidaList}"/>
+                                </ui:include>
+
+                            </p:tab>
+                            <p:tab title="Documentos">
+                                <p:outputLabel value="Documentos" styleClass="customLabel"
+                                               rendered="#{detalhesVisitanteBean.visitanteArquivoList.size() > 0}"/>
+                                <h:panelGrid style="margin: 0 auto;">
+                                    <p:repeat value="#{detalhesVisitanteBean.visitanteArquivoList}"
+                                              var="visitanteArquivo">
+                                        <p:panelGrid columns="1" style="text-align: center;float: left;">
+                                            <h:commandButton
+                                                    action="#{detalhesVisitanteBean.mostrarPdf(visitanteArquivo.arquivo.path)}"
+                                                    image="/resources/imagens/pdf.png"
+                                                    style="height: 57px;width: auto; cursor: pointer;"
+                                                    process="@this" onclick="this.form.target='_blank'" ajax="false"/>
+                                            <h:outputText value="#{visitanteArquivo.arquivo.tipoArquivo.descricao}"/>
+                                        </p:panelGrid>
+                                    </p:repeat>
+                                </h:panelGrid>
+                            </p:tab>
+                            <p:tab title="Histórico de visitas">
+                                <p:outputLabel value="Visitas" styleClass="customLabel"
+                                               rendered="#{detalhesVisitanteBean.visitaList.size() > 0}"/>
+                                <p:dataTable value="#{detalhesVisitanteBean.visitaList}"
+                                             paginatorPosition="bottom"
+                                             rendered="#{detalhesVisitanteBean.visitaList.size() > 0}"
+                                             var="visita" paginator="#{detalhesVisitanteBean.visitaList.size() > 10}"
+                                             rows="10">
+                                    <f:facet name="header">Histórico</f:facet>
+                                    <p:column style="width: 20px;">
+                                        <p:rowToggler/>
+                                    </p:column>
+                                    <p:column headerText="Preso">
+                                        <h:outputText value="#{visita.pessoaParentesco.pessoa.nome}"/>
+                                    </p:column>
+                                    <p:column headerText="Data">
+                                        <h:outputText value="#{visita.data}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Parentensco">
+                                        <h:outputText value="#{visita.pessoaParentesco.parentesco.descricao}"/>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid style="margin-bottom:20px;width: 100%;">
+                                            <p:row>
+                                                <p:column>
+                                                    <h:outputLabel value="Hora da entrada: "/>
+                                                    <h:outputText value="#{visita.horaEntrada}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <h:outputLabel value="Tipo de visita: "/>
+                                                    <h:outputText value="#{visita.tipoVisita.descricao}"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <h:outputLabel value="Hora da saída: "/>
+                                                    <h:outputText value="#{visita.horaSaida}"/>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column>
+                                                    <h:outputLabel value="Peso: "/>
+                                                    <h:outputText rendered="#{visita.peso != null}"
+                                                                  value="#{visita.peso} Kg"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <h:outputLabel value="Observação: "/>
+                                                    <h:outputText value="#{visita.observacao}"/>
+                                                </p:column>
+                                            </p:row>
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

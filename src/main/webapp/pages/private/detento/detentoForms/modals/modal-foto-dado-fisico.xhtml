@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="form-dialog-foto-dado-fisico">
+        <p:dialog header="Adicionar Foto" id="dialogFotoDadoFisico" widgetVar="addFotoDadoFisico" modal="true"
+                  width="600" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         id="pgButtonsFotoTatuagem"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:fileUpload
+                        mode="advanced"
+                        update="form:tabDadosFisicos"
+                        oncomplete="PF('addFotoDadoFisico').hide();"
+                        label="Carregar Foto"
+                        fileUploadListener="#{cadastroDetentoBean.uploadFoto}"
+                        sizeLimit="#{utilBean.sizeFile}"
+                        invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                        allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                        skinSimple="true"
+                />
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+        </p:dialog>
+    </h:form>
+</ui:composition>

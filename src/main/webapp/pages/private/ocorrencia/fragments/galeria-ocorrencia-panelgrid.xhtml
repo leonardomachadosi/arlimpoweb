@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="1"
+                 columnClasses="ui-grid-col-12,ui-grid-col-12"
+                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                 style="border:0px none; background-color:transparent;">
+
+        <h:panelGroup>
+            <p:dataTable id="dtOcorrenciaArquivos"
+                         value="#{ocorrenciaArquivoList}"
+                         var="ocorrenciaArquivo"
+                         reflow="true"
+                         rowKey="#{ocorrenciaArquivo.id}"
+                         rows="5"
+                         emptyMessage="Nenhum arquivo adicionado."
+                         style="width: 100%;text-align: left;">
+                <f:facet name="header">
+                    Galeria
+                </f:facet>
+                <p:column headerText="Arquivo" style="width: 10%; text-align: center">
+                    <p:graphicImage
+                            value="#{cadastroOcorrenciaBean.getThumbnail(ocorrenciaArquivo.arquivo.path)}"
+                            style="width: 100%;"/>
+                </p:column>
+                <p:column headerText="Descrição" style="text-align: center;">
+                    <h:outputText value="#{ocorrenciaArquivo.arquivo.descricao}"/>
+                </p:column>
+                <p:column headerText="Tipo de arquivo" style="text-align: center;">
+                    <h:outputText value="#{ocorrenciaArquivo.arquivo.tipoArquivo.descricao}"/>
+                </p:column>
+                <p:column headerText="Ação" style="width: 5%; text-align: center">
+                    <p:commandButton
+                            icon="ui-icon-remove-red-eye"
+                            style="border-bottom: 10px"
+                            title="Visualizar"
+                            onclick="this.form.target='_blank'" ajax="false"
+                            action="#{visualizaOcorrenciaBean.mostrarPdf()}"
+                            process="@this"
+                            rendered="#{ocorrenciaArquivo.arquivo.tipoArquivo.descricao == 'PDF'}">
+                        <f:setPropertyActionListener value="#{ocorrenciaArquivo.arquivo}"
+                                                     target="#{visualizaOcorrenciaBean.arquivo}"/>
+                    </p:commandButton>
+
+                    <p:lightBox styleClass="imagebox"
+                                rendered="#{ocorrenciaArquivo.arquivo.tipoArquivo.descricao == 'IMAGEM'}">
+                        <h:outputLink
+                                value="/SIISP/foto-detento?foto=#{buscaDetentoBean.enconder(ocorrenciaArquivo.arquivo.path)}">
+                            <p:commandButton icon="ui-icon-remove-red-eye"
+                                             style="border-bottom: 10px"
+                                             title="Visualizar"/>
+                        </h:outputLink>
+                    </p:lightBox>
+
+                    <p:commandButton
+                            icon="ui-icon-remove-red-eye"
+                            style="border-bottom: 10px"
+                            title="Visualizar"
+                            onclick="this.form.target='_blank'" ajax="false"
+                            action="#{visualizaOcorrenciaBean.mostrarVideo()}"
+                            process="@this"
+                            rendered="#{ocorrenciaArquivo.arquivo.tipoArquivo.descricao == 'VIDEO'}">
+                        <f:setPropertyActionListener value="#{ocorrenciaArquivo.arquivo}"
+                                                     target="#{visualizaOcorrenciaBean.arquivo}"/>
+                    </p:commandButton>
+
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
+    </p:panelGrid>
+</ui:composition>

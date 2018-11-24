@@ -1,0 +1,1315 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{efetivaAtendimentoPedagogicoBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:tabView id="tab">
+                        <p:tab title="Dados">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h2><b>Atendimento da Educação</b></h2>
+                                    <br/>
+                                    <p:panel header="Dados Pessoais"
+                                             style="margin-top: 10px; margin-bottom: 10px;">
+                                        <br/>
+                                        <p:panelGrid id="pgdDetentoNascimentoIdade" columns="3"
+                                                     columnClasses="ui-grid-col-8, ui-grid-col-2, ui-grid-col-2"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                                <p:inputText id="itNome"
+                                                             value="#{efetivaAtendimentoPedagogicoBean.detento.pessoa.nome}"
+                                                             readonly="true"
+                                                             style="width: 100%;"/>
+                                                <p:outputLabel for="itNome" value="Nome da Pessoa Presa"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:calendar id="cdNascimento"
+                                                            pattern="dd/MM/yyyy"
+                                                            readonly="true"
+                                                            showOn="none"
+                                                            value="#{efetivaAtendimentoPedagogicoBean.detento.pessoa.dataNascimento}"
+                                                            mask="99/99/9999"
+                                                            locale='pt'
+                                                            style="width: 100%"/>
+                                                <p:outputLabel for="cdNascimento" value="Data de Nascimento"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="itIdade"
+                                                             value="#{efetivaAtendimentoPedagogicoBean.calcularIdade()}"
+                                                             readonly="true" style="width: 100%;"/>
+                                                <p:outputLabel for="itIdade" value="Idade"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdUnidadePrisionalDataIngressoDataAtendimento" columns="3"
+                                                     columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgUnidadePrisional" styleClass="md-inputfield">
+                                                <p:inputText id="itUnidadePrisional"
+                                                             value="#{efetivaAtendimentoPedagogicoBean.detentoSolicitacaoView.unidadePrisional}"
+                                                             readonly="true"
+                                                             style="width: 100%;"/>
+                                                <p:outputLabel for="itUnidadePrisional" value="Unidade Prisional"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup id="pgDataEntradaUp" styleClass="md-inputfield">
+                                                <p:calendar id="cdDataEntrada"
+                                                            pattern="dd/MM/yyyy"
+                                                            readonly="true"
+                                                            mask="99/99/9999"
+                                                            value="#{efetivaAtendimentoPedagogicoBean.detento.dataInicioCiclo}"
+                                                            showOn="none"
+                                                            inputStyle="width: 100%"
+                                                            locale='pt'
+                                                            style="width: 100%"/>
+                                                <p:outputLabel for="cdDataEntrada" value="Data de Ingresso"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup styleClass="md-inputfield"
+                                                          rendered="#{efetivaAtendimentoPedagogicoBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <p:calendar
+                                                        id="cdDataAtendimento"
+                                                        value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.dataAtendimento}"
+                                                        readonly="true"
+                                                        showOn="none"
+                                                        inputStyle="width: 96%"
+                                                        pattern="dd/MM/yyyy HH:mm"
+                                                        mask="99/99/9999 99:99"
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="cdDataAtendimento" value="Data de Atendimento"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                    </p:panel>
+                                    <p:panel header="Grau de Escolaridade"
+                                             style="margin-top: 10px; margin-bottom: 10px;">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdAlfabetizado"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <h:outputText
+                                                        value="Alfabetizado?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdAlfabetizadoSo"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio layout="responsive" columns="3"
+                                                                  style="color: darkBlue"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.detento.pessoa.alfabetizado}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="pgdAlfabetizadoSo"
+                                                            render="pgAssinarNome hpNivelFundamental hpSerieSim pgdSerieSo hpNivelMedio"
+                                                            listener="#{efetivaAtendimentoPedagogicoBean.onSelectedAlfabetizadoRender}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+
+                                        <h:panelGroup id="pgAssinarNome">
+                                            <p:panelGrid columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.sabeAssinarNome}"
+                                                         id="pgdEscreveNome"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <h:outputText
+                                                            value="Sabe assinar o nome?"
+                                                            style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+
+                                            <p:panelGrid columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.sabeAssinarNome}"
+                                                         id="pgdEscreveNomeSo"
+                                                         columnClasses="ui-grid-col-5"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                                      style="color: darkBlue"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.escreveNome}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="hpNivelFundamental">
+                                            <p:panelGrid columns="1"
+                                                         id="pgdNivelFundamental"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelFundamental}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <h:outputText
+                                                            value="Nível Fundamental?"
+                                                            style="color: black;font-weight: bold"/>
+                                                    <br/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid columns="1"
+                                                         id="pgdNivelFundamentalSo"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelFundamental}"
+                                                         columnClasses="ui-grid-col-8"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                                      style="color: darkBlue"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.pessoaEscolaridadeFundamental.escolaridade}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.escolaridadesFundamental}"
+                                                                var="escolaridade"
+                                                                itemLabel="#{escolaridade.descricao}"/>
+                                                        <f:ajax execute="hpNivelFundamental"
+                                                                render="pgdTipoEscolaridade pgTipoEscolaridadeS pgTipoEscolaridade hpNivelFundamental hpNivelMedio"
+                                                                listener="#{efetivaAtendimentoPedagogicoBean.onSelectedNivelFundamentalRender}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+
+                                            <p:panelGrid id="pgdAtividadeProfissionalSim" columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasSerie}"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <h:outputText style="color:darkBlue;font-weight: bold"
+                                                                  value="2.1 Série:"/>
+                                                    <br/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+
+                                            <p:panelGrid columns="1"
+                                                         id="pgdSerieSo"
+                                                         columnClasses="ui-grid-col-12"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasSerie}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio
+                                                            layout="responsive" columns="9"
+                                                            style="color: darkBlue"
+                                                            converter="omnifaces.SelectItemsConverter"
+                                                            value="#{efetivaAtendimentoPedagogicoBean.pessoaEscolaridadeFundamental.serieEscolaridade}">
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.serieEscolaridadesFundamental}"
+                                                                var="serieEscolaridade"
+                                                                itemLabel="#{serieEscolaridade.descricao}"/>
+                                                    </p:selectOneRadio>
+                                                    <br/>
+                                                </h:panelGroup>
+
+                                            </p:panelGrid>
+
+                                        </h:panelGroup>
+                                        <h:panelGroup id="hpNivelMedio">
+                                            <p:panelGrid id="pgdNivelMedio"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelMedio}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <h:outputText
+                                                            value="Nível Médio?"
+                                                            style="color: black;font-weight: bold"/>
+                                                    <br/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid id="pgdNivelMedioSo"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelMedio}"
+                                                         columnClasses="ui-grid-col-8"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                                      style="color: darkBlue"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.pessoaEscolaridadeMedio.escolaridade}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.escolaridadesMedio}"
+                                                                var="escolaridade"
+                                                                itemLabel="#{escolaridade.descricao}"/>
+                                                        <f:ajax execute="hpNivelMedio"
+                                                                render="hpNivelSuperior hpNivelMedio"
+                                                                listener="#{efetivaAtendimentoPedagogicoBean.onSelectedNivelMedioRender}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid id="pgdAnolSim" columns="1"
+                                                         columnClasses="ui-grid-col-12"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.serieEnsinoMedio}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                                   value="Ano:"/>
+                                                    <br/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid columns="1"
+                                                         id="pgdAnoSo"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.serieEnsinoMedio}"
+                                                         columnClasses="ui-grid-col-3"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio
+                                                            layout="responsive" columns="3"
+                                                            style="color: darkBlue"
+                                                            converter="omnifaces.SelectItemsConverter"
+                                                            value="#{efetivaAtendimentoPedagogicoBean.pessoaEscolaridadeMedio.serieEscolaridade}">
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.serieEscolaridadesMedio}"
+                                                                var="serieEscolaridade"
+                                                                itemLabel="#{serieEscolaridade.descricao}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                                <br/>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgTipoEscolaridade">
+                                            <p:panelGrid id="pgdTipoEscolaridade"
+                                                         columns="1"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield"
+                                                              rendered="#{efetivaAtendimentoPedagogicoBean.hasModalidade}">
+                                                    <h:outputText
+                                                            value="Qual a modalidade?"
+                                                            style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <p:panelGrid columns="1"
+                                                         id="pgTipoEscolaridadeSo"
+                                                         columnClasses="ui-grid-col-5"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup
+                                                        rendered="#{efetivaAtendimentoPedagogicoBean.hasModalidade}">
+                                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                                      style="color: darkBlue"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.pessoaEscolaridade.tipoEscolaridade}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.tipoEscolaridades}"
+                                                                itemValue="#{tipoEscolaridade}"
+                                                                var="tipoEscolaridade"
+                                                                itemLabel="#{tipoEscolaridade.descricao}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdHistoriaReprovacao"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <h:outputText value="História de Reprovação?"
+                                                              style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdHistoriaReprovacaoSo"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio layout="responsive" columns="3"
+                                                                  style="color: darkBlue"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.historicoReprovacao}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="pgdHistoriaReprovacaoSo"
+                                                            render="hpHistoriaReprovacaoSim"
+                                                            listener="#{efetivaAtendimentoPedagogicoBean.onSelectedHistoricoReprovacaoRender}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpHistoriaReprovacaoSim">
+                                            <p:panelGrid columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasHistoriaReprovacao}"
+                                                         id="pgdHistoriaReprovacaoQual"
+                                                         columnClasses="ui-grid-col-4"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Motivo?"
+                                                                   style="color: darkblue;font-weight: bold"/>
+                                                </h:panelGroup>
+                                                <br/>
+                                            </p:panelGrid>
+                                            <p:panelGrid columns="1"
+                                                         id="pgdHistoriaReprovacaoTx"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield"
+                                                              rendered="#{efetivaAtendimentoPedagogicoBean.hasHistoriaReprovacao}">
+                                                    <p:inputText id="itHistoriaReprovacao"
+                                                                 value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.descricaoHistoricoReprovacao}"
+                                                                 style="width: 100%"/>
+                                                    <p:outputLabel for="itHistoriaReprovacao"
+                                                                   value="Descrição"/>
+                                                    <br/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+
+                                        </h:panelGroup>
+
+                                        <p:panelGrid columns="1"
+                                                     id="pgdHistoriaEvasao"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <h:outputText value="História de Evasão?"
+                                                              style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdHistoriaEvasaoSo"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio layout="responsive" columns="3"
+                                                                  style="color: darkBlue"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.historicoEvasao}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="pgdHistoriaEvasaoSo" render="hpHistoriaEvasaoSim"
+                                                            listener="#{efetivaAtendimentoPedagogicoBean.onSelectedHistoricoEvasaoRender}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpHistoriaEvasaoSim">
+                                            <p:panelGrid columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasHistoriaEvasao}"
+                                                         id="pgdHistoriaEvasaoQual"
+                                                         columnClasses="ui-grid-col-4"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Motivo?"
+                                                                   style="color: darkblue;font-weight: bold"/>
+                                                </h:panelGroup>
+                                                <br/>
+                                            </p:panelGrid>
+                                            <p:panelGrid columns="1"
+                                                         id="pgdHistoriaEvasaoTx"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield"
+                                                              rendered="#{efetivaAtendimentoPedagogicoBean.hasHistoriaEvasao}">
+                                                    <p:inputText id="itHistoriaEvasao"
+                                                                 value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.descricaoHistoricoEvasao}"
+                                                                 style="width: 100%"/>
+                                                    <p:outputLabel for="itHistoriaEvasao"
+                                                                   value="Descrição"/>
+                                                </h:panelGroup>
+                                                <br/>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="hpNivelSuperior">
+                                            <p:panelGrid id="pgdNivelSuperior"
+                                                         columns="1"
+                                                         columnClasses="ui-grid-col-6"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelSuperior}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield"
+                                                >
+                                                    <p:outputLabel value="Nível Superior?"
+                                                                   style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                                <br/>
+                                            </p:panelGrid>
+                                            <p:panelGrid id="pgdNivelSuperiorSo"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelSuperior}"
+                                                         columns="1"
+                                                         columnClasses="ui-grid-col-8"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup
+                                                >
+                                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                                      style="color: darkBlue"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.pessoaEscolaridadeSuperior.escolaridade}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.escolaridadesSuperior}"
+                                                                var="escolaridade"
+                                                                itemLabel="#{escolaridade.descricao}"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:panelGrid id="pgdNivelSuperiorQual"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelSuperior}"
+                                                         columnClasses="ui-grid-col-4"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Qual?"
+                                                                   style="color: darkblue;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelSuperior}"/>
+                                            <p:panelGrid columns="1"
+                                                         id="pgdCursoSuperiorSo"
+                                                         columnClasses="ui-grid-col-4"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.hasNivelSuperior}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-selectonemenu">
+                                                    <p:selectOneMenu id="soCursoSuperior"
+                                                                     appendTo="@(this)"
+                                                                     converter="omnifaces.SelectItemsConverter"
+                                                                     value="#{efetivaAtendimentoPedagogicoBean.pessoaCursoSuperior.curso}"
+                                                                     style="width: 100%;">
+                                                        <f:selectItem noSelectionOption="true"/>
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.cursosSuperior}"
+                                                                var="curso"
+                                                                itemLabel="#{curso.descricao}"/>
+                                                    </p:selectOneMenu>
+                                                    <p:outputLabel for="soCursoSuperior" value="Curso Superior"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <p:panelGrid columns="1"
+                                                     id="pgLocalCurso"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <h:outputText
+                                                        value="Local onde cursou o último ano letivo?"
+                                                        style="color: darkBlue;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdEstado"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="soEstado"
+                                                                 appendTo="@(this)"
+                                                                 value="#{efetivaAtendimentoPedagogicoBean.estado}"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 filter="true"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"/>
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoPedagogicoBean.estados}"
+                                                            var="municipio"
+                                                            itemLabel="#{municipio.descricao.toUpperCase()}"/>
+                                                    <f:ajax listener="#{efetivaAtendimentoPedagogicoBean.onSelectEstado()}" render="pgdMunicipio" execute="@this" />
+                                                </p:selectOneMenu>
+                                                <p:outputLabel for="soEstado" value="Estado"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdMunicipio"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="soMunicipio"
+                                                                 appendTo="@(this)"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.municipio}"
+                                                                 filter="true"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"/>
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoPedagogicoBean.municipios}"
+                                                            var="municipio"
+                                                            itemLabel="#{municipio.descricao.toUpperCase()}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel for="soMunicipio" value="Município"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgUnidadeEscolar"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0 none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="itUnidadeEscolar"
+                                                             style="width: 100%"
+                                                             value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.ultimaUnidadeEscolar}"/>
+                                                <p:outputLabel value="Última Unidade Escolar" for="itUnidadeEscolar"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid columns="1"
+                                                     id="pgDocumentacaoEscolar"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <h:outputText
+                                                        value="Com quem estão as documentações escolares?"
+                                                        style="color: darkBlue;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="2"
+                                                     id="pgdPessoaDocEscolar"
+                                                     columnClasses="ui-grid-col-6, ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="itPessoaDocEscolar"
+                                                             value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.pessoaDocEscolar}"
+                                                             style="width: 100%"/>
+                                                <p:outputLabel for="itPessoaDocEscolar"
+                                                               value="Nome"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputMask id="itTelePessoaDocEscolar"
+                                                             value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.telePessoaDocEscolar}"
+                                                             mask="(99)?999999999"
+                                                             style="width: 100%"/>
+                                                <p:outputLabel for="itTelePessoaDocEscolar"
+                                                               value="Telefone"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </p:panel>
+                                    <p:panel header="Cursos"
+                                             style="margin-top: 10px; margin-bottom: 10px;">
+                                        <h:panelGroup id="hpInteresseEstudar">
+                                            <p:panelGrid id="pgdInteresseEstudar"
+                                                         columns="1"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel
+                                                            value="Tem interesse em estudar?"
+                                                            style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer/>
+                                            <p:panelGrid id="pgdInteresseEstudarSo"
+                                                         columns="1"
+                                                         columnClasses="ui-grid-col-5"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:selectOneRadio layout="responsive" columns="3"
+                                                                      style="color: darkBlue"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"
+                                                                      converter="omnifaces.SelectItemsConverter">
+                                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                        <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                        <f:ajax execute="pgdInteresseEstudarSo"
+                                                                render="hpInteresseEstudar"/>
+                                                    </p:selectOneRadio>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer
+                                                    rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"/>
+                                            <p:panelGrid id="pgTituloImportanciaEstudo"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel
+                                                            value="Qual a importância do estudo?"
+                                                            style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer
+                                                    rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"/>
+                                            <p:panelGrid id="pgImportanciaEstudo"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:inputText id="itImportanciaEstudo"
+                                                                 style="width: 100%"
+                                                                 value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.descricaoImportanciaEstudo}"/>
+                                                    <p:outputLabel for="itImportanciaEstudo"
+                                                                   value="Importância do Estudo"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer
+                                                    rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"/>
+                                            <p:panelGrid id="pgTituloMotivacaoEstudo"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel
+                                                            value="O que motiva estudar?"
+                                                            style="color: black;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer
+                                                    rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"/>
+                                            <p:panelGrid id="pgMotivacaoEstudo"
+                                                         columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:inputText id="itMotivacaoEstudo"
+                                                                 style="width: 100%"
+                                                                 value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.descricaoMotivacaoEstudo}"/>
+                                                    <p:outputLabel for="itImportanciaEstudo"
+                                                                   value="Motivação de Estudo"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer
+                                                    rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseEstudar}"/>
+                                        </h:panelGroup>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdParticipaCurso"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <h:outputText
+                                                        value="Já participou de algum curso profissionalizante?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdParticipaCursoSo" columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgParticipaCursoSo">
+                                                <p:selectOneRadio id="sorParticipaCursoSo"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.participouCurso}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="@this"
+                                                            render="hpParticipouCursoSim hpInteresseCursoSim"
+                                                            listener="#{efetivaAtendimentoPedagogicoBean.onSelectedParticipouCursoProfissional()}" />
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpParticipouCursoSim">
+                                            <p:panelGrid id="pgdParticipaCursoSim" columns="1"
+                                                         columnClasses="ui-grid-col-12"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.participouCurso}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                                   value="Quais?"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:dataTable id="dtCursosProfissionalizantes"
+                                                         value="#{efetivaAtendimentoPedagogicoBean.pessoaCursos}"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.participouCurso}"
+                                                         var="pessoaCurso"
+                                                         emptyMessage="Nenhum registro encontrado"
+                                                         style="text-align: center"
+                                                         paginator="false"
+                                                         rows="10">
+                                                <f:facet name="header">
+                                                    Cursos Profissionalizantes
+                                                </f:facet>
+                                                <p:column headerText="Descrição" style="text-align: center">
+                                                    <h:outputText
+                                                            value="#{pessoaCurso.curso.descricao}">
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column headerText="Opções" style="width:60px;text-align: center">
+                                                    <p:commandButton title="Remover"
+                                                                     icon="ui-icon-trash"
+                                                                     styleClass="red-btn"
+                                                                     action="#{efetivaAtendimentoPedagogicoBean.removerPessoaCurso()}"
+                                                                     update="dtCursosProfissionalizantes"
+                                                                     process="@this">
+                                                        <f:setPropertyActionListener
+                                                                value="#{pessoaCurso}"
+                                                                target="#{efetivaAtendimentoPedagogicoBean.pessoaCurso}"/>
+                                                    </p:commandButton>
+                                                </p:column>
+                                            </p:dataTable>
+                                            <p:panelGrid id="pgdCursosProfissionalizantes" columns="1"
+                                                         columnClasses="ui-grid-col-12"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.participouCurso}"
+                                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                         cellpadding="5">
+                                                <h:panelGroup style="float: right">
+                                                    <p:commandButton title="Adicionar Curso Profissionalizante"
+                                                                     icon="ui-icon-plus"
+                                                                     oncomplete="PF('addCurso').show();"
+                                                                     update="form-dialog-curso-atendimento-pedagogico:dialogCursoAtendimentoPedagogico"
+                                                                     process="@this"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdInteresseCurso"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="Tem interesse em algum curso profissionalizante?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdInteresseCursoSo" columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgInteresseCursoSo">
+                                                <p:selectOneRadio id="sorInteresseCursoSo"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseCursoProfinalizante}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="@this"
+                                                            render="hpInteresseCursoSim"
+                                                            listener="#{efetivaAtendimentoPedagogicoBean.onSelectedInteresseCursos()}" />
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpInteresseCursoSim">
+                                            <p:panelGrid id="pgdInteresseCursoSim" columns="1"
+                                                         columnClasses="ui-grid-col-12"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseCursoProfinalizante}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                                   value="Qual?"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:dataTable id="dtInteresseCursosProfissionalizantes"
+                                                    value="#{efetivaAtendimentoPedagogicoBean.pessoaCursos}"
+                                                    selection="#{efetivaAtendimentoPedagogicoBean.selectededPessoaCursosInteresse}"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseCursoProfinalizante}"
+                                                    var="pessoaCurso"
+                                                    rowKey="#{pessoaCurso.curso.id}"
+                                                    reflow="true"
+                                                    emptyMessage="Nenhum registro encontrado"
+                                                    style="text-align: center"
+                                                    paginator="false"
+                                                    rows="10">
+                                                <f:facet name="header">
+                                                    Cursos Profissionalizantes
+                                                </f:facet>
+                                                <p:column selectionMode="multiple" style="width:16px;text-align:center">
+                                                </p:column>
+                                                <p:column headerText="Descrição" style="text-align: center">
+                                                    <h:outputText
+                                                            value="#{pessoaCurso.curso.descricao}">
+                                                    </h:outputText>
+                                                </p:column>
+                                            </p:dataTable>
+                                            <p:panelGrid id="pgdInteresseCursosProfissionalizantes" columns="1"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.interesseCursoProfinalizante}"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                         cellpadding="5">
+                                                <h:panelGroup style="float: right">
+                                                    <p:commandButton title="Adicionar Curso Profissionalizante"
+                                                                     icon="ui-icon-plus"
+                                                                     oncomplete="PF('addCurso').show();"
+                                                                     update="form-dialog-curso-atendimento-pedagogico:dialogCursoAtendimentoPedagogico"
+                                                                     process="@this"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdInteresseCertificacao"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="4. Interesse em participar de exames de cetificação?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdInteresseCertificacaoSo" columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgInteresseCertificacaoSo">
+                                                <p:selectOneRadio id="sorInteresseCertificacaoSo"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.interesseExameCertificacao}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="@this"
+                                                            render="hpInteresseCertificacaoSim" />
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpInteresseCertificacaoSim">
+                                            <p:panelGrid id="pgdInteresseCertificacaoSim" columns="1"
+                                                         columnClasses="ui-grid-col-12"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.interesseExameCertificacao}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup>
+                                                    <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                                   value="Qual?"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <p:panelGrid columns="1"
+                                                         id="pgExameCertificacao"
+                                                         columnClasses="ui-grid-col-4"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.interesseExameCertificacao}"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-selectonemenu">
+                                                    <p:selectOneMenu id="soExameCertificacao"
+                                                                     appendTo="@(this)"
+                                                                     converter="omnifaces.SelectItemsConverter"
+                                                                     value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.exameCertificacao}"
+                                                                     filter="true"
+                                                                     style="width: 100%;">
+                                                        <f:selectItem noSelectionOption="true"/>
+                                                        <f:selectItems
+                                                                value="#{efetivaAtendimentoPedagogicoBean.exameCertificacoes}"
+                                                                var="exameCertificacao"
+                                                                itemLabel="#{exameCertificacao.descricao}"/>
+                                                    </p:selectOneMenu>
+                                                    <p:outputLabel for="soExameCertificacao" value="Exame"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                    </p:panel>
+                                    <br/>
+                                    <p:panel header="Histórico para fins de acompanhamento especial"
+                                             style="margin-top: 10px; margin-bottom: 10px;">
+
+                                        <p:panelGrid columns="1"
+                                                     id="pgdAcompanhamento"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="Faz algum acompanhamento?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdAcompanhamentoSo" columns="1"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgAcompanhamentoSo">
+                                                <p:selectManyCheckbox id="sorAcompanhamentoSo"
+                                                                      style="color:darkBlue;"
+                                                                      layout="responsive" columns="4"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.selectedTiposAcompanhamento}">
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoPedagogicoBean.tiposAcompanhamento}"
+                                                            var="tipoAcompanhamento"
+                                                            itemLabel="#{tipoAcompanhamento.descricao}"/>
+                                                </p:selectManyCheckbox>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <!-- <h:panelGroup id="hpAcompanhamentoSim">
+                                             <p:panelGrid columns="1"
+                                                          id="pgdAcompanhamentoQual"
+                                                          columnClasses="ui-grid-col-4"
+                                                          layout="grid"
+                                                          styleClass="ui-panelgrid-blank form-group"
+                                                          style="border:0px none; background-color:transparent;">
+                                                 <h:panelGroup styleClass="md-inputfield">
+                                                     <p:outputLabel value="Qual?"
+                                                                    style="color: darkblue;font-weight: bold"/>
+                                                 </h:panelGroup>
+                                             </p:panelGrid>
+                                             <br/>
+                                             <p:panelGrid columns="1"
+                                                          id="pgdAcompanhamentoTx"
+                                                          columnClasses="ui-grid-col-4"
+                                                          layout="grid"
+                                                          styleClass="ui-panelgrid-blank form-group"
+                                                          style="border:0px none; background-color:transparent;">
+                                                 <h:panelGroup styleClass="md-inputfield">
+                                                     <p:inputText id="itAcompanhamento"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.acompanhamentoPsicologico}"
+                                                                  style="width: 100%"/>
+                                                     <p:outputLabel for="itAcompanhamento"
+                                                                    value="Descrição"/>
+                                                 </h:panelGroup>
+                                             </p:panelGrid>
+                                         </h:panelGroup>-->
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdDoencaInfect"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="Doenças infectocontagiosas?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdDoencaInfectSo" columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgDoencaInfectSo">
+                                                <p:selectOneRadio id="sorDoencaInfectSo"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.doencasInfectocontagiosas}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpDoencaInfectSim">
+                                            <p:panelGrid columns="1"
+                                                         id="pgdDoencaInfectQual"
+                                                         columnClasses="ui-grid-col-4"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Qual?"
+                                                                   style="color: darkblue;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <p:dataTable
+                                                    id="dtDoencasInfectocontagiosas"
+                                                    value="#{efetivaAtendimentoPedagogicoBean.patologiasAtendimentoEnfermagem}"
+                                                    var="patologiaAtendimentoEnfermagem"
+                                                    emptyMessage="Nenhum registro encontrado"
+                                                    style="text-align: center"
+                                                    paginator="false"
+                                                    rows="10">
+                                                <f:facet name="header">
+                                                    Doenças infectocontagiosas
+                                                </f:facet>
+                                                <p:column headerText="Descrição" style="text-align: center">
+                                                    <h:outputText
+                                                            value="#{patologiaAtendimentoEnfermagem.patologia.descricao}">
+                                                    </h:outputText>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdProblemaVisao"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="Problema de Visão?"
+                                                        style="color: black;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgdProblemaVisaoSo" columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup id="pgProblemaVisaoSo">
+                                                <p:selectOneRadio id="sorProblemaVisaoSo"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.problemaVisao}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax execute="@this"
+                                                            render="hpProblemaVisaoSim"
+                                                            listener="#{efetivaAtendimentoPedagogicoBean.onSelectProblemaVisao()}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpProblemaVisaoSim">
+                                            <p:panelGrid columns="1"
+                                                         id="pgdProblemaVisaoQual"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.problemaVisao}"
+                                                         columnClasses="ui-grid-col-4"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel value="Qual?"
+                                                                   style="color: darkblue;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <p:spacer rendered="#{efetivaAtendimentoPedagogicoBean.problemaVisao}"/>
+                                            <p:panelGrid columns="1"
+                                                         id="pgdProblemaVisaoTx"
+                                                         rendered="#{efetivaAtendimentoPedagogicoBean.problemaVisao}"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <!-- <h:panelGroup styleClass="md-inputfield">
+                                                     <p:inputText id="itProblemaVisao"
+                                                                  style="width: 100%"/>
+                                                     <p:outputLabel for="itProblemaVisao"
+                                                                    value="Descrição"/>
+                                                 </h:panelGroup>-->
+                                                <p:selectManyCheckbox id="smProblemaVisao"
+                                                                      style="color:darkBlue;"
+                                                                      layout="responsive" columns="4"
+                                                                      converter="omnifaces.SelectItemsConverter"
+                                                                      value="#{efetivaAtendimentoPedagogicoBean.selectedProblemasVisao}">
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoPedagogicoBean.problemasVisao}"
+                                                            var="problemaVisao"
+                                                            itemLabel="#{problemaVisao.descricao}"/>
+                                                </p:selectManyCheckbox>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:panelGrid id="pgProblemaAudicao" columns="1"
+                                                     columnClasses="ui-grid-col-8"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:black;font-weight: bold"
+                                                               value="4. Problema de audição? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgProblemaAudicaoSo" columns="1"
+                                                     columnClasses="ui-grid-col-10"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio id="sorProblemaAudicao"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="4"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.problemaAudicao}">
+                                                    <f:selectItem itemLabel="Não" itemValue="#{null}"/>
+                                                    <f:selectItems
+                                                            value="#{efetivaAtendimentoPedagogicoBean.problemasAudicao}"
+                                                            var="problemaAudicao"
+                                                            itemLabel="#{problemaAudicao.descricao}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </p:panel>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Apoio Educacional">
+                            <p:panel header="Apoio Educacional"
+                                     style="margin-top: 10px; margin-bottom: 10px;">
+                                <p:panelGrid id="pgApoioEducacional" columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="color:black;font-weight: bold"
+                                                       value="1. O(A) aluno(a) necessita de apoio educacional especial? "/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="1"
+                                             id="pgApoioEducacionalTxt"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputTextarea
+                                                id="itaApoioEducacional"
+                                                value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.apoioEducacional}"
+                                                rows="1"
+                                                style="width: 100%"/>
+                                        <p:outputLabel for="itaApoioEducacional"
+                                                       value="Em caso de positivo, justifique"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                            </p:panel>
+                            <br/>
+                        </p:tab>
+                        <p:tab title="Síntese">
+                            <p:panel header="Síntese para CTC"
+                                     style="margin-top: 10px; margin-bottom: 10px;">
+                                <br/>
+                                <p:panelGrid columns="1"
+                                             id="pgSintese"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputTextarea
+                                                id="itaSintese"
+                                                value="#{efetivaAtendimentoPedagogicoBean.atendimentoPedagogico.sintese}"
+                                                rows="1"
+                                                style="width: 100%"/>
+                                        <p:outputLabel for="itaSintese" value="Síntese para o CTC"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:panel>
+                            <br/>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{!efetivaAtendimentoPedagogicoBean.renderizaAtendido()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton id="btnSalvar" value="Salvar"
+                                                 action="#{efetivaAtendimentoPedagogicoBean.salvar()}"
+                                                 icon="ui-icon-check"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-curso-atendimentoPedagogico.xhtml"/>
+        </ui:insert>
+    </ui:define>
+
+</ui:composition>

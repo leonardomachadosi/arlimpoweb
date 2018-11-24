@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" style="max-width: 27em;"
+                 styleClass="customImgFrontalHeader"
+                 columnClasses="ui-grid-col-3,ui-grid-col-8, ui-grid-col-1 customButtonAlign" layout="grid"
+                 rendered="#{detentoView != null and detentoView.matriculaDetento != null}">
+        <f:facet name="header">
+            <p:commandButton title="Visualizar" process="@this" style="float: right;"
+                             action="#{utilBean.visualizarDetento(detentoView)}"
+                             ajax="false" onclick="this.form.target='_blank'"
+                             icon="ui-icon-remove-red-eye"/>
+            <p:graphicImage style="max-width: 22em; border: transparent;"
+                            value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"/>
+        </f:facet>
+
+        <h:outputLabel style="font-weight: bold" value="Nome: "/>
+        <h:outputText value="#{detentoView.nomeDetento} "/>
+
+        <h:outputLabel style="font-weight: bold" value="Pai: "/>
+        <h:outputText value="#{detentoView.nomePai} "/>
+
+        <h:outputLabel style="font-weight: bold" value="Mãe: "/>
+        <h:outputText value="#{detentoView.nomeMae} "/>
+
+        <h:outputLabel style="font-weight: bold" value="Unidade Prisional: "/>
+        <h:outputText value="#{detentoView.nomeUnidadePrisional} "/>
+
+        <h:outputLabel style="font-weight: bold" value="Data de Nascimento: "/>
+        <h:outputText
+                value="#{detentoView.dataNascimento}">
+            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+        </h:outputText>
+
+        <h:outputLabel style="font-weight: bold" value="Situação: "/>
+        <h:outputText value="#{detentoView.situacao}"
+                      styleClass="#{utilBean.addStyleByStatus(detentoView.situacao)}"/>
+
+    </p:panelGrid>
+
+</ui:composition>

@@ -1,0 +1,937 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{efetivaAtendimentoTerapiaOcupacionalBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:tabView id="tab">
+                        <p:tab title="Dados">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <br/>
+                                    <p:panelGrid id="pgdDetentoNascimentoIdadeIngresso" columns="4"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                            <p:inputText id="itNome"
+                                                         value="#{efetivaAtendimentoTerapiaOcupacionalBean.detento.pessoa.nome}"
+                                                         readonly="true"
+                                                         style="width: 100%;"/>
+                                            <p:outputLabel for="itNome" value="Nome de Pessoa Presa"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:calendar id="cdNascimento"
+                                                        pattern="dd/MM/yyyy"
+                                                        readonly="true"
+                                                        showOn="none"
+                                                        value="#{efetivaAtendimentoTerapiaOcupacionalBean.detento.pessoa.dataNascimento}"
+                                                        mask="99/99/9999"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdNascimento" value="Data de Nascimento"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itIdade"
+                                                         value="#{efetivaAtendimentoTerapiaOcupacionalBean.calcularIdade()}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itIdade" value="Idade"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataAtendimento"
+                                                      rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                      styleClass="md-inputfield">
+                                            <p:calendar id="cdDataAtendimento"
+                                                        pattern="dd/MM/yyyy HH:mm"
+                                                        mask="99/99/9999 99:99"
+                                                        readonly="true"
+                                                        value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.dataAtendimento}"
+                                                        showOn="none"
+                                                        inputStyle="width: 96%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataAtendimento" value="Data de Atendimento"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgdUnidadePrisionalAnterior" columns="2"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup id="pgUnidadePrisionalAnterior" styleClass="md-inputfield">
+                                            <p:inputText id="itUnidadePrisionalAnterior"
+                                                         value="#{efetivaAtendimentoTerapiaOcupacionalBean.buscaUltimaUnidadePrisional()}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itUnidadePrisionalAnterior"
+                                                           value="Unidade Prisional Anterior"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataEntradaUp" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataEntrada"
+                                                        pattern="dd/MM/yyyy"
+                                                        readonly="true"
+                                                        mask="99/99/9999"
+                                                        value="#{efetivaAtendimentoTerapiaOcupacionalBean.detento.dataInicioCiclo}"
+                                                        showOn="none"
+                                                        inputStyle="width: 100%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataEntrada" value="Data de Ingresso"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup style="text-align: left">
+                                        <h3>Dados Profissionais</h3>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdTipoCrimePraticado"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="1. Quais as três últimas atividades profissionais exercidas antes da prisão?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <br/>
+                                    <p:dataTable
+                                            id="dtUltimasProfissoes"
+                                            value="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissoes}"
+                                            var="pessoaProfissao"
+                                            rowKey="#{pessoaProfissao.id}"
+                                            emptyMessage="Nenhum registro encontrado"
+                                            style="text-align: center"
+                                            paginator="false"
+                                            rows="3">
+                                        <f:facet name="header">
+                                            Atividades
+                                        </f:facet>
+                                        <p:column headerText="Descrição" style="text-align: center">
+                                            <h:outputText
+                                                    value="#{pessoaProfissao.profissao.descricao}">
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Opções" style="text-align: center;width: 60px"
+                                                  rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}">
+                                            <p:commandButton title="Remover"
+                                                             icon="ui-icon-trash"
+                                                             style="border-bottom: 10px"
+                                                             styleClass="red-btn"
+                                                             action="#{efetivaAtendimentoTerapiaOcupacionalBean.removerPessoaProfissao()}"
+                                                             update="dtUltimasProfissoes "
+                                                             process="@this">
+                                                <f:setPropertyActionListener value="#{pessoaProfissao}"
+                                                                             target="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissao}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:panelGrid id="pgProfissaoAntesPrisao" columns="1"
+                                                 rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                 cellpadding="5">
+                                        <h:panelGroup style="float: right">
+                                            <p:commandButton title="Adicionar Profissão"
+                                                             icon="ui-icon-plus"
+                                                             oncomplete="PF('addProfissao').show();"
+                                                             update="form-dialog-profissao-atendimento-terapiaOcupacional:dialogProfissaoAtendimentoTerapiaOcupacional"
+                                                             process="@this"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdAtividadeProfissional"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="2. Atividade profissional com Carteira de Trabalho assinada?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdParticipaFaccaoSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoTerapiaOcupacionalBean.atividadeProfissionalCarteiraAssinada}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpAtividadeProfissionalSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpAtividadeProfissionalSim">
+                                        <p:panelGrid id="pgdAtividadeProfissionalSim" columns="1"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.atividadeProfissionalCarteiraAssinada}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkBlue;font-weight: bold"
+                                                               value="Quais ?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:dataTable
+                                                id="dtAtividadeProfissionalCarteira"
+                                                rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.atividadeProfissionalCarteiraAssinada}"
+                                                value="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissoes}"
+                                                selection="#{efetivaAtendimentoTerapiaOcupacionalBean.selectededPessoaProfissoesCarteiraAssinada}"
+                                                var="pessoaProfissao"
+                                                rowKey="#{pessoaProfissao.profissao.id}"
+                                                reflow="true"
+                                                emptyMessage="Nenhum registro encontrado"
+                                                style="text-align: center"
+                                                paginator="false"
+                                                rows="10">
+                                            <f:facet name="header">
+                                                Atividades
+                                            </f:facet>
+                                            <p:column selectionMode="multiple" style="width:16px;text-align:center"
+                                                      visible="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}">
+                                                <!--<p:commandButton title="Remover"-->
+                                                <!--icon="ui-icon-trash"-->
+                                                <!--style="border-bottom: 10px"-->
+                                                <!--styleClass="red-btn"-->
+                                                <!--action="#{efetivaAtendimentoTerapiaOcupacionalBean.removerPessoaProfissaoCarteiraAssinada()}"-->
+                                                <!--update="dtAtividadeProfissionalCarteira"-->
+                                                <!--process="@this">-->
+                                                <!--<f:setPropertyActionListener-->
+                                                <!--value="#{pessoaProfissao}"-->
+                                                <!--target="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissao}"/>-->
+                                                <!--</p:commandButton>-->
+                                            </p:column>
+                                            <p:column headerText="Descrição" style="text-align: center">
+                                                <h:outputText
+                                                        value="#{pessoaProfissao.profissao.descricao}">
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                        <p:panelGrid id="pgAtividadeProfissionalCarteira" columns="1"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.atividadeProfissionalCarteiraAssinada and efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                     cellpadding="5">
+                                            <h:panelGroup style="float: right">
+                                                <p:commandButton title="Adicionar Profissão"
+                                                                 icon="ui-icon-plus"
+                                                                 actionListener="#{efetivaAtendimentoTerapiaOcupacionalBean.setarTipoProfissao('carteiraAssinada')}"
+                                                                 oncomplete="PF('addProfissao').show();"
+                                                                 update="form-dialog-profissao-atendimento-terapiaOcupacional:dialogProfissaoAtendimentoTerapiaOcupacional"
+                                                                 process="@this"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPresoTrabalhando"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel value="3. Quando foi preso estava trabalhando?"
+                                                           style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPresoTrabalhandoSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpPresoTrabalhandoSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpPresoTrabalhandoSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdPresoTrabalhandoQual"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel value="Em qual(is) atividade(s)? "
+                                                               style="color: darkblue;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <br/>
+                                        <p:dataTable
+                                                id="dtPresoTrabalhando"
+                                                rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                value="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissoes}"
+                                                selection="#{efetivaAtendimentoTerapiaOcupacionalBean.selectededPessoaProfissoesPresoTrabalhando}"
+                                                var="pessoaProfissao"
+                                                rowKey="#{pessoaProfissao.profissao.id}"
+                                                reflow="true"
+                                                emptyMessage="Nenhum registro encontrado"
+                                                style="text-align: center"
+                                                paginator="false"
+                                                rows="10">
+                                            <f:facet name="header">
+                                                Atividades
+                                            </f:facet>
+                                            <p:column selectionMode="multiple" style="width:16px;text-align:center"
+                                                      visible="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}">
+                                                <!--<p:commandButton title="Remover"-->
+                                                <!--icon="ui-icon-trash"-->
+                                                <!--style="border-bottom: 10px"-->
+                                                <!--styleClass="red-btn"-->
+                                                <!--action="#{efetivaAtendimentoTerapiaOcupacionalBean.removerPessoaProfissaoPresoTrabalhando()}"-->
+                                                <!--update="dtPresoTrabalhando"-->
+                                                <!--process="@this">-->
+                                                <!--<f:setPropertyActionListener-->
+                                                <!--value="#{pessoaProfissao}"-->
+                                                <!--target="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissao}"/>-->
+                                                <!--</p:commandButton>-->
+                                            </p:column>
+                                            <p:column headerText="Descrição" style="text-align: center">
+                                                <h:outputText
+                                                        value="#{pessoaProfissao.profissao.descricao}">
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                        <p:panelGrid id="pgPresoTrabalhando" columns="1"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando and efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; background-color:transparent;"
+                                                     cellpadding="5">
+                                            <h:panelGroup style="float: right">
+                                                <p:commandButton title="Adicionar Profissão"
+                                                                 icon="ui-icon-plus"
+                                                                 actionListener="#{efetivaAtendimentoTerapiaOcupacionalBean.setarTipoProfissao('presoTrabalhando')}"
+                                                                 oncomplete="PF('addProfissao').show();"
+                                                                 update="form-dialog-profissao-atendimento-terapiaOcupacional:dialogProfissaoAtendimentoTerapiaOcupacional"
+                                                                 process="@this"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdQuantiaRemuneracao"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="3.1 Quanto recebia de remuneração?"
+                                                        style="color: darkBlue;"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdRemuneracaoTx"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                     columnClasses="ui-grid-col-2"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputNumber id="itRemuneracao"
+                                                               styleClass="ui-custom-inputnumber"
+                                                               value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.ultimaRemuneracao}"
+                                                               readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                               style="width: 100%"/>
+                                                <p:outputLabel for="itRemuneracao"
+                                                               value="Remuneração"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdCarteiraTrabalhoAssinada"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="3.2 Sua Carteira de Trabalho estava sendo assinada pela empresa?"
+                                                        style="color: darkBlue;"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdCarteiraTrabalhoAssinadaSo"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoTrabalhando}"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio layout="responsive" columns="3"
+                                                                  style="color: darkBlue"
+                                                                  disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                                  value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.carteiraAssinada}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <h:panelGroup style="text-align: left">
+                                        <h3>Sobre o trabalho</h3>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdImportanciaTrabalho"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="1. Qual a importância do trabalho em sua vida?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdImportanciaTrabalhoTx"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea id="itImportanciaTrabalho"
+                                                             value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.importanciaTrabalho}"
+                                                             readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                             style="width: 100%"/>
+                                            <p:outputLabel for="itImportanciaTrabalho"
+                                                           value="Descreva"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdNotaTrabalho"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="2. Dê uma nota de 0 a 10 (para o trabalho)?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdNotaTrabalhoTx"
+                                                 columnClasses="ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputNumber id="itNotaTrabalho"
+                                                           styleClass="ui-custom-inputnumber"
+                                                           decimalPlaces="0" thousandSeparator=""
+                                                           minValue="0"
+                                                           maxValue="10"
+                                                           value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.notaTrabalho}"
+                                                           readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                           style="width: 100%"/>
+                                            <p:outputLabel for="itNotaTrabalho"
+                                                           value="Nota"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdNotaTrabalhoSo"
+                                                 columnClasses="ui-grid-col-10"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio
+                                                    layout="responsive" columns="4"
+                                                    style="color: darkBlue"
+                                                    converter="omnifaces.SelectItemsConverter"
+                                                    disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.conceitoTrabalho}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoTerapiaOcupacionalBean.conceitosTrabalhos}"
+                                                        var="conceitoTrabalho"
+                                                        itemLabel="#{conceitoTrabalho.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdNotaTrabalhoJust"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itNotaTrabalhoJust"
+                                                         value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.justificativaNota}"
+                                                         readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itNotaTrabalhoJust"
+                                                           value="Justifique"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPresoAnteriormente"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="3. Já esteve preso anteriormente?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdPresoAnteriormenteSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this"
+                                                        render="hpPresoAnteriormenteSim hpTrabalhoUnidadeAnteriorSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpPresoAnteriormenteSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdPresoAnteriormenteSim"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="Em qual unidade?"
+                                                        style="color: darkblue;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <br/>
+                                        <p:dataTable id="dtUnidadesPrisionais"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente}"
+                                                     value="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoUnidadesPrisionais}"
+                                                     var="detentoUnidadePrisional"
+                                                     rowKey="#{detentoUnidadePrisional.id}"
+                                                     reflow="true"
+                                                     paginator="false" rows="5"
+                                                     emptyMessage="Nenhum registro encontrado"
+                                                     style="text-align: center">
+                                            <f:facet name="header">
+                                                Unidades Prisionais
+                                            </f:facet>
+                                            <p:column headerText="Descrição"
+                                                      style="text-align: center">
+                                                <h:outputText
+                                                        value="#{detentoUnidadePrisional.unidadePrisional.descricao}"/>
+                                            </p:column>
+                                            <!--<p:column headerText="Opções"-->
+                                            <!--style="width: 60px;text-align: center;">-->
+                                            <!--<p:commandButton title="Remover"-->
+                                            <!--icon="ui-icon-trash"-->
+                                            <!--style="border-bottom: 10px"-->
+                                            <!--styleClass="red-btn"-->
+                                            <!--action="#{efetivaAtendimentoTerapiaOcupacionalBean.removerDetentoUnidadePrisional()}"-->
+                                            <!--update="dtUnidadesPrisionais"-->
+                                            <!--process="@this">-->
+                                            <!--<f:setPropertyActionListener-->
+                                            <!--value="#{detentoUnidadePrisional}"-->
+                                            <!--target="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoUnidadePrisional}"/>-->
+                                            <!--</p:commandButton>-->
+                                            <!--</p:column>-->
+                                        </p:dataTable>
+                                        <!--<p:panelGrid columns="1"-->
+                                        <!--rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente}"-->
+                                        <!--columnClasses="ui-grid-col-12"-->
+                                        <!--layout="grid"-->
+                                        <!--styleClass="ui-panelgrid-blank form-group"-->
+                                        <!--style="border:0px none; background-color:transparent;">-->
+                                        <!--<h:panelGroup style="float: right">-->
+                                        <!--<p:commandButton title="Adicionar Unidade Prisional"-->
+                                        <!--oncomplete="PF('addUnidadePrisional').show();"-->
+                                        <!--update="form-dialog-unidadePrisional-atendimento-terapiaOcupacional:dialogUnidadePrisionalAtendimentoTerapiaOcupacional"-->
+                                        <!--process="@this"-->
+                                        <!--icon="ui-icon-plus">-->
+                                        <!--</p:commandButton>-->
+                                        <!--</h:panelGroup>-->
+                                        <!--</p:panelGrid>-->
+                                        <p:panelGrid columns="1"
+                                                     id="pgdTrabalhoUnidadeAnterior"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="3.1 Trabalhava na unidade anterior?"
+                                                        style="color: darkblue;"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdTrabalhoUnidadeAnteriorSo"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente}"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio layout="responsive" columns="3"
+                                                                  style="color: darkBlue"
+                                                                  disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                                  value="#{efetivaAtendimentoTerapiaOcupacionalBean.trabalhoUnidadeAnterior}"
+                                                                  converter="omnifaces.SelectItemsConverter">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                    <f:ajax event="change"
+                                                            execute="@this" render="hpTrabalhoUnidadeAnteriorSim"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <h:panelGroup id="hpTrabalhoUnidadeAnteriorSim">
+                                            <p:panelGrid columns="1"
+                                                         id="pgdAtividadeDesenvolvida"
+                                                         rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente and efetivaAtendimentoTerapiaOcupacionalBean.trabalhoUnidadeAnterior}"
+                                                         columnClasses="ui-grid-col-6"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; background-color:transparent;">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:outputLabel
+                                                            value="Desenvolvia qual(is) atividade(s)?"
+                                                            style="color: darkblue;font-weight: bold"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                            <br/>
+                                            <h:panelGroup id="pgAtividadeDesenvolvida">
+                                                <p:panelGrid columns="1"
+                                                             id="pgDtAtividadeDesenvolvida"
+                                                             rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.presoAnteriormente and efetivaAtendimentoTerapiaOcupacionalBean.trabalhoUnidadeAnterior}"
+                                                             columnClasses="ui-grid-col-12"
+                                                             layout="grid"
+                                                             styleClass="ui-panelgrid-blank form-group"
+                                                             style="border:0px none; background-color:transparent;">
+                                                    <h:panelGroup styleClass="md-inputfield">
+                                                        <p:inputTextarea id="itAtividadeDesenvolvida"
+                                                                         readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                                         value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.ativadadesUnidadeAnterior}"
+                                                                         rows="1"
+                                                                         style="width: 100%"/>
+                                                        <p:outputLabel for="itAtividadeDesenvolvida"
+                                                                       value="Descreva"/>
+                                                    </h:panelGroup>
+                                                </p:panelGrid>
+                                            </h:panelGroup>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdInteresseTrabalhar"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="4. Tem interesse em trabalhar nesta unidade?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdInteresseTrabalharSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoTerapiaOcupacionalBean.interesseTrabalhoUnidade}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpInteresseTrabalharSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpInteresseTrabalharSim">
+                                        <p:panelGrid columns="1"
+                                                     id="pgdInteresseAtividadeTrabalhar"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.interesseTrabalhoUnidade}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="4.1 Em quais atividades profissionais tem interesse de trabalhar?"
+                                                        style="color: darkblue;"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <br/>
+                                        <p:dataTable id="dtAtividadeProfissional"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.interesseTrabalhoUnidade}"
+                                                     value="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissoes}"
+                                                     selection="#{efetivaAtendimentoTerapiaOcupacionalBean.selectededPessoaProfissoesUnidadeAtual}"
+                                                     var="pessoaProfissao"
+                                                     rowKey="#{pessoaProfissao.profissao.id}"
+                                                     reflow="true"
+                                                     paginator="false"
+                                                     rows="10"
+                                                     emptyMessage="Nenhum registro encontrado"
+                                                     style="text-align: center">
+                                            <f:facet name="header">
+                                                Atividades
+                                            </f:facet>
+                                            <p:column selectionMode="multiple" style="width:16px;text-align:center"
+                                                      visible="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}">
+                                                <!--<p:commandButton title="Remover"-->
+                                                <!--icon="ui-icon-trash"-->
+                                                <!--style="border-bottom: 10px"-->
+                                                <!--styleClass="red-btn"-->
+                                                <!--action="#{efetivaAtendimentoTerapiaOcupacionalBean.removerPessoaProfissaoUnidadeAtual()}"-->
+                                                <!--update="dtAtividadeProfissional"-->
+                                                <!--process="@this">-->
+                                                <!--<f:setPropertyActionListener-->
+                                                <!--value="#{pessoaProfissao}"-->
+                                                <!--target="#{efetivaAtendimentoTerapiaOcupacionalBean.pessoaProfissao}"/>-->
+                                                <!--</p:commandButton>-->
+                                            </p:column>
+                                            <p:column headerText="Descrição"
+                                                      style="text-align: center">
+                                                <h:outputText
+                                                        value="#{pessoaProfissao.profissao.descricao}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                        <p:panelGrid columns="1"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.interesseTrabalhoUnidade and efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup style="float: right">
+                                                <p:commandButton title="Adicionar Profissão"
+                                                                 icon="ui-icon-plus"
+                                                                 actionListener="#{efetivaAtendimentoTerapiaOcupacionalBean.setarTipoProfissao('unidadeAtual')}"
+                                                                 oncomplete="PF('addProfissao').show();"
+                                                                 update="form-dialog-profissao-atendimento-terapiaOcupacional:dialogProfissaoAtendimentoTerapiaOcupacional"
+                                                                 process="@this">
+                                                </p:commandButton>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdAtividadeProfissionalPorque"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.interesseTrabalhoUnidade}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:outputLabel
+                                                        value="Porquê?"
+                                                        style="color: darkBlue;font-weight: bold"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid columns="1"
+                                                     id="pgdAtividadeProfissionalPorqueTx"
+                                                     rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.interesseTrabalhoUnidade}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText id="itAtividadeProfissionalPorque"
+                                                             value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.justificativaUnidadeAtual}"
+                                                             readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                             style="width: 100%"/>
+                                                <p:outputLabel for="itAtividadeProfissionalPorque"
+                                                               value="Descreva"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdMotivoTrabalho"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+
+                                            <p:outputLabel
+                                                    value="5. Qual o motivo mais importante que o preso alega para trabalhar?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:selectOneRadio
+                                                    layout="responsive" columns="4"
+                                                    style="color: darkBlue"
+                                                    converter="omnifaces.SelectItemsConverter"
+                                                    disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.motivoTrabalho}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoTerapiaOcupacionalBean.motivosTrabalhos}"
+                                                        var="motivoTrabalho"
+                                                        itemLabel="#{motivoTrabalho.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdTrabalhoRemissao"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:outputLabel
+                                                    value="6. Aceita trabalhar por remição de pena?"
+                                                    style="color: black;font-weight: bold"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgdTrabalhoRemissaoSo"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio layout="responsive" columns="3"
+                                                              style="color: darkBlue"
+                                                              disabled="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.trabalharRemissaoPena}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Síntese">
+                            <br/>
+                            <p:panelGrid columns="1"
+                                         id="pgSintese"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputTextarea
+                                            id="itaSintese"
+                                            readonly="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus == 7}"
+                                            value="#{efetivaAtendimentoTerapiaOcupacionalBean.atendimentoTerapiaOcupacional.sintese}"
+                                            rows="1"
+                                            style="width: 100%"/>
+                                    <p:outputLabel for="itaSintese" value="Síntese para o CTC"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <br/>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{efetivaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView.codStatus != 7}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton id="btnSalvar" value="Salvar"
+                                                 action="#{efetivaAtendimentoTerapiaOcupacionalBean.salvar()}"
+                                                 icon="ui-icon-check"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-profissao-atendimento-terapiaOcupacional.xhtml"/>
+        </ui:insert>
+        <!--<ui:insert name="form">-->
+        <!--<ui:include src="modals/modal-unidadePrisional-atendimento-terapiaOcupacional.xhtml"/>-->
+        <!--</ui:insert>-->
+    </ui:define>
+
+</ui:composition>

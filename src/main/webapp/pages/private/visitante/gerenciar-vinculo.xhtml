@@ -1,0 +1,603 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+
+            .ui-panelgrid {
+                border-collapse: unset !important;
+            }
+
+            .ui-grid-row {
+                margin-bottom: 1em;
+            }
+
+            .ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+
+        </style>
+        <script>
+            var $elements = $(".parentescoDlg");
+            var clientIds = [];
+
+            $.each($elements, function (index, element) {
+                if (element.id) {
+                    clientIds.push(":" + element.id);
+                }
+            });
+            var newUpdate = clientIds.join(" ");
+
+            PrimeFaces.widget.Dialog.prototype.applyFocus = function () {
+                var firstInput = this.jq.find(':not(:submit):not(:button):input:visible:enabled:first');
+                if (!firstInput.hasClass('hasDatepicker')) {
+                    firstInput.focus();
+                }
+            }
+        </script>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Gerenciar Vínculo</b></h1>
+
+                        <p:panelGrid id="pgGerVinculo"
+                                     columns="1"
+                                     columnClasses="ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid form-group">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acVisitante"
+                                                style="width: 100%"
+                                                inputStyle="width: 80%"
+                                                completeMethod="#{gerenciarVinculoBean.completeVisitanteView}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{gerenciarVinculoBean.visitanteView}"
+                                                var="visitanteView"
+                                                itemValue="#{visitanteView}"
+                                                itemLabel="#{visitanteView.nome}"
+                                                converter="visitanteViewConverter">
+                                    <p:column style="width: 30%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(visitanteView.codPessoa, 2)}"
+                                                style="max-width: 4em;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{visitanteView.nome}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{gerenciarVinculoBean.carregarVisitanteDetentosView()}"
+                                            update="@form"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acVisitante" value="Visitante"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitanteView">
+
+                                <ui:include src="fragments/visitanteView-panelgrid.xhtml">
+                                    <ui:param name="visitanteView"
+                                              value="#{gerenciarVinculoBean.visitanteView}"/>
+                                </ui:include>
+
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar rendered="#{gerenciarVinculoBean.exibeBotao(1,'emitir-credencial')}">
+                        <f:facet name="left">
+                            <p:commandButton value="Emitir Credencial" icon="ui-icon-print"
+                                             action="#{gerenciarVinculoBean.imprimeCarteira}" process="@this"
+                                             ajax="false" onclick="this.form.target='_blank'"/>
+                        </f:facet>
+
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <h:panelGroup id="hpDetentoView" rendered="#{!gerenciarVinculoBean.visitanteDetentosView.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1><b>Presos</b></h1>
+                            <p:dataList value="#{gerenciarVinculoBean.visitanteDetentosView}"
+                                        id="dtDetentos"
+                                        var="detento"
+                                        type="unordered" itemType="none" paginator="true" rows="10"
+                                        paginatorPosition="bottom"
+                                        styleClass="cars-datalist">
+                                <f:facet name="header">Presos</f:facet>
+
+                                <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                    <ui:include
+                                            src="../detento/fragments/visitanteDetentoView-dados-basicos-panelgroup.xhtml">
+                                        <ui:param name="detento"
+                                                  value="#{detento}"/>
+                                        <ui:param name="historicoPessoaParentesco"
+                                                  value="#{gerenciarVinculoBean.getHistorico(detento)}"/>
+                                    </ui:include>
+
+                                    <p:commandButton
+                                            title="Aprovar Vínculo" icon="ui-icon-check"
+                                            action="#{gerenciarVinculoBean.aprovarVinculo}"
+                                            style="margin:24px 12px 0 0"
+                                            update="@this dtDetentos"
+                                            rendered="#{gerenciarVinculoBean.exibeBotao(detento.codSituacaoVinculo,'aprovar') and !gerenciarVinculoBean.existeSolicitacaoVisita(detento.codPessoaParentesco)}">
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{gerenciarVinculoBean.visitanteDetento}"/>
+                                        <p:confirm header="Confirmação"
+                                                   message="Deseja realmente salvar alterações?"
+                                                   icon="ui-icon-alert"/>
+                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                         widgetVar="confirmDlg">
+                                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                             icon="ui-icon-check"/>
+                                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                             icon="ui-icon-close"/>
+                                        </p:confirmDialog>
+                                    </p:commandButton>
+
+                                    <p:commandButton
+                                            title="Suspender" icon="ui-icon-lock"
+                                            style="margin:24px 12px 0 0"
+                                            oncomplete="PF('dlgSuspenderVinculo').show();"
+                                            update="form:dlgSuspenderVinculo"
+                                            actionListener="#{gerenciarVinculoBean.refreshModalSuspensao()}"
+                                            rendered="#{gerenciarVinculoBean.exibeBotao(detento.codSituacaoVinculo,'suspender')}">
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{gerenciarVinculoBean.visitanteDetento}"/>
+                                    </p:commandButton>
+                                    <p:commandButton title="Reativar Vínculo" icon="ui-icon-refresh"
+                                                     oncomplete="PF('dlgReativarVinculo').show();"
+                                                     update="form:dlgReativarVinculo"
+                                                     actionListener="#{gerenciarVinculoBean.refreshCamposModal()}"
+                                                     rendered="#{gerenciarVinculoBean.exibeBotao(detento.codSituacaoVinculo,'reativar')}"
+                                                     style="margin:24px 12px 0 0">
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{gerenciarVinculoBean.visitanteDetento}"/>
+                                    </p:commandButton>
+
+                                    <p:commandButton action="#{gerenciarVinculoBean.excluirVinculo}"
+                                                     rendered="#{gerenciarVinculoBean.exibeBotao(detento.codSituacaoVinculo,'excluir')}"
+                                                     icon="ui-icon-trash" title="Excluir" style="margin:24px 12px 0 0"
+                                                     update="dtDetentos">
+                                        <p:confirm header="Confirmação"
+                                                   message="Tem certeza que deseja excluir este vínculo?"
+                                                   icon="ui-icon-alert"/>
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{gerenciarVinculoBean.visitanteDetento}"/>
+                                    </p:commandButton>
+
+                                    <p:commandButton
+                                            oncomplete="PF('dlgCancelarVinculo').show();"
+                                            actionListener="#{gerenciarVinculoBean.refreshArquivo()}"
+                                            update="form:dlgCancelarVinculo"
+                                            rendered="#{gerenciarVinculoBean.exibeBotao(detento.codSituacaoVinculo,'cancelar') and gerenciarVinculoBean.estaNoPrazo(detento.codPessoaParentesco, detento.codSituacaoVinculo)}"
+                                            icon="ui-icon-cancel" title="Cancelar" style="margin:24px 12px 0 0"
+                                    >
+                                        <p:confirm header="Confirmação"
+                                                   message="Tem certeza que deseja cancelar este vínculo?"
+                                                   icon="ui-icon-alert"/>
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{gerenciarVinculoBean.visitanteDetento}"/>
+                                    </p:commandButton>
+
+                                    <p:commandButton
+                                            title="Editar Parentesco" icon="ui-icon-edit"
+                                            style="margin:24px 12px 0 0"
+                                            action="#{gerenciarVinculoBean.setParentescoSelected(detento.codParentesco)}"
+                                            onclick="PF('dlgEditarParentesco').show();"
+                                            update="@(.parentescoDlg)"
+                                            rendered="#{gerenciarVinculoBean.exibeBotao(detento.codSituacaoVinculo,'editar') || p:ifAnyGranted('SI_GESTOR')}">
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{gerenciarVinculoBean.visitanteDetento}"/>
+                                    </p:commandButton>
+
+                                    <p:dialog header="Editar Parentesco" widgetVar="dlgEditarParentesco"
+                                              id="dlgEditarParentesco"
+                                              closeOnEscape="true"
+                                              modal="true" height="100" responsive="true">
+                                        <p:selectOneMenu id="soParentesco" style="width: 25em;"
+                                                         styleClass="parentescoDlg"
+                                                         value="#{gerenciarVinculoBean.parentesco}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                        >
+
+                                            <f:selectItems value="#{gerenciarVinculoBean.parentescos}"
+                                                           var="parentesco"
+                                                           itemLabel="#{parentesco.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <br/>
+                                        <p:commandButton value="Alterar"
+                                                         style="margin-top: 3em"
+                                                         action="#{gerenciarVinculoBean.editarParentesco()}"
+                                                         update="@form"
+                                                         oncomplete="PF('dlgEditarParentesco').hide();"/>
+
+                                    </p:dialog>
+                                </div>
+                            </p:dataList>
+                            <p:dialog header="Suspender Vínculo" widgetVar="dlgSuspenderVinculo"
+                                      id="dlgSuspenderVinculo" modal="true" width="600" closable="true"
+                                      closeOnEscape="true">
+
+                                <p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-6"
+                                             styleClass="ui-panelgrid-blank form-group" id="pnlSuspVinculo">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:calendar id="cdDataInicial" pattern="dd/MM/yyyy" locale='pt'
+                                                    mask="99/99/9999" value="#{gerenciarVinculoBean.dtInicial}"
+                                                    styleClass="input-auto">
+                                            <p:ajax update="cdDataFinal" process="@this" event="dateSelect"/>
+                                        </p:calendar>
+                                        <p:outputLabel for="cdDataInicial" value="Data inicial"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:calendar id="cdDataFinal" pattern="dd/MM/yyyy" locale='pt'
+                                                    mask="99/99/9999" value="#{gerenciarVinculoBean.dtFinal}"
+                                                    immediate="true"
+                                                    mindate="#{gerenciarVinculoBean.dtInicial}"
+                                                    styleClass="input-auto"/>
+                                        <p:outputLabel for="cdDataFinal" value="Data final"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soMotivoSuspensao"
+                                                         value="#{gerenciarVinculoBean.motivoSuspensao}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;" appendTo="@(this)">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione o Motivo" itemValue=""/>
+                                            <f:selectItems value="#{gerenciarVinculoBean.motivosSuspensao}"
+                                                           var="motivoSuspensao"
+                                                           itemLabel="#{motivoSuspensao.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Motivo Suspensão" for="soMotivoSuspensao"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputTextarea id="obsSuspensao"
+                                                         value="#{gerenciarVinculoBean.observacao}"
+                                                         rows="3" cols="60"/>
+                                        <p:outputLabel for="obsSuspensao" value="Observação"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgDescricaoArquivo" columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="font-weight: bold"
+                                                       value="Arquivo"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  rendered="#{gerenciarVinculoBean.arquivos.isEmpty()}">
+                                        <p:inputText id="itDescricao"
+                                                     style="width: 100%"
+                                                     value="#{gerenciarVinculoBean.arquivo.descricao}">
+                                            <p:ajax process="@this" event="blur"/>
+                                        </p:inputText>
+                                        <p:outputLabel for="itDescricao"
+                                                       value="Descrição do Arquivo"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgUpload"
+                                             columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup rendered="#{gerenciarVinculoBean.arquivos.isEmpty()}">
+                                        <p:fileUpload
+                                                cancelLabel="Cancelar"
+                                                fileUploadListener="#{gerenciarVinculoBean.uploadDocumento}"
+                                                uploadLabel="Anexar"
+                                                label="Escolher"
+                                                mode="advanced"
+                                                update="pgUpload pgArquivo"
+                                                dragDropSupport="false"
+                                                invalidFileMessage="Tipo de arquivo inválido."
+                                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                                sizeLimit="#{utilBean.sizeFile}"
+                                                multiple="false" allowTypes="/(\.|\/)(pdf)$/"
+                                        />
+                                    </h:panelGroup>
+
+                                </p:panelGrid>
+                                <p:panelGrid
+                                        id="pgArquivo"
+                                        columns="1"
+                                        columnClasses="ui-grid-col-12"
+                                        layout="grid"
+                                        styleClass="ui-panelgrid-blank form-group"
+                                        style="border:0 none;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtArquivo"
+                                                     paginator="false"
+                                                     value="#{gerenciarVinculoBean.arquivos}"
+                                                     rendered="#{!gerenciarVinculoBean.arquivos.isEmpty()}"
+                                                     reflow="true"
+                                                     style="text-align: center"
+                                                     var="arquivo"
+                                                     rowKey="#{arquivo.id}">
+                                            <p:column headerText="Arquivo">
+                                                <p:outputLabel value="#{arquivo.descricao}"/>
+                                            </p:column>
+                                            <p:column style="width: 20%">
+                                                <p:commandButton title="Visualizar"
+                                                                 icon="ui-icon-file-download" process="@this"
+                                                                 update="pgArquivo pgUpload"
+                                                                 action="#{gerenciarVinculoBean.mostrarPdf()}"
+                                                                 onclick="this.form.target='_blank'" ajax="false">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{gerenciarVinculoBean.arquivo}"/>
+                                                </p:commandButton>
+                                                <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                                 action="#{gerenciarVinculoBean.removerDocumento()}"
+                                                                 update="form:pgArquivo form:pgDescricaoArquivo form:pgUpload">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{gerenciarVinculoBean.arquivo}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+
+                                <p:toolbar style="margin-top: 5px; margin-left: 10px; margin-right: 10px;">
+                                    <f:facet name="right">
+                                        <p:commandButton value="Salvar"
+                                                         action="#{gerenciarVinculoBean.suspenderVinculo()}"
+                                                         update="dtDetentos"
+                                                         oncomplete="PF('dlgSuspenderVinculo').hide();"
+                                                         process="dlgSuspenderVinculo"/>
+                                    </f:facet>
+                                </p:toolbar>
+                            </p:dialog>
+                            <p:dialog header="Cancelar Vínculo" widgetVar="dlgCancelarVinculo"
+                                      id="dlgCancelarVinculo" modal="true" width="600" closable="true"
+                                      closeOnEscape="true">
+                                <p:panelGrid id="pgDescricaoArquivoCancelamento" columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="font-weight: bold"
+                                                       value="Arquivo"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  rendered="#{gerenciarVinculoBean.arquivos.isEmpty()}">
+                                        <p:inputText id="itDescricaoArquivo"
+                                                     style="width: 100%"
+                                                     value="#{gerenciarVinculoBean.arquivo.descricao}">
+                                            <p:ajax process="@this" event="blur"/>
+                                        </p:inputText>
+                                        <p:outputLabel for="itDescricaoArquivo"
+                                                       value="Descrição do Arquivo"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgUploadCancelar"
+                                             columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup rendered="#{gerenciarVinculoBean.arquivos.isEmpty()}">
+                                        <p:fileUpload
+                                                cancelLabel="Cancelar"
+                                                fileUploadListener="#{gerenciarVinculoBean.uploadDocumentoCancelamento}"
+                                                uploadLabel="Anexar"
+                                                label="Escolher"
+                                                mode="advanced"
+                                                update="pgUploadCancelar pgArquivoCancelar"
+                                                dragDropSupport="false"
+                                                invalidFileMessage="Tipo de arquivo inválido."
+                                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                                sizeLimit="#{utilBean.sizeFile}"
+                                                multiple="false" allowTypes="/(\.|\/)(pdf)$/"
+                                        />
+                                    </h:panelGroup>
+
+                                </p:panelGrid>
+                                <p:panelGrid
+                                        id="pgArquivoCancelar"
+                                        columns="1"
+                                        columnClasses="ui-grid-col-12"
+                                        layout="grid"
+                                        styleClass="ui-panelgrid-blank form-group"
+                                        style="border:0 none;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtArquivoCancelar"
+                                                     paginator="false"
+                                                     value="#{gerenciarVinculoBean.arquivos}"
+                                                     rendered="#{!gerenciarVinculoBean.arquivos.isEmpty()}"
+                                                     reflow="true"
+                                                     style="text-align: center"
+                                                     var="arquivo"
+                                                     rowKey="#{arquivo.id}">
+                                            <p:column headerText="Arquivo">
+                                                <p:outputLabel value="#{arquivo.descricao}"/>
+                                            </p:column>
+                                            <p:column style="width: 20%">
+                                                <p:commandButton title="Visualizar"
+                                                                 icon="ui-icon-file-download" process="@this"
+                                                                 update="pgArquivo pgUpload"
+                                                                 action="#{gerenciarVinculoBean.mostrarPdf()}"
+                                                                 onclick="this.form.target='_blank'" ajax="false">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{gerenciarVinculoBean.arquivo}"/>
+                                                </p:commandButton>
+                                                <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                                 action="#{gerenciarVinculoBean.removerDocumento()}"
+                                                                 update="form:pgArquivoCancelar form:pgDescricaoArquivoCancelamento form:pgUploadCancelar">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{gerenciarVinculoBean.arquivo}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:toolbar style="margin-top: 5px; margin-left: 10px; margin-right: 10px;">
+                                    <f:facet name="right">
+                                        <p:commandButton value="Salvar"
+                                                         action="#{gerenciarVinculoBean.cancelarVinculo()}"
+                                                         update="dtDetentos pnlSuspVinculo"
+                                                         oncomplete="PF('dlgCancelarVinculo').hide();"
+                                                         process="@this"/>
+                                    </f:facet>
+                                </p:toolbar>
+                            </p:dialog>
+                            <p:dialog header="Reativar Vínculo" widgetVar="dlgReativarVinculo"
+                                      id="dlgReativarVinculo" modal="true" width="600" closable="true"
+                                      closeOnEscape="true">
+                                <p:panelGrid columns="2" layout="grid" columnClasses="ui-grid-col-6"
+                                             styleClass="ui-panelgrid-blank form-group" id="pnlReatVinculo">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soMotivoReativacao"
+                                                         value="#{gerenciarVinculoBean.motivoReativacao}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;" appendTo="@(this)">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="Selecione o Motivo" itemValue=""/>
+                                            <f:selectItems value="#{gerenciarVinculoBean.motivosReativacao}"
+                                                           var="motivoReativacao"
+                                                           itemLabel="#{motivoReativacao.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Motivo Reativação" for="soMotivoReativacao"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputTextarea id="obsReativacao"
+                                                         value="#{gerenciarVinculoBean.observacao}"
+                                                         rows="3" cols="60"/>
+                                        <p:outputLabel for="obsReativacao" value="Observação"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgDescricaoArquivoReativacao" columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="font-weight: bold"
+                                                       value="Arquivo"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  rendered="#{gerenciarVinculoBean.arquivos.isEmpty()}">
+                                        <p:inputText id="itDescricaoReativacao"
+                                                     style="width: 100%"
+                                                     value="#{gerenciarVinculoBean.arquivo.descricao}">
+                                            <p:ajax process="@this" event="blur"/>
+                                        </p:inputText>
+                                        <p:outputLabel for="itDescricao"
+                                                       value="Descrição do Arquivo"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgUploadReativacao"
+                                             columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none;">
+                                    <h:panelGroup rendered="#{gerenciarVinculoBean.arquivos.isEmpty()}">
+                                        <p:fileUpload
+                                                cancelLabel="Cancelar"
+                                                fileUploadListener="#{gerenciarVinculoBean.uploadDocumento}"
+                                                uploadLabel="Anexar"
+                                                label="Escolher"
+                                                mode="advanced"
+                                                update="pgUploadReativacao pgArquivoReativacao"
+                                                dragDropSupport="false"
+                                                invalidFileMessage="Tipo de arquivo inválido."
+                                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                                sizeLimit="#{utilBean.sizeFile}"
+                                                multiple="false" allowTypes="/(\.|\/)(pdf)$/"
+                                        />
+                                    </h:panelGroup>
+
+                                </p:panelGrid>
+                                <p:panelGrid
+                                        id="pgArquivoReativacao"
+                                        columns="1"
+                                        columnClasses="ui-grid-col-12"
+                                        layout="grid"
+                                        styleClass="ui-panelgrid-blank form-group"
+                                        style="border:0 none;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtArquivoReativao"
+                                                     paginator="false"
+                                                     value="#{gerenciarVinculoBean.arquivos}"
+                                                     rendered="#{!gerenciarVinculoBean.arquivos.isEmpty()}"
+                                                     reflow="true"
+                                                     style="text-align: center"
+                                                     var="arquivo"
+                                                     rowKey="#{arquivo.id}">
+                                            <p:column headerText="Arquivo">
+                                                <p:outputLabel value="#{arquivo.descricao}"/>
+                                            </p:column>
+                                            <p:column style="width: 20%">
+                                                <p:commandButton title="Visualizar"
+                                                                 icon="ui-icon-file-download" process="@this"
+                                                                 update="pgArquivoReativacao pgUploadReativacao"
+                                                                 action="#{gerenciarVinculoBean.mostrarPdf()}"
+                                                                 onclick="this.form.target='_blank'" ajax="false">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{gerenciarVinculoBean.arquivo}"/>
+                                                </p:commandButton>
+                                                <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                                 action="#{gerenciarVinculoBean.removerDocumento()}"
+                                                                 update="form:pgArquivoReativacao form:pgDescricaoArquivoReativacao form:pgUploadReativacao">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{gerenciarVinculoBean.arquivo}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:toolbar style="margin-top: 5px; margin-left: 10px; margin-right: 10px;">
+                                    <f:facet name="right">
+                                        <p:commandButton value="Salvar"
+                                                         action="#{gerenciarVinculoBean.reativarVinculo()}"
+                                                         update="dtDetentos pnlSuspVinculo"
+                                                         oncomplete="PF('dlgReativarVinculo').hide();"
+                                                         process="@this pnlReatVinculo"/>
+                                    </f:facet>
+                                </p:toolbar>
+                            </p:dialog>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <p:confirmDialog global="true">
+                <p:commandButton type="button" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton type="button" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

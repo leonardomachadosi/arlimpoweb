@@ -1,0 +1,237 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+
+            .message {
+                background-color: #2196F3;
+                color: #ffffff;
+                padding: 1em;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+
+            .ui-panel-content {
+                text-align: center;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <p:blockUI block="form" trigger="btnBuscarDetento" />
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid rendered="#{identificacaoPessoaBean.pessoaBusca.nome != null}">
+                            <div class="message">
+                                <p:outputLabel value="#{identificacaoPessoaBean.pessoaBusca.nome}"/>
+                            </div>
+                        </p:panelGrid>
+                        <h1>Identificacao de Pessoa</h1>
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNome"
+                                             value="#{identificacaoPessoaBean.pessoa.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNome" value="Nome"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itRg"
+                                             value="#{identificacaoPessoaBean.rg.numero}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itRg" value="RG"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputMask id="itCpf"
+                                             value="#{identificacaoPessoaBean.documento.cpf}"
+                                             mask="999.999.999-99"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itCpf" value="CPF"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeMae"
+                                             value="#{identificacaoPessoaBean.mae.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomeMae" value="Nome da Mãe"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomePai"
+                                             value="#{identificacaoPessoaBean.pai.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomePai" value="Nome do Pai"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdNascimento"
+                                            value="#{identificacaoPessoaBean.pessoa.dataNascimento}"
+                                            pattern="dd/MM/yyyy" navigator="true"
+                                            mask="99/99/9999"
+                                            locale='pt'
+                                            maxdate="#{identificacaoPessoaBean.maxDate()}"
+                                            mindate="#{identificacaoPessoaBean.minDate()}"
+                                            styleClass="input-auto"/>
+                                <p:outputLabel for="cdNascimento" value="Nascimento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar id="tlb">
+                        <f:facet name="left">
+                            <!--<p:commandButton title="Buscar detento"
+                                             icon="ui-icon-fingerprint"
+                                             id="btnBuscar"
+                                             action="#{identificacaoPessoaBean.redirectToNewPage()}">
+                            </p:commandButton>-->
+
+                            <p:commandButton value="Buscar"
+                                             icon="ui-icon-search"
+                                             id="btnBuscarDetento"
+                                             actionListener="#{identificacaoPessoaBean.buscaPessoa()}"
+                                             update="plnGroup formList tlb btnCadastrarDetento btnCadastrarVisitante dtPessoas messages"
+                                             style="margin-left: 16px"
+                                             process="form"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton value="Cadastrar Detento"
+                                             icon="ui-icon-plus"
+                                             id="btnCadastrarDetento"
+                                             rendered="#{identificacaoPessoaBean.numeroPesquisas >= 2}"
+                                             actionListener="#{identificacaoPessoaBean.cadastroPreso()}"
+                                             style="margin-left: 16px"
+                                             process="form"/>
+                            <p:commandButton value="Cadastrar Visitante"
+                                             icon="ui-icon-plus"
+                                             id="btnCadastrarVisitante"
+                                             rendered="#{identificacaoPessoaBean.numeroPesquisas >= 2}"
+                                             actionListener="#{identificacaoPessoaBean.gotoCadastroVisitanteSemPessoa}"
+                                             style="margin-left: 16px"
+                                             process="form"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+
+        <h:form id="formList" prependId="false">
+            <h:panelGroup rendered="#{!identificacaoPessoaBean.pessoasIdentificadas.isEmpty()}" id="plnGroup">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h:panelGroup id="hpDetentos">
+
+                                <h1>Pessoas</h1>
+
+                                <p:dataList value="#{identificacaoPessoaBean.lazyPessoasIdentificadas}"
+                                            lazy="true"
+                                            id="dtPessoas"
+                                            var="pessoaIdentificada"
+                                            type="unordered" itemType="none" paginator="true" rows="10"
+                                            styleClass="cars-datalist">
+                                    <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                        <h:panelGroup rendered="#{pessoaIdentificada.foto != null}" style="padding: 1.5em">
+                                            <p:graphicImage value="#{pessoaIdentificada.digitalStreamedContent}"
+                                                            stream="false"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup rendered="#{pessoaIdentificada.foto == null}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:78px;color:#757575;margin:24px;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <div class="car-details">
+                                            <p><strong>#{pessoaIdentificada.nome}</strong>
+                                            </p>
+                                            <h:panelGroup
+                                                    rendered="#{pessoaIdentificada.nome_anterior != null}">
+                                                <p style="color:#757575">
+                                                    <strong>Nome anterior: </strong>#{pessoaIdentificada.nome_anterior}
+                                                </p>
+                                            </h:panelGroup>
+                                            <p style="color:#757575">
+                                                <strong>CPF: </strong>#{pessoaIdentificada.cpf != null ? pessoaIdentificada.cpf : ""}
+                                            </p>
+                                            <p style="color:#757575">
+                                                <strong>RG: </strong>#{pessoaIdentificada.rg != null ? pessoaIdentificada.rg : ""}
+                                            </p>
+                                            <p style="color:#757575">
+                                                <strong>Data de nascimento: </strong>#{pessoaIdentificada.nascimento != null ? pessoaIdentificada.nascimento : ""}
+                                            </p>
+                                            <p style="color:#757575">
+                                                <strong>Pai: </strong>#{pessoaIdentificada.nome_pai != null ? pessoaIdentificada.nome_pai : ""}
+                                            </p>
+                                            <p style="color:#757575">
+                                                <strong>Mãe: </strong>#{(pessoaIdentificada.nome_mae != null ? pessoaIdentificada.nome_mae : "")}
+                                            </p>
+                                            <p style="color:#757575">
+                                                <strong>Naturalidade: </strong>#{pessoaIdentificada.localidade} - #{pessoaIdentificada.uf}
+                                            </p>
+
+                                            <p style="color:#757575">
+                                                <strong>SEXO: </strong>#{pessoaIdentificada.sexo}
+                                            </p>
+                                        </div>
+
+                                        <h:panelGroup styleClass="cars-datalist" style="float: right; margin-top: 7em;">
+                                            <p:splitButton value="Opções" icon="ui-icon-disk"
+                                                           rendered="#{identificacaoPessoaBean.renderizaBotaoCadastrar(pessoaIdentificada)}">
+                                                <p:menuitem value="Cadastrar preso"
+                                                            rendered="#{p:ifAnyGranted('SI_GESTOR, SI_AGENTE_ADMIN, SI_AGENTE_ADMIN_INTERIOR')}"
+                                                            action="#{identificacaoPessoaBean.gotoCadastroPreso(pessoaIdentificada)}"
+                                                            update="messages" icon="ui-icon-person"/>
+                                                <p:menuitem value="Cadastrar visitante"
+                                                            action="#{identificacaoPessoaBean.gotoCadastroVisitante(pessoaIdentificada)}"
+                                                            icon="ui-icon-group"/>
+                                            </p:splitButton>
+                                        </h:panelGroup>
+
+                                    </div>
+                                </p:dataList>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

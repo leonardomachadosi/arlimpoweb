@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-steps .ui-steps-item {
+                width: 33%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Cadastro de Preso</b></h1>
+                        <p:steps activeIndex="#{cadastroDetentoBean.passo}">
+                            <p:menuitem value="Dados Pessoais"/>
+                            <p:menuitem value="Dados Físicos"/>
+                            <p:menuitem value="Dados Prisionais"/>
+                        </p:steps>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <h:panelGroup rendered="#{cadastroDetentoBean.passo == 0}" id="dadosPessoais">
+                            <ui:insert name="form">
+                                <ui:include src="detentoForms/dados-pessoais.xhtml"/>
+                            </ui:insert>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{cadastroDetentoBean.passo == 1}">
+                            <ui:insert name="form">
+                                <ui:include src="detentoForms/dados-fisicos.xhtml"/>
+                            </ui:insert>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{cadastroDetentoBean.passo == 2}">
+                            <ui:insert name="form">
+                                <ui:include src="detentoForms/dados-prisionais.xhtml"/>
+                            </ui:insert>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                     <!--<p:toolbar>-->
+                       <!--  <f:facet name="right">-->
+                    <p:commandButton id="btnProximo"
+                                     value="Próximo"
+                                     process="@form"
+                                     style="float:right;"
+                                     rendered="#{cadastroDetentoBean.passo != 2}"
+                                     update="@form"
+                                     action="#{cadastroDetentoBean.avancar()}"
+                                     />
+                    <p:commandButton id="btnConcluir"
+                                     value="Concluir"
+                                     style="float:right;"
+                                     rendered="#{cadastroDetentoBean.passo == 2}"
+                                     process="@form"
+                                     update="@form"
+                                     action="#{cadastroDetentoBean.salvar()}"
+                                     />
+                    <span class="ui-separator" style="padding: 2px; float:right"/>
+                    <p:commandButton id="btnAnterior"
+                                     value="Anterior"
+                                     style="float: right;"
+                                     process="@form" update="@form"
+                                     action="#{cadastroDetentoBean.voltar()}"
+                                     rendered="#{cadastroDetentoBean.passo > 0}"
+                                     />
+                    <!--   </f:facet>-->
+                 <!--</p:toolbar>-->
+                </div>
+            </div>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-rg.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-pessoa.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-foto-dado-fisico.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-foto-cam-dado-fisico.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-incidenciaPenal-processo.xhtml"/>
+        </ui:insert>
+    </ui:define>
+</ui:composition>

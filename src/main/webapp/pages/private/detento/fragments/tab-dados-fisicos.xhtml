@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+    <p:outputLabel value="Dados Físicos" styleClass="customLabel"/>
+    <p:accordionPanel multiple="false">
+        <c:forEach items="#{visualizaDetentoBean.detentoDadoFisicoList}" var="detentoDadoFisico">
+            <p:tab title="Ciclo #{detentoDadoFisico.detento.numeroCiclo}">
+                <ui:include src="dados-fisicos-panelgrid.xhtml">
+                    <ui:param name="dadosFisicos"
+                              value="#{detentoDadoFisico}"/>
+                </ui:include>
+            </p:tab>
+        </c:forEach>
+    </p:accordionPanel>
+
+
+    <p:spacer/>
+    <p:outputLabel value="Deficiências" styleClass="customLabel"
+                   rendered="#{visualizaDetentoBean.deficienciaList.size() > 0}"/>
+    <p:dataTable value="#{visualizaDetentoBean.deficienciaList}"
+                 rendered="#{visualizaDetentoBean.deficienciaList.size() > 0}"
+                 paginator="#{visualizaDetentoBean.deficienciaList.size() > 10}"
+                 var="deficiencia" rows="10" paginatorPosition="bottom" style="text-align: center;width: 50%;">
+        <f:facet name="header">
+            Deficiências
+        </f:facet>
+        <p:column headerText="Tipo">
+            <h:outputText value="#{deficiencia.deficiencia.tipoDeficiencia.descricao}"/>
+        </p:column>
+        <p:column headerText="Descrição">
+            <h:outputText value="#{deficiencia.deficiencia.descricao}"/>
+        </p:column>
+    </p:dataTable>
+</ui:composition>

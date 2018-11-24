@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid style="margin-bottom:20px;width: 100%;" styleClass="pgDadosOcorrencia">
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Número da ocorrência: "/>
+                <h:outputText value="#{acompanhaOcorrenciaBean.formataNumOcorrencia(ocorrencia.id)}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Data da ocorrência: "/>
+                <h:outputText value="#{ocorrencia.dataCadastro}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Título: "/>
+                <h:outputText
+                        value="#{ocorrencia.tipoMovimentacao.categoriaMovimentacao.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Subtítulo: "/>
+                <h:outputText
+                        value="#{ocorrencia.tipoMovimentacao.descricao}"/>
+            </p:column>
+        </p:row>
+
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Setor: "/>
+                <h:outputText
+                        value="#{ocorrenciaSetor.setor.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Severidade: "/>
+                <h:outputText
+                        value="#{ocorrencia.severidade.descricao}"/>
+            </p:column>
+        </p:row>
+
+    </p:panelGrid>
+
+</ui:composition>

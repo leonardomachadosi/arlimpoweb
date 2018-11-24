@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<head>
+    <style type="text/css">
+        body {
+            font-family: Sans-Serif;
+        }
+
+        #dadosVisitante {
+            font-size: 0.63em;
+            color: #1d1e1f;
+        }
+
+        .imgCarteira {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #imageContainer {
+            position: absolute;
+            height: 8.7em;
+            top: 5.3em;
+            left: 42.6em;
+            width: 6.4em;
+            overflow: hidden;
+        }
+
+        .imgVisitante {
+            max-height: 8.7em;
+
+            position: absolute;
+            top: -9999px;
+            bottom: -9999px;
+            left: -9999px;
+            right: -9999px;
+            margin: auto;
+        }
+
+        .nome {
+            position: absolute;
+            top: 10.3em;
+            left: 42.2em;
+        }
+
+        .tpVisitante {
+            position: absolute;
+            top: 13.9em;
+            left: 42.2em;
+        }
+
+        .responsavel {
+            position: absolute;
+            top: 17.4em;
+            left: 42.2em;
+        }
+
+        .cpf {
+            position: absolute;
+            top: 21em;
+            left: 54.4em;
+        }
+
+        .rg {
+            position: absolute;
+            top: 21em;
+            left: 42.2em;
+        }
+
+        .codigo {
+            position: absolute;
+            top: 23.3em;
+            left: 71em;
+            color: red;
+            font-weight: bold;
+
+        }
+
+        .naturalidade {
+            position: absolute;
+            top: 6.2em;
+            left: 2.2em;
+        }
+
+        .validade {
+            position: absolute;
+            top: 6.2em;
+            left: 14.5em;
+        }
+
+        .dtNascimento {
+            position: absolute;
+            top: 6.2em;
+            left: 26.6em;
+        }
+
+        .mae {
+            position: absolute;
+            top: 9.5em;
+            left: 2.2em;
+        }
+
+        .pai {
+            position: absolute;
+            top: 11.7em;
+            left: 2.2em;
+        }
+
+        .detentoList {
+            position: absolute;
+            top: 15.5em;
+            left: 2.2em;
+            padding-left: 0.1em;
+            margin-top: 0;
+            margin-bottom: 0.1em;
+            list-style: none;
+            max-width: 29em;
+        }
+    </style>
+
+    <title>Imprime carteira</title>
+</head>
+<h:body onload="#{imprimeCarteiraBean.carregaDados()}">
+    <h:form rendered="#{imprimeCarteiraBean.visitantesAprovados != null}">
+        <h:graphicImage styleClass="imgCarteira"
+                        value="/resources/imagens/CarteiraVisiitante.png"/>
+
+        <div id="dadosVisitante">
+            <p:outputLabel styleClass="nome" value="#{imprimeCarteiraBean.visitanteView.nome}"/>
+            <p:outputLabel styleClass="tpVisitante" value="#{imprimeCarteiraBean.visitanteView.tipoVisitante}"/>
+            <p:outputLabel styleClass="responsavel" value="#{imprimeCarteiraBean.visitanteView.responsavel}"/>
+            <p:outputLabel styleClass="cpf" value="#{imprimeCarteiraBean.visitanteView.cpf}"/>
+            <p:outputLabel styleClass="rg" value="#{imprimeCarteiraBean.visitanteView.rg}"/>
+            <p:outputLabel styleClass="codigo" value="#{imprimeCarteiraBean.getMatricula()}"/>
+            <p:outputLabel styleClass="naturalidade" value="#{imprimeCarteiraBean.visitanteView.municipio}"/>
+            <p:outputLabel styleClass="validade" value="#{imprimeCarteiraBean.format(
+            imprimeCarteiraBean.carteiraVisitante.dataValidade)}"/>
+            <p:outputLabel styleClass="dtNascimento"
+                           value="#{imprimeCarteiraBean.format(imprimeCarteiraBean.visitanteView.nascimento)}"/>
+            <p:outputLabel styleClass="mae" value="#{imprimeCarteiraBean.visitanteView.mae}"/>
+            <p:outputLabel styleClass="pai" value="#{imprimeCarteiraBean.visitanteView.pai}"/>
+
+            <ul class="detentoList">
+                <ui:repeat value="#{imprimeCarteiraBean.visitantesAprovados}" var="detento">
+                    <li>
+                        <p:outputLabel styleClass="detentoItem"
+                                       value="#{detento.nomeDetento} - (#{detento.parentesco})"/>
+                    </li>
+                </ui:repeat>
+            </ul>
+        </div>
+        <div id="imageContainer">
+            <p:graphicImage styleClass="imgVisitante"
+                            value="/foto-detento?foto=#{imprimeCarteiraBean.enconder(imprimeCarteiraBean.visitanteView.path)}"/>
+        </div>
+    </h:form>
+</h:body>
+<h:outputScript rendered="#{imprimeCarteiraBean.visitanteView.path != null}">
+    window.print();
+    setTimeout(window.close, 700);
+</h:outputScript>
+</html>

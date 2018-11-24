@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-pessoa">
+        <p:dialog header="Adicionar Pessoa" id="dialogPessoa" widgetVar="addPessoa" modal="true"
+                  width="600" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgPessoa"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="itNomePesquisa" value="Nome"/>
+                    <p:inputText id="itNomePesquisa"
+                                 value="#{cadastroDetentoBean.pessoaPesquisa.nome}"
+                                 style="width: 100%;"/>
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton value="Buscar"
+                                     id="btnbuscar"
+                                     icon="ui-icon-search"
+                                     action="#{cadastroDetentoBean.buscarPessoasByNome()}"
+                                     update="dtPessoas tbBtn"
+                                     process="form-dialog-pessoa"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                    <p:commandButton
+                            value="Inserir Novo"
+                            id="btnInserir"
+                            update="form:tabDadosPessoais:pgMae form:tabDadosPessoais:pgPai form:tabDadosPessoais:pgEstadoCivilConjuge"
+                            oncomplete="PF('addPessoa').hide();"
+                            actionListener="#{cadastroDetentoBean.adicionarPessoa()}"
+                            icon="ui-icon-done"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+
+                </f:facet>
+            </p:toolbar>
+            <p:spacer/>
+            <p:dataTable
+                    id="dtPessoas" paginator="true" rows="3"
+                    paginatorPosition="bottom"
+                    value="#{cadastroDetentoBean.pessoas}"
+                    var="pessoa"
+                    style="text-align: center"
+                    emptyMessage="Nenhum registro encontrado">
+                <f:facet name="header">
+                    Pessoas
+                </f:facet>
+                <p:column headerText="Foto" width="20%">
+                    <h:panelGroup
+                            rendered="#{pessoa.foto == null or pessoa.foto == ''}">
+                        <i class="ui-icon ui-icon-person"
+                           style="font-size:40px;color:#757575;">
+                        </i>
+                    </h:panelGroup>
+                    <p:graphicImage
+                            rendered="#{pessoa.foto != null and pessoa.foto != ''}"
+                            value="/foto-detento?foto=#{cadastroDetentoBean.enconder(pessoa.foto)}"
+                            style="max-height:3em; "/>
+                </p:column>
+                <p:column headerText="Matrícula"
+                          style="width:20%">
+                    <h:outputText
+                            value="#{cadastroDetentoBean.getMatricula(pessoa.id)}"/>
+                </p:column>
+                <p:column headerText="Nome">
+                    <h:outputText value="#{pessoa.nome}"/>
+                </p:column>
+                <p:column style="width: 30px;">
+                    <p:commandButton title="Adicionar Pessoa"
+                                     icon="ui-icon-check"
+                                     update="form:tabDadosPessoais:pgMae form:tabDadosPessoais:pgPai form:tabDadosPessoais:pgEstadoCivilConjuge"
+                                     oncomplete="PF('addPessoa').hide();"
+                                     action="#{cadastroDetentoBean.adicionarPessoa()}"
+                                     process="@this"
+                    >
+                        <f:setPropertyActionListener value="#{pessoa}"
+                                                     target="#{cadastroDetentoBean.pessoaPesquisa}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </h:form>
+</ui:composition>

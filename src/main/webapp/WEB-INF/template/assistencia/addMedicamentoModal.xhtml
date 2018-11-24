@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="dlgAddMedicamento" widgetVar="dlgAddMedicamento" modal="true" header="Adicionar novo medicamento" width="700">
+        <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="form-group ui-panelgrid-blank">
+            <h:panelGroup>
+                <p:selectCheckboxMenu id="scbmMedicamento" label="Selecione o(s) medicamento(s)" filter="true" filterMatchMode="startsWith" style="width: 100%;"
+                                      required="true" requiredMessage="Selecione pelo menos um medicamento" converter="omnifaces.SelectItemsConverter"
+                                      value="#{efetivaAtendimentoPsicologicoBean.medicamentoParaAdicionarList}">
+                    <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.medicamentoList}" var="medicamento" itemValue="#{medicamento}"
+                                   itemLabel="#{medicamento.descricao}"/>
+                </p:selectCheckboxMenu>
+            </h:panelGroup>
+        </p:panelGrid>
+
+        <p:toolbar>
+            <f:facet name="right">
+                <p:commandButton value="Adicionar" icon="ui-icon-plus" process="@this scbmMedicamento" update="scbmMedicamento form:tabView:tabMedicamento"
+                                 actionListener="#{efetivaAtendimentoPsicologicoBean.onClickAddMedicamento}" oncomplete="handleAddMedicamentoRequest(args)"/>
+            </f:facet>
+        </p:toolbar>
+    </p:dialog>
+</ui:composition>

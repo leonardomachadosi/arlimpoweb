@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataList value="#{list}" var="visitaAssistida"
+                type="unordered" itemType="none"
+                rendered="#{list.size() > 0}"
+                paginator="#{list.size() > 10}"
+                rows="10"
+                paginatorPosition="bottom"
+                emptyMessage="Nenhum registro encontrado"
+                styleClass="cars-datalist">
+        <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+            <f:facet name="header">
+                Solicitação de Visita Assistida
+            </f:facet>
+            <div class="car-details">
+                <p:graphicImage
+                        value="#{fotoBean.getFotoFrontalPath(visitaAssistida.pessoaParentesco.pessoaParente.id, 2)}"
+                        style="width: 78px; margin:24px;"/>
+            </div>
+            <div class="car-details">
+                <p><strong>#{visitaAssistida.pessoaParentesco.pessoaParente.nome}</strong></p>
+                <p><strong>Data da Solicitação: </strong>
+                    <h:outputText value="#{visitaAssistida.dataSolicitacao}">
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                    </h:outputText></p>
+                <p><strong>Data Prevista: </strong>
+                    <h:outputText value="#{visitaAssistida.dataPrevista}">
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                    </h:outputText></p>
+                <p><strong>Data da Realização: </strong>
+                    <h:outputText value="#{visitaAssistida.dataRealizacao}">
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                    </h:outputText></p>
+                <p><strong>Status: </strong>
+                    <h:outputText value="#{historicoSolicitacaoVisitaAssistidaServiceImpl
+                    .getSolicitacaoAberta(visitaAssistida).situacaoSolicitacaoVisitaAssistida.descricao}"
+                                  styleClass="#{utilBean.addStyleByStatus(historicoSolicitacaoVisitaAssistidaServiceImpl
+                    .getSolicitacaoAberta(visitaAssistida).situacaoSolicitacaoVisitaAssistida.descricao)}"/>
+                </p>
+            </div>
+        </div>
+    </p:dataList>
+</ui:composition>

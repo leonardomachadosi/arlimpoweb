@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Análise de Solicitação</b></h1>
+                        <br/>
+                        <p:panelGrid id="pgSetorNomeTipoAtendimento" columns="2"
+                                     columnClasses="ui-grid-col-5, ui-grid-col-7"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgLotacao" styleClass="md-inputfield">
+                                <p:inputText id="itLotacao"
+                                             value="#{buscaSolicitacaoSegurancaBean.servidorLotacaoView.lotacao}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itLotacao" value="Lotação"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                <p:inputText id="itNome"
+                                             value="#{buscaSolicitacaoSegurancaBean.usuario.pessoa.nome}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itNome" value="Funcionário"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel value="Filtros" style="color:darkBlue;"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgCodigoTipoAtendimentoData" columns="4"
+                                     columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgCodigoSolicitacao" styleClass="md-inputfield">
+                                <p:inputText id="itCodigoSolicitacao"
+                                             value="#{buscaSolicitacaoSegurancaBean.solicitacaoAtendimento.id}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itCodigoSolicitacao" value="Código Solicitação"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgTipoSolicitacaoAtendimento" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somTipoSolicitacaoAtendimento"
+                                                 value="#{buscaSolicitacaoSegurancaBean.solicitacaoAtendimento.tipoSolicitacaoAtendimento}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Tipo de Atendimento" itemValue=""/>
+                                    <f:selectItems var="tipoSolicitacaoAtendimento"
+                                                   itemLabel="#{tipoSolicitacaoAtendimento.descricao}"
+                                                   value="#{buscaSolicitacaoSegurancaBean.tiposSolicitacaoAtendimentos}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Tipo de Atendimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar
+                                        id="cdDataInicial"
+                                        pattern="dd/MM/yyyy HH:mm"
+                                        mask="99/99/9999 99:99"
+                                        value="#{buscaSolicitacaoSegurancaBean.dataInicial}"
+                                        locale='pt'
+                                        inputStyle="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </p:calendar>
+                                <p:outputLabel for="cdDataInicial" value="Data Prevista Atendimento Inicial"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar
+                                        id="cdDataFinal"
+                                        pattern="dd/MM/yyyy HH:mm"
+                                        mask="99/99/9999 99:99"
+                                        value="#{buscaSolicitacaoSegurancaBean.dataFinal}"
+                                        locale='pt'
+                                        inputStyle="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </p:calendar>
+                                <p:outputLabel for="cdDataFinal" value="Data Prevista Atendimento Final"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnBuscarSolicitacaoAtendimento" value="Buscar"
+                                             process="@form" update="@form"
+                                             action="#{buscaSolicitacaoSegurancaBean.buscarSolicitacoesAtendimentos()}"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Solicitações</b></h1>
+                        <p:dataTable id="dtSolicitacaoAtendimentos" var="solicitacaoAtendimento"
+                                     value="#{buscaSolicitacaoSegurancaBean.solicitacaoAtendimentos}" reflow="true"
+                                     rowKey="#{solicitacaoAtendimento.id}"
+                                     paginator="true" rows="10"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                            <p:column headerText="Código Solicitação"
+                                      style="width:80px;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimento.matricula}"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Atendimento"
+                                      style="width:200px;text-align: center">
+                                <h:outputText
+                                        value="#{solicitacaoAtendimento.tipoSolicitacaoAtendimento.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Previsão de Atendimento"
+                                      style="width:150px;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimento.dataPrevistaAtendimento}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Status"
+                                      style="width:100px;text-align: center">
+                                <h:outputText value="#{solicitacaoAtendimento.status.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Opções"
+                                      style="width:60px;text-align: center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaSolicitacaoSegurancaBean.onClickVisualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{solicitacaoAtendimento}"
+                                                                 target="#{buscaSolicitacaoSegurancaBean.solicitacaoAtendimento}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

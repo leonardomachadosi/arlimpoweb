@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-curso-atendimento-pedagogico">
+        <p:dialog header="Adicionar Curso Profissionalizante" id="dialogCursoAtendimentoPedagogico"
+                  widgetVar="addCurso"
+                  modal="true"
+                  width="1000" height="120" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgProfissao"
+                         columnClasses="ui-grid-col-8"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgProfissaoList">
+                    <p:selectCheckboxMenu id="soProfissoes"
+                                          styleClass="custom-select-menu" panelStyleClass="custom-select-menu-panel"
+                                          value="#{efetivaAtendimentoPedagogicoBean.selectedCursosProfissionalizantes}"
+                                          converter="omnifaces.SelectItemsConverter"
+                                          filter="true"
+                                          filterMatchMode="startsWith"
+                                          label="Cursos Profissionalizantes"
+                                          style="width: 100%;color: darkgray">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{efetivaAtendimentoPedagogicoBean.cursos}"
+                                var="curso"
+                                itemLabel="#{curso.descricao}"/>
+                    </p:selectCheckboxMenu>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            id="btnInserir"
+                            update="form:tab:dtCursosProfissionalizantes form:tab:dtInteresseCursosProfissionalizantes"
+                            oncomplete="PF('addCurso').hide();"
+                            actionListener="#{efetivaAtendimentoPedagogicoBean.adicionarCursos()}"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

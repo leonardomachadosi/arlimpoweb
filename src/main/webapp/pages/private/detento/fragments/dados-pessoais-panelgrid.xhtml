@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+    <p:panelGrid id="pgDetentoDadosPessoais" style="margin-bottom:20px;width: 100%;" rendered="#{detentoView.codDetento != null}"
+                 styleClass="customDadosPanelgrid">
+        <p:row>
+            <p:column rowspan="7">
+                <h:graphicImage style="width: 20em"
+                                value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <p:commandButton title="Visualizar" process="@this" style="float: right;"
+                                 action="#{utilBean.visualizarDetento(detentoView)}"
+                                 ajax="false" onclick="this.form.target='_blank'"
+                                 icon="ui-icon-remove-red-eye"
+                                 rendered="#{exibeDetalhes}"/>
+                <h:outputLabel value="Nome: "/>
+                <h:outputText
+                        value="#{detentoView.nomeDetento} (Ciclo: #{detentoView.numeroCiclo})"/>
+            </p:column>
+            <!--<p:column>-->
+                <!--<p:commandButton id="btnDadosPessoais"-->
+                                 <!--title="editar"-->
+                                 <!--style="float: right"-->
+                                 <!--icon="ui-icon-edit"-->
+                                 <!--action="#{visualizaDetentoBean.carregarDetento()}"-->
+                                 <!--oncomplete="PF('addNome').show();"-->
+                                 <!--rendered="#{visualizaDetentoBean.renderizarBotaoEditarNome()}"-->
+                                 <!--update="dialogEdicaoNome"-->
+                                 <!--process="@this"-->
+                <!--/>-->
+            <!--</p:column>-->
+
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Matrícula : "/>
+                <h:outputText
+                        value="#{utilBean.formataCodigo(detentoView.matriculaDetento)}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Nome do pai: "/>
+                <h:outputText value="#{detentoView.nomePai}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Nome da mãe: "/>
+                <h:outputText value="#{detentoView.nomeMae}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Data de nascimento: "/>
+                <h:outputText value="#{detentoView.dataNascimento}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+</ui:composition>

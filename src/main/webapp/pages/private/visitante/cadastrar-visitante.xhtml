@@ -1,0 +1,977 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+
+            <p:remoteCommand name="setResponse" process="@this"
+                             update="form:tabDadosPessoais:dgPosicao"
+                             actionListener="#{cadastroVisitanteBean.setResponseMessage}"/>
+            <p:blockUI block="form" trigger="btnSalvarCela" />
+            <h:panelGroup rendered="#{!cadastroVisitanteBean.renderizaBotaoSalvar}">
+                <div id="staticMessage" class="ui-messages ui-widget" aria-live="polite">
+                    <div class="ui-messages-error ui-corner-all"><span class="ui-messages-error-icon"/>
+                        <ul>
+                            <li>
+                                <span class="ui-messages-error-summary">Erro ao listar os dados desse Visitante!</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Cadastro de Visitante</b></h1>
+                        <p:tabView id="tabDadosPessoais">
+                            <p:tab title="Dados Pessoais">
+                                <p:spacer/>
+                                <p:panelGrid id="pgTipoVisitante" columns="3"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-6,ui-grid-col-2"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soTipoVisitante"
+                                                         value="#{cadastroVisitanteBean.visitante.tipoVisitante}"
+                                                         style="width: 100%"
+                                                         converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems
+                                                    value="#{cadastroVisitanteBean.tiposVisitante}"
+                                                    var="tipoVisitante"
+                                                    itemLabel="#{tipoVisitante.descricao}"/>
+                                            <p:ajax event="change" execute="@this" update="pgTipoVisitante hpAcompanhante hpDeficiencia"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soTipoVisitante" value="Tipo de Visitante"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  rendered="#{cadastroVisitanteBean.visitante.tipoVisitante.id == 2420}">
+                                        <p:selectOneMenu id="soOrgaoEmancipacao"
+                                                         value="#{cadastroVisitanteBean.pessoa.orgaoEmancipacao}"
+                                                         style="width: 100%"
+                                                         converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems
+                                                    value="#{cadastroVisitanteBean.orgaosEmancipacao}"
+                                                    var="orgaoEmanciapacao"
+                                                    itemLabel="#{orgaoEmanciapacao.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="soOrgaoEmancipacao" value="Órgão de Emancipação"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  rendered="#{cadastroVisitanteBean.renderizaInstitucao()}">
+                                        <p:selectOneMenu id="soInstituicao"
+                                                         value="#{cadastroVisitanteBean.instituicao}"
+                                                         style="width: 100%"
+                                                         converter="omnifaces.SelectItemsConverter">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems
+                                                    value="#{cadastroVisitanteBean.instituicoes}"
+                                                    var="instituicao"
+                                                    itemLabel="#{instituicao.nomeFantasia}"/>
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="soInstituicao" value="Instituição"/>
+                                    </h:panelGroup>
+
+                                </p:panelGrid>
+                                <p:panelGrid id="pgNomeVisitante" columns="2"
+                                             columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itNome"
+                                                     value="#{cadastroVisitanteBean.pessoa.nome}"
+                                                     required="true"
+                                                     requiredMessage="Informe o nome"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itNome" value="Nome"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgNascimentoNacionalidade" columns="3"
+                                             columnClasses="ui-grid-col-3,ui-grid-col-4,ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:calendar id="cdDataNascimento"
+                                                    value="#{cadastroVisitanteBean.pessoa.dataNascimento}"
+                                                    pattern="dd/MM/yyyy"
+                                                    yearRange="c-100:c+100"
+                                                    locale='pt'
+                                                    mask="99/99/9999"
+                                                    required="true"
+                                                    requiredMessage="Informe a data de nascimento"
+                                                    style="width: 100%" navigator="true" maxdate="null">
+                                            <p:ajax event="dateSelect" process="@this"
+                                                    listener="#{cadastroVisitanteBean.validarIdadeComTipoVisitante}"/>
+                                        </p:calendar>
+                                        <p:outputLabel for="cdDataNascimento" value="Data de Nascimento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soNacionalidade"
+                                                         value="#{cadastroVisitanteBean.pessoa.nacionalidade}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems value="#{cadastroVisitanteBean.nacionalidades}"
+                                                           var="nacionalidade"
+                                                           itemLabel="#{nacionalidade.descricao}"/>
+                                            <p:ajax event="change"
+                                                    listener="#{cadastroVisitanteBean.carregaPaisNacionalidade()}"
+                                                    process="@this" update="hpPaisEstadoNaturalidade hpPaisOrigem"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soNacionalidade" value="Nacionalidade"/>
+                                    </h:panelGroup>
+
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  id="hpPaisOrigem"
+                                    >
+                                        <p:selectOneMenu id="soPaisOrigem"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         rendered="#{cadastroVisitanteBean.pessoa.nacionalidade.id != null and (cadastroVisitanteBean.pessoa.nacionalidade.id == 33 ||cadastroVisitanteBean.pessoa.nacionalidade.id == 34)}"
+                                                         filter="true"
+                                                         style="width: 100%;"
+                                        >
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems value="#{cadastroVisitanteBean.paises}"
+                                                           var="pais"
+                                                           itemLabel="#{pais.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel
+                                                rendered="#{cadastroVisitanteBean.pessoa.nacionalidade.id != null and (cadastroVisitanteBean.pessoa.nacionalidade.id == 33 ||cadastroVisitanteBean.pessoa.nacionalidade.id == 34)}"
+                                                value="País de Origem"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <h:panelGroup id="hpPaisEstadoNaturalidade">
+                                    <p:panelGrid columns="2"
+                                                 id="pgEstadoNaturalidade"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                                 rendered="#{cadastroVisitanteBean.pessoa.nacionalidade.id == 32}"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0 none; background-color:transparent;">
+
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="soEstadoOrigem"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             value="#{cadastroVisitanteBean.estadoNaturalidade}"
+                                                             filter="true"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"/>
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{cadastroVisitanteBean.estados}"
+                                                               var="estado"
+                                                               itemLabel="#{estado.descricao}"/>
+                                                <p:ajax process="@this" update="pgEstadoNaturalidade"
+                                                        listener="#{cadastroVisitanteBean.carregarNaturalidades()}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel for="soEstadoOrigem" value="Estado de Origem"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="soNaturalidade"
+                                                             value="#{cadastroVisitanteBean.pessoa.municipioNascimento}"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             filter="true"
+                                                             filterMatchMode="contains"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"/>
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{cadastroVisitanteBean.naturalidades}"
+                                                               var="naturalidade"
+                                                               itemLabel="#{naturalidade.descricao}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel for="soNaturalidade" value="Naturalidade"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                                <p:panelGrid id="pgMae" columns="2"
+                                             columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itMae"
+                                                     readonly="true"
+                                                     value="#{cadastroVisitanteBean.pessoaParentescoMae.pessoaParente.nome}"
+                                                     style="width: 100%;"
+                                                     inputStyle="width: 100%;"/>
+                                        <p:outputLabel for="itMae" value="Mãe"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{cadastroVisitanteBean.pessoaParentescoMae.pessoaParente.id == null or !cadastroVisitanteBean.visitante.pessoa.identificado}" >
+                                        <p:commandButton title="Adicionar Mãe"
+                                                         oncomplete="PF('addPessoa').show();"
+                                                         rendered="#{cadastroVisitanteBean.pessoaParentescoMae.pessoaParente.nome == null}"
+                                                         actionListener="#{cadastroVisitanteBean.setarTipoParente('mae')}"
+                                                         update="form-dialog-pessoa:dialogPessoa"
+                                                         icon="ui-icon-plus"
+                                                         process="@this"
+                                        />
+                                        <p:commandButton title="Remover"
+                                                         icon="ui-icon-trash"
+                                                         styleClass="red-btn"
+                                                         rendered="#{cadastroVisitanteBean.pessoaParentescoMae.pessoaParente.nome != null}"
+                                                         update="pgMae"
+                                                         process="@this"
+                                                         actionListener="#{cadastroVisitanteBean.refreshParente('mae')}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgPai" columns="2"
+                                             columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itPai"
+                                                     value="#{cadastroVisitanteBean.pessoaParentescoPai.pessoaParente.nome}"
+                                                     readonly="true"
+                                                     style="width: 100%;"
+                                                     inputStyle="width: 100%;"/>
+                                        <p:outputLabel for="itPai" value="Pai"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{cadastroVisitanteBean.pessoaParentescoPai.pessoaParente.id == null or !cadastroVisitanteBean.visitante.pessoa.identificado}">
+                                        <p:commandButton title="Adicionar Pai"
+                                                         oncomplete="PF('addPessoa').show();"
+                                                         rendered="#{cadastroVisitanteBean.pessoaParentescoPai.pessoaParente.nome == null}"
+                                                         actionListener="#{cadastroVisitanteBean.setarTipoParente('pai')}"
+                                                         update="form-dialog-pessoa:dialogPessoa"
+                                                         icon="ui-icon-plus"
+                                                         process="@this"
+                                        />
+                                        <p:commandButton title="Remover"
+                                                         icon="ui-icon-trash"
+                                                         styleClass="red-btn"
+                                                         rendered="#{cadastroVisitanteBean.pessoaParentescoPai.pessoaParente.nome != null}"
+                                                         update="pgPai"
+                                                         process="@this"
+                                                         actionListener="#{cadastroVisitanteBean.refreshParente('pai')}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="3"
+                                             id="pgSexo"
+                                             columnClasses="ui-grid-col-4"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soSexo"
+                                                         value="#{cadastroVisitanteBean.pessoa.sexo}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItems value="#{cadastroVisitanteBean.sexos}"
+                                                           var="sexo"
+                                                           itemLabel="#{sexo.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Sexo" for="soSexo"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soEstadoCivil"
+                                                         value="#{cadastroVisitanteBean.pessoa.estadoCivil}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItems value="#{cadastroVisitanteBean.estadoCivilList}"
+                                                           var="estadoCivil"
+                                                           itemValue="#{estadoCivil}"
+                                                           itemLabel="#{estadoCivil.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Estado Civil" for="soEstadoCivil"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2"
+                                             id="pgTelefone"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputMask id="itTelefone"
+                                                     mask="(99)?999999999"
+                                                     value="#{cadastroVisitanteBean.telefone.descricao}"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itTelefone" value="Telefone"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:commandButton title="Adicionar Telefone"
+                                                         action="#{cadastroVisitanteBean.adicionarTelefone()}"
+                                                         process="pgTelefone"
+                                                         update="pgDtTelefone pgTelefone"
+                                                         icon="ui-icon-plus"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2"
+                                             id="pgDtTelefone"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                             var="telefone"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <p:dataTable value="#{cadastroVisitanteBean.telefones}" var="telefone"
+                                                 type="ordered"
+                                                 rendered="#{!cadastroVisitanteBean.telefones.isEmpty()}">
+                                        <f:facet name="header">Telefones</f:facet>
+                                        <p:column headerText="Telefone">
+                                            <h:outputText value="#{telefone.descricao}"/>
+                                        </p:column>
+                                        <p:column style="width: 30px">
+                                            <p:commandButton
+                                                    icon="ui-icon-trash"
+                                                    style="border-bottom: 10px"
+                                                    update="form:tabDadosPessoais:pgDtTelefone"
+                                                    action="#{cadastroVisitanteBean.removerTelefone()}"
+                                                    process="@this"
+                                                    styleClass="red-btn"
+                                                    title="Remover"
+                                            >
+                                                <f:setPropertyActionListener value="#{telefone}"
+                                                                             target="#{cadastroVisitanteBean.telefone}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgPossuiDeficiencia" columns="1"
+                                             columnClasses="ui-grid-col-5"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="font-weight: bold"
+                                                       value="Possui deficiências ?"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:selectOneRadio id="soDeficiencia"
+                                                          style="color:darkBlue;"
+                                                          layout="responsive" columns="3"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          value="#{cadastroVisitanteBean.possuiDeficiencia}">
+                                            <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                            <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                            <f:ajax event="change"
+                                                    listener="#{cadastroVisitanteBean.refreshTipoDeficiencia()}"
+                                                    execute="@this" render="hpDeficiencia"/>
+                                        </p:selectOneRadio>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <h:panelGroup id="hpDeficiencia">
+                                    <p:panelGrid id="pgDeficiencia" columns="1"
+                                                 rendered="#{cadastroVisitanteBean.possuiDeficiencia}"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0 none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="font-weight: bold"
+                                                           value="Quais?"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:selectManyCheckbox id="smDeficiencias"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive"
+                                                                  columns="5"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{cadastroVisitanteBean.selectedTiposDeficiencia}">
+                                                <f:selectItems
+                                                        value="#{cadastroVisitanteBean.deficiencias}"
+                                                        var="deficiencia"
+                                                        itemLabel="#{deficiencia.descricao}"/>
+                                            </p:selectManyCheckbox>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgPrecisaAcompanhante" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 rendered="#{cadastroVisitanteBean.possuiDeficiencia and cadastroVisitanteBean.visitante.tipoVisitante.id != 2421}"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0 none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="font-weight: bold"
+                                                           value="Precisa de Acompanhamento ?"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="soPrecisaAcompanhante"
+                                                              style="width: 100%"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{cadastroVisitanteBean.precisaAcompanhamento}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this"
+                                                        listener="#{cadastroVisitanteBean.refreshVisitanteAcompanhante()}"
+                                                        render="hpAcompanhante"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                                <h:panelGroup id="hpAcompanhante">
+                                    <p:panelGrid id="pgAcompanhante" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 rendered="#{cadastroVisitanteBean.visitante.tipoVisitante.id == 2421 or cadastroVisitanteBean.precisaAcompanhamento}"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0 none; background-color:transparent;">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="font-weight: bold"
+                                                           value="Acompanhante"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+
+                                            <p:autoComplete id="acVisitanteAcompanhante"
+                                                            style="width: 100%"
+                                                            inputStyle="width:100%"
+                                                            converter="visitanteConverter"
+                                                            value="#{cadastroVisitanteBean.visitante.visitanteAcompanhante}"
+                                                            completeMethod="#{cadastroVisitanteBean.completeVisitante}"
+                                                            minQueryLength="3"
+                                                            var="visitanteAcompanhante"
+                                                            itemValue="#{visitanteAcompanhante}"
+                                                            itemLabel="#{visitanteAcompanhante.pessoa.nome}"
+                                            >
+                                                <p:column style="width: 10%; text-align: center">
+                                                    <p:graphicImage
+                                                            value="#{fotoBean.getFotoFrontalPath(visitanteAcompanhante.pessoa.id, 2)}"
+                                                            style="width: 90%;"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <h:outputText value="#{visitanteAcompanhante.pessoa.nome}"/>
+                                                </p:column>
+                                            </p:autoComplete>
+                                            <h:outputLabel for="acVisitanteAcompanhante" value="Acompanhante"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </h:panelGroup>
+                            </p:tab>
+                            <p:tab title="Endereço" id="tbEndereco">
+                                <p:spacer/>
+                                <p:panelGrid columns="3"
+                                             id="pgEstadoMunicipio"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="soEstado"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             value="#{cadastroVisitanteBean.estado}"
+                                                             filter="true"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"/>
+                                                <f:selectItem itemLabel="" itemValue=""/>
+                                                <f:selectItems value="#{cadastroVisitanteBean.estados}"
+                                                               var="estado"
+                                                               itemLabel="#{estado.descricao}"/>
+                                                <p:ajax process="@this" update="soMunicipio"
+                                                        listener="#{cadastroVisitanteBean.carregarMunicipios()}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel for="soEstado" value="Estado"/>
+                                        </h:panelGroup>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soMunicipio"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         value="#{cadastroVisitanteBean.endereco.municipio}"
+                                                         filter="true"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItems value="#{cadastroVisitanteBean.municipios}"
+                                                           var="municipio"
+                                                           itemLabel="#{municipio.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soMunicipio" value="Município"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText
+                                                id="itBairro"
+                                                value="#{cadastroVisitanteBean.endereco.bairro}"
+                                                style="width: 100%"
+                                        />
+                                        <p:outputLabel for="itBairro" value="Bairro"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="3"
+                                             id="pgCepLogradouroNumero"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-6, ui-grid-col-2"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputMask id="itCep"
+                                                     value="#{cadastroVisitanteBean.endereco.cep}"
+                                                     mask="99999-999"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itCep" value="CEP"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itLogradouro"
+                                                     value="#{cadastroVisitanteBean.endereco.logradouro}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itLogradouro" value="Logradouro"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itNumero"
+                                                     value="#{cadastroVisitanteBean.endereco.numero}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itNumero" value="Número"/>
+                                    </h:panelGroup>
+
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             id="pgReferencia"
+                                             columnClasses="ui-grid-col-8"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itReferencia"
+                                                     value="#{cadastroVisitanteBean.endereco.referencia}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itReferencia" value="Referência"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup style="float: right">
+                                        <p:commandButton value="Adicionar"
+                                                         action="#{cadastroVisitanteBean.adicionarEndereco()}"
+                                                         update="@this form:tabDadosPessoais:pgDtEndereco pgEstadoMunicipio pgCepLogradouroNumero pgReferencia"
+                                                         process="@this form:tabDadosPessoais:tbEndereco"
+                                                         icon="ui-icon-plus"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgDtEndereco"
+                                             columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtEndereco"
+                                                     var="endereco"
+                                                     reflow="true"
+                                                     value="#{cadastroVisitanteBean.enderecos}"
+                                                     rows="5"
+                                                     rendered="#{!cadastroVisitanteBean.enderecos.isEmpty()}"
+                                                     emptyMessage=""
+                                                     style="width: 100%">
+                                            <f:facet name="header">
+                                                Endereços
+                                            </f:facet>
+                                            <p:column headerText="Município" style=" width:150px; text-align: center">
+                                                <h:outputText value="#{endereco.municipio.descricao.toUpperCase()}"/>
+                                            </p:column>
+                                            <p:column headerText="Bairro" style="width:170px; text-align: center">
+                                                <h:outputText value="#{endereco.bairro}"/>
+                                            </p:column>
+                                            <p:column headerText="CEP" style="width:70px;text-align: center">
+                                                <h:outputText value="#{endereco.cep}"/>
+                                            </p:column>
+                                            <p:column headerText="Logradouro" style="text-align: center">
+                                                <h:outputText value="#{endereco.logradouro}"/>
+                                            </p:column>
+                                            <p:column headerText="Referência" style="text-align: center">
+                                                <h:outputText value="#{endereco.referencia}"/>
+                                            </p:column>
+                                            <p:column headerText="Número" style="width:50px;text-align: center">
+                                                <h:outputText value="#{endereco.numero}"/>
+                                            </p:column>
+                                            <p:column style="width: 30px">
+                                                <p:commandButton
+                                                        icon="ui-icon-trash"
+                                                        style="border-bottom: 10px;text-align: center"
+                                                        styleClass="red-btn"
+                                                        title="Remover"
+                                                        process="@this"
+                                                        update="@this form:tabDadosPessoais:pgDtEndereco"
+                                                        action="#{cadastroVisitanteBean.removerEndereco()}">
+                                                    <f:setPropertyActionListener value="#{endereco}"
+                                                                                 target="#{cadastroVisitanteBean.endereco}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Documentação Civil">
+                                <p:spacer/>
+                                <p:panelGrid id="pgCpfNascimentoCasamento"
+                                             columns="2"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputMask id="itCpf"
+                                                     mask="999.999.999-99"
+
+                                                     value="#{cadastroVisitanteBean.documento.cpf}"
+                                                     style="width: 100%">
+                                            <p:ajax event="blur" listener="#{cadastroVisitanteBean.validarCpf()}"
+                                                    process="@this"/>
+                                        </p:inputMask>
+                                        <p:outputLabel for="itCpf" value="CPF"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  rendered="#{cadastroVisitanteBean.exibeInputCertidaoNascimento()}">
+                                        <p:inputMask id="itCertidaoNascimento"
+                                                     mask="999999 99 99 9999 9 99999 999 9999999 99"
+                                                     value="#{cadastroVisitanteBean.documento.certidaoNascimento}"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itCertidaoNascimento" value="Certidão de Nascimento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield"
+                                                  rendered="#{cadastroVisitanteBean.exibeInputCertidaoCasamento()}">
+                                        <p:inputMask id="itCertidaoCasamento"
+                                                     mask="999999 99 99 9999 9 99999 999 9999999 99"
+                                                     value="#{cadastroVisitanteBean.documento.certidaoCasamento}"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itCertidaoCasamento" value="Certidão de Casamento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itLivro" value="#{cadastroVisitanteBean.documento.livro}"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itLivro" value="Livro"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itPagina" value="#{cadastroVisitanteBean.documento.pagina}"
+                                                     style="width: 100%"/>
+                                        <p:outputLabel for="itPagina" value="Página"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup style="float: right">
+                                        <p:commandButton value="Adicionar RG"
+                                                         icon="ui-icon-plus"
+                                                         process="@this"
+                                                         actionListener="#{cadastroVisitanteBean.refreshRg()}"
+                                                         oncomplete="PF('addRG').show();"
+                                                         update="form-dialog-rg:dialogRG"
+                                        />
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid id="pgRg"
+                                             columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtRg"
+                                                     var="rg"
+                                                     reflow="true"
+                                                     value="#{cadastroVisitanteBean.rgs}"
+                                                     rendered="#{!cadastroVisitanteBean.rgs.isEmpty()}"
+                                                     rows="5"
+                                                     paginator="false"
+                                                     emptyMessage=""
+                                                     style="width: 100%">
+                                            <f:facet name="header">
+                                                RG
+                                            </f:facet>
+                                            <p:column headerText="Número RG" style="text-align: center;">
+                                                <h:outputText value="#{rg.numero}"/>
+                                            </p:column>
+                                            <p:column headerText="Data de Emissão" style="text-align: center;">
+                                                <h:outputText value="#{rg.dataExpedicao}">
+                                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Órgão Expedidor" style="text-align: center;">
+                                                <h:outputText value="#{rg.orgaoExpedidor.descricao}"/>
+                                            </p:column>
+                                            <p:column headerText="Estado de Emissão" style="text-align: center;">
+                                                <h:outputText value="#{rg.estado.descricao}"/>
+                                            </p:column>
+                                            <p:column style="width: 10%; text-align: center">
+                                                <p:commandButton
+                                                        icon="ui-icon-trash"
+                                                        style="border-bottom: 10px"
+                                                        title="Remover"
+                                                        styleClass="red-btn"
+                                                        update="form:tabDadosPessoais:pgRg"
+                                                        process="@this"
+                                                        action="#{cadastroVisitanteBean.removerRg()}">
+                                                    <f:setPropertyActionListener value="#{rg}"
+                                                                                 target="#{cadastroVisitanteBean.rg}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Foto">
+                                <p:spacer/>
+                                <p:carousel id="crFotoVisitante"
+                                            headerText="Foto"
+                                            numVisible="1"
+                                            style="width: 30%; text-align: center;"
+                                            value="#{cadastroVisitanteBean.visitanteFotos}"
+                                            var="visitanteFoto"
+
+                                >
+                                    <p:panelGrid id="pgFotoVisitante" columns="1"
+                                                 style="margin:10px 10px; text-align:center; width: 100%"
+                                                 columnClasses="label,value"
+                                                 layout="grid" styleClass="ui-panelgrid-blank">
+                                        <p:graphicImage
+                                                value="/foto-detento?foto=#{cadastroVisitanteBean.enconder(visitanteFoto.path)}"
+                                                width="90%" style="max-height: 180px"/>
+                                        <p:commandButton icon="ui-icon-trash"
+                                                         value="Remover"
+                                                         styleClass="red-btn"
+                                                         rendered="#{visitanteFoto.path != null and visitanteFoto.path != ''}"
+                                                         process="@this"
+                                                         update="crFotoVisitante"
+                                                         action="#{cadastroVisitanteBean.removerFoto()}">
+                                            <f:setPropertyActionListener value="#{visitanteFoto}"
+                                                                         target="#{cadastroVisitanteBean.visitanteFoto}"/>
+                                        </p:commandButton>
+                                        <p:splitButton value="Adicionar" icon="ui-icon-plus"
+                                                       style="float: center"
+                                                       rendered="#{visitanteFoto.path == null or visitanteFoto.path == ''}">
+                                            <p:menuitem value="Carregar Foto"
+                                                        actionListener="#{cadastroVisitanteBean.refreshFotoVisitante('foto')}"
+                                                        update="form-dialog-foto-visitante:dialogFotoVisitante"
+                                                        process="@this"
+                                                        oncomplete="PF('addFotoVisitante').show();"
+                                                        style="float: right"
+                                                        icon="ui-icon-plus"/>
+                                            <p:menuitem title="Tirar Foto"
+                                                        value="Tirar Foto"
+                                                        process="@this"
+                                                        actionListener="#{cadastroVisitanteBean.refreshFotoVisitante('camera')}"
+                                                        oncomplete="PF('addFotoCamVisitante').show();"
+                                                        icon="ui-icon-photo-camera"/>
+                                        </p:splitButton>
+                                    </p:panelGrid>
+                                </p:carousel>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <p:splitButton value="Adicionar" icon="ui-icon-plus"
+                                                   style="float: right"
+                                                   rendered="#{cadastroVisitanteBean.visitanteFotos.isEmpty()}">
+                                        <p:menuitem value="Carregar Foto"
+                                                    actionListener="#{cadastroVisitanteBean.refreshFotoVisitante('foto')}"
+                                                    update="form-dialog-foto-visitante:dialogFotoVisitante"
+                                                    oncomplete="PF('addFotoVisitante').show();"
+                                                    style="float: right"
+                                                    icon="ui-icon-plus"/>
+                                        <p:menuitem title="Tirar Foto"
+                                                    value="Tirar Foto"
+                                                    actionListener="#{cadastroVisitanteBean.refreshFotoVisitante('camera')}"
+                                                    update="form-dialog-foto-cam-visitante"
+                                                    oncomplete="PF('addFotoCamVisitante').show();"
+                                                    icon="ui-icon-photo-camera"/>
+                                    </p:splitButton>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Vínculo">
+                                <p:spacer/>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <p:dataTable id="dtPessoaParentesco"
+                                                 var="pessoaParentesco"
+                                                 reflow="true"
+                                                 value="#{cadastroVisitanteBean.pessoasParentescos}"
+                                                 rows="5"
+                                                 paginator="false"
+                                                 emptyMessage="Nenhum vínculo cadastrado"
+                                                 style="width: 100%">
+                                        <f:facet name="header">Vínculos</f:facet>
+                                        <p:column headerText="Nome" style="text-align: center">
+                                            <h:outputText value="#{pessoaParentesco.pessoa.nome}"/>
+                                        </p:column>
+                                        <p:column headerText="Vínculo com a Pessoa"
+                                                  style="text-align: center; width: 20%">
+                                            <h:outputText value="#{pessoaParentesco.parentesco.descricao}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Documentação">
+                                <!--<p:outputLabel value="Visitante com pendência"-->
+                                <!--styleClass="customAlert-info"-->
+                                <!--rendered="#{cadastroVisitanteBean.arquivosPendencia.size() > 0}"/>-->
+                                <p:spacer/>
+                                <p:panelGrid
+                                        id="pgArquivoVisitante"
+                                        columns="2"
+                                        columnClasses="ui-grid-col-5, ui-grid-col-7"
+                                        layout="grid"
+                                        styleClass="ui-panelgrid-blank form-group"
+                                        style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itDescricaoArquivo"
+                                                     value="#{cadastroVisitanteBean.arquivo.descricao}"
+                                                     style="width: 100%;">
+                                            <p:ajax process="@this" event="blur"/>
+                                        </p:inputText>
+                                        <p:outputLabel for="itDescricaoArquivo" value="Descrição Documento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soTipoArquivo"
+                                                         value="#{cadastroVisitanteBean.arquivo.tipoArquivo}"
+                                                         filter="true"
+                                                         filterMatchMode="contains"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems var="tipoArquivo"
+                                                           value="#{cadastroVisitanteBean.tiposArquivo}"
+                                                           itemLabel="#{tipoArquivo.descricao}"/>
+                                            <p:ajax process="@this" event="itemSelect"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soTipoArquivo" value="Tipo do Documento"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <p:fileUpload
+                                            cancelLabel="Cancelar"
+                                            fileUploadListener="#{cadastroVisitanteBean.uploadDocumentoVisitante}"
+                                            uploadLabel="Anexar"
+                                            label="Escolher"
+                                            mode="advanced"
+                                            update="pgDocumentosVisitante pgArquivoVisitante"
+                                            dragDropSupport="false"
+                                            invalidFileMessage="Tipo de arquivo inválido."
+                                            invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                            sizeLimit="#{utilBean.sizeFile}"
+                                            multiple="false" allowTypes="/(\.|\/)(pdf)$/" style="width:100%"/>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             columnClasses="ui-grid-col-12"
+                                             id="pgDocumentosVisitante"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0 none; background-color:transparent;">
+                                    <h:panelGroup id="pgListaDoc"
+                                                  rendered="#{!cadastroVisitanteBean.arquivos.isEmpty()}">
+                                        <h2>Documentos</h2>
+                                    </h:panelGroup>
+                                    <h:panelGroup>
+                                        <p:dataTable id="dtDocumentosVisitante"
+                                                     var="arquivo"
+                                                     reflow="true"
+                                                     rendered="#{!cadastroVisitanteBean.arquivos.isEmpty()}"
+                                                     value="#{cadastroVisitanteBean.arquivos}"
+                                                     rows="5"
+                                                     emptyMessage=""
+                                                     style="width: 100%">
+                                            <f:facet name="header">Documentos</f:facet>
+                                            <p:column headerText="Descrição" style="text-align: center;">
+                                                <h:outputText value="#{arquivo.descricao}"/>
+                                            </p:column>
+                                            <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                                <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                                            </p:column>
+                                            <p:column headerText="Opção" style="width: 78px; text-align: center;">
+                                                <p:commandButton title="Visualizar"
+                                                                 icon="ui-icon-file-download" process="@this"
+                                                                 update="form:tabDadosPessoais:dtDocumentosVisitante form:tabDadosPessoais:pgListaDoc"
+                                                                 action="#{cadastroVisitanteBean.mostrarPdf()}"
+                                                                 onclick="this.form.target='_blank'" ajax="false">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{cadastroVisitanteBean.arquivo}"/>
+                                                </p:commandButton>
+                                                <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                                 action="#{cadastroVisitanteBean.removerDocumentoVisitante()}"
+                                                                 process="@this"
+                                                                 update="form:tabDadosPessoais:pgDocumentosVisitante form:tabDadosPessoais:pgListaDoc">
+                                                    <f:setPropertyActionListener value="#{arquivo}"
+                                                                                 target="#{cadastroVisitanteBean.arquivo}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Biometria">
+                                <p:spacer/>
+                                <p:dataGrid id="dgPosicao" value="#{cadastroVisitanteBean.posicoes}"
+                                            var="posicao" columns="5" layout="grid" paginator="false"
+                                            paginatorAlwaysVisible="false">
+                                    <p:panel header="#{posicao.descricao}" style="text-align: center">
+                                        <p:panelGrid columns="1" style="width: 100%">
+                                            <p:graphicImage value="#{posicao.img == null ? resource['biometric:digital.png'] : posicao.digitalStreamedContent}"
+                                                            stream="false"
+                                                            style="max-width: 128px !important;"/>
+                                            <p:commandButton value="#{posicao.img == null ? 'Cadastrar' : 'Alterar'}"
+                                                             type="button"
+                                                             onclick="callClientWS('#{cadastroVisitanteBean.getJsonRequest(posicao.id)}')"/>
+                                        </p:panelGrid>
+                                    </p:panel>
+                                    <f:facet name="footer">Datiloscopia</f:facet>
+                                </p:dataGrid>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarCela" value="Salvar"
+                                             rendered="#{cadastroVisitanteBean.renderizaBotaoSalvar}"
+                                             process="@form" update="@form"
+                                             action="#{cadastroVisitanteBean.salvar()}" icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-pessoa.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-rg.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-foto-visitante.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-foto-cam-visitante.xhtml"/>
+        </ui:insert>
+
+        <script type="text/javascript">
+            function handleAddRgRequest(args) {
+                if (args.ehValido) PF('addRG').hide();
+            }
+        </script>
+    </ui:define>
+
+</ui:composition>

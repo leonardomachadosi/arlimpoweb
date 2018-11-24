@@ -1,0 +1,273 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{cadastroFrenteTrabalhoBean.voltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Cadastrar Frente de Trabalho</h1>
+                        <p:panelGrid id="pgNomeSiglaTipoFrenteTrabalho" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeFrenteTrabalho"
+                                             value="#{cadastroFrenteTrabalhoBean.frenteTrabalho.descricao}"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itNomeFrenteTrabalho" value="Nome da Frente de Trabalho"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itSigla"
+                                             value="#{cadastroFrenteTrabalhoBean.frenteTrabalho.sigla}"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itSigla" value="Sigla"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soTipoFrenteTrabalho"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{cadastroFrenteTrabalhoBean.frenteTrabalho.tipoFrenteTrabalho}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{cadastroFrenteTrabalhoBean.tiposFrenteTrabalho}"
+                                                   var="tipoFrenteTrabalho"
+                                                   itemLabel="#{tipoFrenteTrabalho.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soTipoFrenteTrabalho" value="Tipo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgLotacaoNumeroVagas" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soLotacaoMae"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 filter="true"
+                                                 value="#{cadastroFrenteTrabalhoBean.frenteTrabalho.unidadePrisional}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{cadastroFrenteTrabalhoBean.unidadesPrisionais}"
+                                                   var="unidadePrisional"
+                                                   itemLabel="#{unidadePrisional.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soLotacaoMae" value="Lotação Mãe"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNumeroVagas"
+                                             value="#{cadastroFrenteTrabalhoBean.frenteTrabalho.capacidade}"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itNumeroVagas" value="Número de Vagas"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup  id="hpAddCoordenador">
+                            <p:panelGrid id="pgCoordenador" columns="2"
+                                         columnClasses="ui-grid-col-4, ui-grid-col-2"
+                                         rendered="#{cadastroFrenteTrabalhoBean.servidores.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:autoComplete
+                                            id="acCoordenador"
+                                            converter="servidorConverter"
+                                            completeMethod="#{cadastroFrenteTrabalhoBean.completeServidor}"
+                                            value="#{cadastroFrenteTrabalhoBean.servidor}"
+                                            var="servidor"
+                                            itemValue="#{servidor}"
+                                            itemLabel="#{servidor.pessoa.nome}"
+                                            style="width: 100%"
+                                            inputStyle="width: 100%"/>
+                                    <p:outputLabel for="acCoordenador" value="Coordenador"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:commandButton title="Adicionar Coordenador"
+                                                     actionListener="#{cadastroFrenteTrabalhoBean.adicionarServidor()}"
+                                                     update="hpCoordenador hpAddCoordenador"
+                                                     process="acCoordenador @this"
+                                                     icon="ui-icon-plus"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <h:panelGroup id="hpCoordenador">
+                            <p:panelGrid id="pgDtCoordenador" columns="1"
+                                         columnClasses="ui-grid-col-4"
+                                         rendered="#{!cadastroFrenteTrabalhoBean.servidores.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:dataTable id="dtCoordenador"
+                                                 value="#{cadastroFrenteTrabalhoBean.servidores}"
+                                                 var="servidor"
+                                                 rows="5"
+                                                 style="padding-bottom: 10px"
+                                    >
+                                        <p:column headerText="Coordenador" style="text-align: center">
+                                            <h:outputText value="#{servidor.pessoa.nome}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%">
+                                            <p:commandButton
+                                                    icon="ui-icon-trash"
+                                                    style="border-bottom: 10px"
+                                                    styleClass="red-btn"
+                                                    title="Remover"
+                                                    update="form:hpCoordenador form:hpAddCoordenador"
+                                                    process="@this"
+                                                    action="#{cadastroFrenteTrabalhoBean.removerServidor()}">
+                                                <f:setPropertyActionListener value="#{servidor}"
+                                                                             target="#{cadastroFrenteTrabalhoBean.servidor}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:panelGrid id="pgAtividadesLaborais" columns="2"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete
+                                        id="acAtividadeLaboral"
+                                        completeMethod="#{cadastroFrenteTrabalhoBean.completeAtividadeLaboral}"
+                                        converter="atividadeLaboralConverter"
+                                        value="#{cadastroFrenteTrabalhoBean.atividadeLaboral}"
+                                        var="atividadeLaboral"
+                                        itemValue="#{atividadeLaboral}"
+                                        itemLabel="#{atividadeLaboral.descricao}"
+                                        style="width: 100%"
+                                        inputStyle="width: 100%"/>
+                                <p:outputLabel for="acAtividadeLaboral" value="Atividades laborais a serem realizadas"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:commandButton title="Adicionar Atividade Laboral"
+                                                 actionListener="#{cadastroFrenteTrabalhoBean.adicionarAtividadeLaboral()}"
+                                                 update="hpAtividadeLaboral acAtividadeLaboral"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="hpAtividadeLaboral">
+                            <p:panelGrid id="pgDtAtividadesLaborais" columns="1"
+                                         columnClasses="ui-grid-col-4"
+                                         rendered="#{!cadastroFrenteTrabalhoBean.atividadesLaborais.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <p:dataTable id="dtAtividadesLaborais"
+                                                 value="#{cadastroFrenteTrabalhoBean.atividadesLaborais}"
+                                                 var="atividadeLaboral"
+                                                 rows="5">
+                                        <p:column headerText="Atividade Laboral" style="text-align: center">
+                                            <h:outputText value="#{atividadeLaboral.descricao}"/>
+                                        </p:column>
+                                        <p:column style="width: 15%">
+                                            <p:commandButton
+                                                    icon="ui-icon-trash"
+                                                    style="border-bottom: 10px"
+                                                    styleClass="red-btn"
+                                                    title="Remover"
+                                                    update="form:hpAtividadeLaboral"
+                                                    action="#{cadastroFrenteTrabalhoBean.removerAtividadeLaboral()}">
+                                                <f:setPropertyActionListener value="#{atividadeLaboral}"
+                                                                             target="#{cadastroFrenteTrabalhoBean.atividadeLaboral}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:panelGrid id="pgProdutos" columns="2"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete
+                                        id="acProdutosProduzidos"
+                                        converter="produtoConverter"
+                                        style="width: 100%"
+                                        completeMethod="#{cadastroFrenteTrabalhoBean.completeProduto}"
+                                        value="#{cadastroFrenteTrabalhoBean.produto}"
+                                        var="produto"
+                                        itemValue="#{produto}"
+                                        itemLabel="#{produto.descricao}"
+                                        inputStyle="width: 100%"/>
+                                <p:outputLabel for="acProdutosProduzidos" value="Produtos a serem produzidos"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:commandButton title="Adicionar Produto"
+                                                 actionListener="#{cadastroFrenteTrabalhoBean.adicionarProduto()}"
+                                                 update="hpProduto acProdutosProduzidos"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="hpProduto">
+                            <p:panelGrid id="pgDtProdutos" columns="1"
+                                         columnClasses="ui-grid-col-4"
+                                         rendered="#{!cadastroFrenteTrabalhoBean.produtos.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:dataTable id="dtProdutos"
+                                             value="#{cadastroFrenteTrabalhoBean.produtos}"
+                                             var="produto">
+                                    <p:column headerText="Produto" style="text-align: center">
+                                        <h:outputText value="#{produto.descricao}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 15%">
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                styleClass="red-btn"
+                                                title="Remover"
+                                                update="form:hpProduto"
+                                                process="@this"
+                                                action="#{cadastroFrenteTrabalhoBean.removerProduto()}">
+                                            <f:setPropertyActionListener value="#{produto}"
+                                                                         target="#{cadastroFrenteTrabalhoBean.produto}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarFrenteTrabalho" value="Salvar"
+                                             action="#{cadastroFrenteTrabalhoBean.salvar()}"
+                                             process="@form" update="@form"
+                                             icon="ui-icon-check"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

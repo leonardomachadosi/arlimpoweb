@@ -1,0 +1,173 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+
+            .ui-steps .ui-steps-item {
+                width: 33%;
+            }
+
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Identificacao Biometrica</h1>
+
+                        <p:steps activeIndex="#{identificacaoDigitalPessoaBean.passo}">
+                            <p:menuitem value="Dados característicos"/>
+                            <p:menuitem value="Dados específicos"/>
+                            <p:menuitem value="Resultado"/>
+                        </p:steps>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <p:spacer/>
+                        <h:panelGroup rendered="#{identificacaoDigitalPessoaBean.passo == 0}" id="dadosPessoais">
+
+                            <ui:insert name="form">
+                                <!--<ui:include src="detentoForms/dados-pessoais.xhtml"/>-->
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-4"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soSexo"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         value="#{identificacaoDigitalPessoaBean.sexo}"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems var="sexo"
+                                                           value="#{identificacaoDigitalPessoaBean.sexos}"
+                                                           itemLabel="#{sexo.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soSexo" value="Sexo"/>
+                                    </h:panelGroup>
+
+                                </p:panelGrid>
+
+                            </ui:insert>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{identificacaoDigitalPessoaBean.passo == 1}">
+                            <ui:insert name="form">
+
+                                <p:panelGrid columns="3" columnClasses="ui-grid-col-4" id="pgDados"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soMao"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         value="#{identificacaoDigitalPessoaBean.mao}"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems var="mao"
+                                                           value="#{identificacaoDigitalPessoaBean.maos}"
+                                                           itemLabel="#{mao.descricao}"/>
+                                            <f:ajax event="change" execute="@this"
+                                                    listener="#{identificacaoDigitalPessoaBean.carregarPosicao(identificacaoDigitalPessoaBean.mao)}"
+                                                    render="pgDados"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soMao" value="Mão"/>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <br/>
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  rendered="#{identificacaoDigitalPessoaBean.mao.id != null}">
+                                        <p:selectOneMenu id="soPosicao"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         value="#{identificacaoDigitalPessoaBean.posicao}"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItem itemLabel="" itemValue=""/>
+                                            <f:selectItems var="posicao"
+                                                           value="#{identificacaoDigitalPessoaBean.posicaos}"
+                                                           itemLabel="#{posicao.descricao}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel for="soPosicao" value="Posição"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+
+
+                            </ui:insert>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{identificacaoDigitalPessoaBean.passo == 2}">
+                            <ui:insert name="form">
+                                <!--<ui:include src="detentoForms/dados-prisionais.xhtml"/>-->
+                            </ui:insert>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12" style="padding-right: 0;padding-left: 0">
+                    <p:commandButton id="btnFinalizar"
+                                     value="Finalizar"
+                                     process="@form"
+                                     style="float:right;"
+                                     update="@form"
+                                     resetValues="true"
+                                     rendered="#{identificacaoDigitalPessoaBean.passo == 2}"
+                                     action="#{identificacaoDigitalPessoaBean.salvar()}"
+                    />
+                    <p:commandButton id="btnProximo"
+                                     value="Próximo"
+                                     process="@form"
+                                     style="float:right;"
+                                     update="@form"
+                                     rendered="#{identificacaoDigitalPessoaBean.passo lt 2}"
+                                     action="#{identificacaoDigitalPessoaBean.avancar()}"
+                    />
+                    <p:commandButton id="btnVoltar"
+                                     value="Voltar"
+                                     process="@form"
+                                     style="float:left;"
+                                     update="@form"
+                                     rendered="#{identificacaoDigitalPessoaBean.passo >= 1}"
+                                     action="#{identificacaoDigitalPessoaBean.voltar()}"
+                    />
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid columns="2"
+                 columnClasses="ui-grid-col-6,ui-grid-col-6"
+                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                 style="border:0 none; background-color:transparent;">
+
+        <p:row>
+            <p:column>
+                <h:outputLabel style="font-weight: bold" value="Número da Solicitação: "/>
+                <h:outputText value="#{solicitacaoVisitaAssistida.numeroSolicitacao} "/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel style="font-weight: bold" value="Parentesco: "/>
+                <h:outputText value="#{solicitacaoVisitaAssistida.pessoaParentesco.parentesco.descricao} "/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel style="font-weight: bold" value="Data da Solicitação: "/>
+                <h:outputText
+                        value="#{solicitacaoVisitaAssistida.dataSolicitacao}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+        <p:row rendered="#{solicitacaoVisitaAssistida.dataPrevista != null}">
+            <p:column>
+                <h:outputLabel style="font-weight: bold" value="Data Prevista: "/>
+                <h:outputText
+                        value="#{solicitacaoVisitaAssistida.dataPrevista}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+        <p:row rendered="#{solicitacaoVisitaAssistida.motivo != null}">
+            <p:column>
+                <h:outputLabel style="font-weight: bold" value="Motivo da visita: "/>
+                <h:outputText value="#{solicitacaoVisitaAssistida.motivo}"/>
+            </p:column>
+        </p:row>
+        <p:row rendered="#{solicitacaoVisitaAssistida.observacao != null}">
+            <p:column>
+                <h:outputLabel style="font-weight: bold" value="Motivo da reprovação: "/>
+                <h:outputText value="#{solicitacaoVisitaAssistida.observacao}"/>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+
+</ui:composition>

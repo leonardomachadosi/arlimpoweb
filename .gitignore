@@ -1,0 +1,21 @@
+# Eclipse
+.classpath
+.project
+.tern-project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# JRebel
+src/main/resources/rebel.xml
+src/main/resources/application-dev.properties

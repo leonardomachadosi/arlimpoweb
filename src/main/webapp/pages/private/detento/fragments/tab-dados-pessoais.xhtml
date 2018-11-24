@@ -1,0 +1,239 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid style="width: 100%;">
+        <p:column>
+            <p:outputLabel value="Documentação Civil Básica" styleClass="customLabel"/>
+        </p:column>
+        <p:column>
+            <p:commandButton id="btnDocumentacaoCivil"
+                             title="editar"
+                             style="float: right"
+                             icon="ui-icon-edit"
+                             oncomplete="PF('addDadosPessoais').show();"
+                             process="@this"
+                             rendered="#{visualizaDetentoBean.renderizarBotaoEditar()}"
+                             update="dialogEdicaoDadosPessoasis"
+            />
+        </p:column>
+    </p:panelGrid>
+    <p:panelGrid style="margin-bottom:20px;width: 100%;">
+        <p:row>
+            <p:column>
+                <p:inputMask mask="999.999.999-99" disabled="true"
+                             styleClass="outputMask"
+                             value="#{visualizaDetentoBean.documento.cpf}">
+                    <p:outputLabel value="CPF:"/>
+                </p:inputMask>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Título de Eleitor: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.tituloEleitor}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Seção: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.secao}"/>
+            </p:column>
+            <p:column>
+                <!--  <p:button id="btn"
+                            title="editar"
+                            icon="ui-icon-edit"
+                            rendered="#{visualizaDetentoBean.renderizarBotaoEditar()}" />-->
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Certidão de Nascimento: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.certidaoNascimento}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Certificado de Reservista: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.reservista}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Certidão de Casamento: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.certidaoCasamento}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Livro: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.livro}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Página: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pagina}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="SUS: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.sus}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="CNH: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.cnh}"/>
+            </p:column>
+        </p:row>
+
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Nome da Mãe: "/>
+                <h:outputText value="#{visualizaDetentoBean.detentoView.nomeMae}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Nome do Pai: "/>
+                <h:outputText value="#{visualizaDetentoBean.detentoView.nomePai}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Data de nascimento: "/>
+                <h:outputText value="#{visualizaDetentoBean.detentoView.dataNascimento}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Nacionalidade: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.nacionalidade.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="País de Origem: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.paisOrigem.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Naturalidade: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.municipioNascimento.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Estado Civil: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.estadoCivil.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Conjuge: "/>
+                <h:outputText value="#{visualizaDetentoBean.conjuge.pessoaParente.nome}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Escolaridade: "/>
+                <h:outputText value="#{visualizaDetentoBean.escolaridade.escolaridade.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Sexo: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.sexo.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Orientação Sexual: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.orientacaoSexual.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Identidade de Gênero: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.identidadeGenero.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Religião: "/>
+                <h:outputText value="#{visualizaDetentoBean.documento.pessoa.religiao.descricao}"/>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+
+    <p:spacer/>
+    <p:panelGrid style="width: 100%;">
+        <p:column>
+            <p:outputLabel value="RG" styleClass="customLabel"/>
+        </p:column>
+        <p:column>
+            <p:commandButton id="btnRg"
+                             title="editar"
+                             style="float: right"
+                             icon="ui-icon-edit"
+                             oncomplete="PF('addEdicaoRg').show();"
+                             rendered="#{visualizaDetentoBean.renderizarBotaoEditar()}"
+                             update="dialogEdicaoRg"
+            />
+        </p:column>
+    </p:panelGrid>
+    <p:panelGrid id="pgRgList" columns="1"
+                 columnClasses="ui-grid-col-12" layout="grid"
+                 styleClass="ui-panelgrid-blank form-group"
+                 style="border:0px none; background-color:transparent;">
+        <p:dataTable value="#{visualizaDetentoBean.rgList}"
+                     var="rg" rows="10" paginatorPosition="bottom" style="text-align: center;width: 50%;">
+            <f:facet name="header">
+                RG
+            </f:facet>
+            <p:column headerText="Número">
+                <h:outputText value="#{rg.numero}"/>
+            </p:column>
+            <p:column headerText="UF">
+                <h:outputText value="#{rg.estado.uf}"/>
+            </p:column>
+        </p:dataTable>
+    </p:panelGrid>
+    <p:spacer/>
+    <p:outputLabel value="Telefones" styleClass="customLabel"
+                   rendered="#{visualizaDetentoBean.documento.pessoa.telefones.size() > 0}"/>
+    <p:dataList type="unordered" itemType="none" emptyMessage="Nenhum registro encontrado"
+                rendered="#{visualizaDetentoBean.documento.pessoa.telefones.size() > 0}"
+                value="#{visualizaDetentoBean.documento.pessoa.telefones}" var="telefone" style="width: 50%;">
+        <f:facet name="header">
+            Telefones
+        </f:facet>
+        <p:inputMask mask="(99) 9999-9999?9" disabled="true" styleClass="outputMask"
+                     value="#{telefone.descricao}"/>
+    </p:dataList>
+
+    <p:spacer/>
+    <p:panelGrid style="width: 100%;">
+        <p:column>
+            <p:outputLabel value="Endereços" styleClass="customLabel"/>
+        </p:column>
+        <p:column>
+            <p:commandButton id="btnEnderecos"
+                             title="editar"
+                             style="float: right"
+                             icon="ui-icon-edit"
+                             oncomplete="PF('addEdicaoEndereco').show();"
+                             rendered="#{visualizaDetentoBean.renderizarBotaoEditar()}"
+                             update="dialogEdicaoEnderecos"
+            />
+        </p:column>
+    </p:panelGrid>
+    <p:panelGrid id="pgEnderecoList" columns="1"
+                 columnClasses="ui-grid-col-12" layout="grid"
+                 styleClass="ui-panelgrid-blank form-group"
+                 style="border:0px none; background-color:transparent;">
+        <p:dataTable value="#{visualizaDetentoBean.enderecoList}" style="text-align: center"
+                     var="endereco" rows="10" paginatorPosition="bottom" emptyMessage="Nenhum registro encontrado">
+            <f:facet name="header">
+                Endereços
+            </f:facet>
+            <p:column headerText="Municipio">
+                <h:outputText value="#{endereco.endereco.municipio.descricao}"/>
+            </p:column>
+            <p:column headerText="Bairro">
+                <h:outputText value="#{endereco.endereco.bairro}"/>
+            </p:column>
+            <p:column headerText="CEP">
+                <h:outputText value="#{endereco.endereco.cep}"/>
+            </p:column>
+            <p:column headerText="Logradouro">
+                <h:outputText value="#{endereco.endereco.logradouro}"/>
+            </p:column>
+            <p:column headerText="Referência">
+                <h:outputText value="#{endereco.endereco.referencia}"/>
+            </p:column>
+            <p:column headerText="Número">
+                <h:outputText value="#{endereco.endereco.numero}"/>
+            </p:column>
+        </p:dataTable>
+    </p:panelGrid>
+</ui:composition>

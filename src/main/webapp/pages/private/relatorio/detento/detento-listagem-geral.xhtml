@@ -1,0 +1,204 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Listagem Geral</b></h1>
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="ui-selectmanymenu">
+                                <p:selectCheckboxMenu id="scmUnidadePrisional"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{detentoListagemGeralBean.selectedUnidadePrisionais}"
+                                                      label="Estabelecimento"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{detentoListagemGeralBean.unidadePrisionais}"
+                                                   var="unidadePrisional"
+                                                   itemLabel="#{unidadePrisional.descricao}"
+                                                   itemValue="#{unidadePrisional}"/>
+                                </p:selectCheckboxMenu>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="ui-selectmanymenu">
+                                <p:selectCheckboxMenu id="scmCustodia"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{detentoListagemGeralBean.selectedNaturezaCustodias}"
+                                                      label="Natureza da Custódia"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{detentoListagemGeralBean.naturezaCustodias}"
+                                                   var="naturezaCustodia"
+                                                   itemLabel="#{naturezaCustodia.descricao}"
+                                                   itemValue="#{naturezaCustodia}"/>
+                                </p:selectCheckboxMenu>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="ui-selectmanymenu">
+                                <p:selectCheckboxMenu id="scmDelegaciaOrigem"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{detentoListagemGeralBean.selectedEsferaOrigens}"
+                                                      label="Esfera de Origem"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{detentoListagemGeralBean.esferaOrigens}"
+                                                   var="esferaOrigem"
+                                                   itemLabel="#{esferaOrigem.descricao}"
+                                                   itemValue="#{esferaOrigem}"/>
+                                </p:selectCheckboxMenu>
+
+                            </h:panelGroup>
+
+                        </p:panelGrid>
+
+                        <br/>
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somSituacao"
+                                                 value="#{detentoListagemGeralBean.situacao}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Situação"/>
+                                    <f:selectItems var="situacao"
+                                                   itemLabel="#{situacao.descricao}"
+                                                   value="#{detentoListagemGeralBean.situacaos}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Situação"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somSexo"
+                                                 value="#{detentoListagemGeralBean.sexo}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Sexo"/>
+                                    <f:selectItems var="sexo"
+                                                   itemLabel="#{sexo.descricao}"
+                                                   value="#{detentoListagemGeralBean.sexos}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Sexo"/>
+                            </h:panelGroup>
+
+                        </p:panelGrid>
+
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton id="btnBuscar" value="Buscar"
+                                                     process="@form" update="@form"
+                                                     actionListener="#{detentoListagemGeralBean.buscar()}"
+                                                     icon="ui-icon-search"/>
+                                    <span class="ui-separator" style="padding-right: 5px;"/>
+
+                                </f:facet>
+                                <f:facet name="right">
+                                    <p:commandButton id="btnExportar" value="Exportar" process="@this"
+                                                     rendered="#{!detentoListagemGeralBean.renderExport()}"
+                                                     action="#{detentoListagemGeralBean.exportar()}"
+                                                     ajax="false"
+                                                     style="background-color: green !important;"
+                                                     icon="ui-icon-get-app"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </div>
+                    </div>
+
+                    <h:panelGroup id="teste" rendered="#{!detentoListagemGeralBean.renderExport()}">
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <div class="card card-w-title">
+                                    <h:panelGroup id="hpDetentos">
+                                        <p:panelGrid columns="1"
+                                                     id="pgDetentosAdicionados"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; background-color:transparent;">
+
+                                            <h1>Resultado</h1>
+
+                                            <p:dataTable id="dtDetentosAdicionados" var="detento"
+                                                         value="#{detentoListagemGeralBean.detentoListagemGerals}"
+                                                         reflow="true"
+                                                         rowKey="#{detento.id}"
+                                                         paginator="true" paginatorPosition="bottom" rows="50"
+                                                         emptyMessage="Nenhum registro encontrado"
+                                                         style="text-align: center">
+                                                <f:facet name="header">
+                                                    Presos
+                                                </f:facet>
+                                                <p:column headerText="Foto" style="text-align: center">
+                                                    <p:graphicImage
+                                                            value="#{fotoBean.getFotoFrontalPath(detento.matricula, 1)}"
+                                                            style="max-height:4em;"/>
+                                                </p:column>
+                                                <p:column headerText="Matrícula"
+                                                          style="width:50px;text-align: center">
+                                                    <h:outputText
+                                                            value="#{detentoListagemGeralBean.getMatricula(detento.matricula)}"/>
+                                                </p:column>
+                                                <p:column headerText="Nome"
+                                                          style="width:200px;text-align: center">
+                                                    <h:outputText value="#{detento.nome}"/>
+                                                </p:column>
+                                                <p:column headerText="Unidade Prisional"
+                                                          style="width:200px;text-align: center">
+                                                    <h:outputText value="#{detento.unidadePrisional}"/>
+                                                </p:column>
+                                                <p:column headerText="Natureza da Custódia"
+                                                          style="width:200px;text-align: center">
+                                                    <h:outputText value="#{detento.naturezaCcustodia}"/>
+                                                </p:column>
+                                                <p:column headerText="Situação"
+                                                          style="width:200px;text-align: center">
+                                                    <h:outputText value="#{detento.situacao}"/>
+                                                </p:column>
+                                                <p:column headerText="Sexo"
+                                                          style="width:200px;text-align: center">
+                                                    <h:outputText value="#{detento.sexo}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

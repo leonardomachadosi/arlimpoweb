@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"/>
+
+            <div class="ui-g-12">
+                <div class="card card-w-title">
+                    <h1><b>Cadastrar Recurso</b></h1>
+                    <p:panelGrid id="pgNome" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                 style="border:0px none; background-color:transparent;">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itDescricao"
+                                         value="#{cadastrarRecursoBean.resource.description}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itDescricao" value="Descrição"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itStatus"
+                                         value="#{cadastrarRecursoBean.resource.status}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itStatus" value="Status"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itLatitude"
+                                         value="#{cadastrarRecursoBean.resource.lat}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itLatitude" value="Latitude"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText id="itLongitude"
+                                         value="#{cadastrarRecursoBean.resource.lon}"
+                                         style="width: 100%;"/>
+                            <p:outputLabel for="itLongitude" value="Longitude"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectCheckboxMenu id="scmCapacidade"
+                                                  value="#{cadastrarRecursoBean.capabilitiesSelected}"
+                                                  label="Tipo Preso"
+
+                                                  filter="true" filterMatchMode="startsWith"
+                                                  style="color:darkGray;width: 100%;">
+                                <f:selectItem noSelectionOption="true"/>
+                                <f:selectItems value="#{cadastrarRecursoBean.capabilities}"
+                                               var="capability" itemLabel="#{capability}"
+                                               itemValue="#{capability}"/>
+                            </p:selectCheckboxMenu>
+                        </h:panelGroup>
+                    </p:panelGrid>
+                </div>
+
+                <div class="ui-g" style="margin-top: 10px;">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                                <p:commandButton value="Salvar"
+                                                 id="btnSalvarRecurso"
+                                                 actionListener="#{cadastrarRecursoBean.salvarRecurso}"
+                                                 update="@form"
+                                                 process="@this scmCapacidade itDescricao
+                                                 itStatus itLatitude itLongitude"/>
+                                <p:defaultCommand target="btnSalvarRecurso"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

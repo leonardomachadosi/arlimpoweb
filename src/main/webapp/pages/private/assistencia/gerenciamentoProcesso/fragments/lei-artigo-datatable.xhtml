@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dataTable id="dtProcessoArtigos"
+                 value="#{incidenciaPenalBean.incidenciaPenalList}"
+                 var="incidenciaPenal"
+                 reflow="true"
+                 rowKey="#{incidenciaPenal.id}"
+                 paginator="false" rows="5"
+                 emptyMessage="Nenhum registro encontrado"
+                 style="text-align: center">
+        <f:facet name="header">
+            #{tituloFacet}
+        </f:facet>
+        <p:column style="width: 5px;text-align: center;">
+            <p:rowToggler/>
+        </p:column>
+        <p:column headerText="Lei Origem"
+                  style="width:100px;text-align: center">
+            <h:outputText
+                    value="#{incidenciaPenal.leiOrigem.descricao}"/>
+        </p:column>
+        <p:column headerText="Artigo"
+                  style="width:100px;text-align: center">
+            <h:outputText
+                    value="#{incidenciaPenal.descricao}"/>
+        </p:column>
+        <p:column headerText="Tipificação Penal"
+                  style="width:100px;text-align: center">
+            <h:outputText
+                    value="#{incidenciaPenalBean.getProcessoArtigoByIncidenciaPenal(incidenciaPenal).tipificacaoCriminal.descricao}"/>
+        </p:column>
+        <p:column headerText="Opções"
+                  style="width:5px;text-align: center" rendered="#{exibeOpcoes}">
+            <p:commandButton title="Validar" process="@form"
+                             action="#{bean.validarGuiaRecolhimento(incidenciaPenal)}"
+                             rendered="#{incidenciaPenalBean.permiteValidarGuia(incidenciaPenal)}"
+                             icon="ui-icon-check">
+            </p:commandButton>
+            <p:commandButton title="Cadastrar Processo" process="@form"
+                             action="#{bean.cadastrarProcesso(incidenciaPenal)}"
+                             rendered="#{incidenciaPenalBean.permiteCadastrarProcesso(incidenciaPenal)}"
+                             icon="ui-icon-plus">
+            </p:commandButton>
+        </p:column>
+        <p:rowExpansion>
+            <p:dataTable var="leiParagrafo" emptyMessage="Sem Parágrafos."
+                         value="#{incidenciaPenalBean.getLeiParagrafoListByIncidenciaPenal(incidenciaPenal)}">
+                <p:column headerText="Parágrafo(s)"
+                          style="text-align: left;">
+                    <h:outputText
+                            value="#{leiParagrafo.numeroFormatado} #{leiParagrafo.descricao}"/>
+                </p:column>
+            </p:dataTable>
+            <p:dataTable var="inciso"
+                         value="#{incidenciaPenalBean.getLeiIncisoByIncidenciaPenal(incidenciaPenal)}"
+                         emptyMessage="Sem Incisos.">
+                <p:column headerText="Inciso(s)" style="text-align: left;">
+                    <h:outputText
+                            value="#{inciso.leiParagrafo.numeroFormatado} #{inciso.numeroFormatado} #{inciso.descricao}"/>
+                </p:column>
+            </p:dataTable>
+        </p:rowExpansion>
+    </p:dataTable>
+</ui:composition>

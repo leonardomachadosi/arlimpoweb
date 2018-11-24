@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/templateSemMenu.xhtml">
+
+    <ui:define name="title">Alterar Senha</ui:define>
+    <ui:define name="content">
+        <!-- MESSAGES -->
+        <p:growl id="messages" showDetail="false" autoUpdate="true"/>
+        <p:ajaxStatus
+                oncomplete="setTimeout(function() {$('.ui-messages').slideUp();}, 1000)"/>
+        <!-- MESSAGES -->
+        <h:form id="form">
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-8 ui-lg-8">
+                    <div class="card card-w-title">
+                        <p:fieldset legend="Redefinição de senha"
+                                    style="margin-bottom:20px">
+                            <p:panelGrid id="gridSenha" columns="2"
+                                         columnClasses="ui-grid-col-6,ui-grid-col-6"
+                                         styleClass="ui-panelgrid-blank form-control" layout="grid">
+                                <h:panelGroup>
+                                    <h:outputLabel value="Nova Senha" for="senha"/>
+                                    <p:password id="senha" feedback="true"
+                                                value="#{alterarSenhaBean.senha}"
+                                                promptLabel="Digite a senha, por favor."
+                                                weakLabel="Senha fraca" goodLabel="Senha boa"
+                                                strongLabel="Senha forte" styleClass="form-control"
+                                                match="repetirSenha" converter="senhaConverter"
+                                                required="true" requiredMessage="* Informe a senha."
+                                                validatorMessage="* Por favor, verifique as senhas digitas.">
+                                        <f:validateLength minimum="6" maximum="101"/>
+                                    </p:password>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <h:outputLabel value="Confirmar Senha" for="repetirSenha"/>
+                                    <p:password id="repetirSenha" styleClass="form-control"
+                                                required="true" requiredMessage="Informe a confirmação de senha."
+                                                validatorMessage="A senha tem que possuir 6 digitos no mínimo"
+                                                value="#{alterarSenhaBean.confirmacaoSenha}"
+                                                converter="senhaConverter">
+                                        <f:validateLength minimum="6" maximum="101"/>
+                                    </p:password>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton id="btnSave" process="@all"
+                                                     icon="ui-icon-check" style="width:auto;"
+                                                     action="#{alterarSenhaBean.save()}"
+                                                     value="Salvar"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </p:fieldset>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

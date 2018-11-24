@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <h3>Dados do Preso</h3>
+            <br/>
+            <p:panelGrid id="pgNomePresoNascimento" columns="2"
+                         columnClasses="ui-grid-col-8, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itNomePreso"
+                                 value="#{detentoView.nomeDetento}"
+                                 readonly="true"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itNomePreso" value="Nome do Preso"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="cdNascimento"
+                                 value="#{detentoView.dataNascimento}"
+                                 readonly="true"
+                                 style="width: 100%">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </p:inputText>
+                    <p:outputLabel for="cdNascimento" value="Data de Nascimento"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid columns="2"
+                         id="pgMae"
+                         columnClasses="ui-grid-col-8,ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itMae"
+                                 value="#{detentoView.nomeMae}"
+                                 readonly="true"
+                                 style="width: 100%;"
+                                 inputStyle="width: 100%;"/>
+                    <p:outputLabel for="itMae" value="Mãe"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <br/>
+            <p:panelGrid columns="2"
+                         id="pgPai"
+                         columnClasses="ui-grid-col-8, ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itPai"
+                                 value="#{detentoView.nomePai}"
+                                 readonly="true"
+                                 var="pessoa"
+                                 style="width: 100%"
+                                 inputStyle="width: 100%;"/>
+                    <p:outputLabel for="itPai" value="Pai"/>
+                </h:panelGroup>
+            </p:panelGrid>
+        </div>
+    </div>
+</ui:composition>

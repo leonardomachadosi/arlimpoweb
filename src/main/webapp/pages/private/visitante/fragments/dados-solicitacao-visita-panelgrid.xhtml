@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid id="pgUnidadePrisionalSolicitacao" columns="4"
+                 columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-3, ui-grid-col-3"
+                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                 style="border:0 none; background-color:transparent;">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="itNumeroSolicitacao"
+                         readonly="true"
+                         value="#{solicitacaoVisitante.numeroFormatado}"
+                         style="width: 100%"/>
+            <p:outputLabel for="itNumeroSolicitacao" value="Número da Solicitação"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="itUnidadePrisional"
+                         readonly="true"
+                         value="#{detentoView.nomeUnidadePrisional}"
+                         style="width: 100%"/>
+            <p:outputLabel for="itUnidadePrisional" value="Unidade Prisional"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="itPavilhao"
+                         readonly="true"
+                         value="#{detentoView.nomePavilhao}"
+                         style="width: 100%"/>
+            <p:outputLabel for="itPavilhao" value="Pavilhão"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="itCela"
+                         readonly="true"
+                         value="#{detentoView.nomeCela}"
+                         style="width: 100%"/>
+            <p:outputLabel for="itCela" value="Cela"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">
+            <p:calendar id="cdDataSolicitacao"
+                        showOn="false"
+                        pattern="dd/MM/yyyy"
+                        mask="99/99/9999"
+                        locale='pt'
+                        value="#{solicitacaoVisitante.dataSolicitacao}"
+                        inputStyle="width: 100%"/>
+            <p:outputLabel for="cdDataSolicitacao" value="Data da Solicitação"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">
+            <p:inputText id="itVinculo"
+                         readonly="true"
+                         value="#{solicitacaoVisitante.pessoaParentesco.parentesco.descricao}" />
+            <p:outputLabel for="itVinculo" value="Vínculo"/>
+        </h:panelGroup>
+    </p:panelGrid>
+</ui:composition>

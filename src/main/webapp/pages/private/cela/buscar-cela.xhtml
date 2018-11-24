@@ -1,0 +1,292 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Busca de Cela</h1>
+                        <p:panelGrid id="pgUnidadePavilhaoTipoCelaSituacao" columns="4"
+                                     columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somUnidadePrisional"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 value="#{buscaCelaBean.pavilhao.unidadePrisional}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Estabelecimento"
+                                                  itemValue=""/>
+                                    <f:selectItems var="unidadePrisional"
+                                                   itemLabel="#{unidadePrisional.descricao}"
+                                                   value="#{buscaCelaBean.unidadePrisionaisSelect}"/>
+                                    <p:ajax
+                                            update="@form"
+                                            event="change" listener="#{buscaCelaBean.onSelectUnidadesPrisionais()}"
+                                            execute="@this" render="@form"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estabelecimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgPavilhao" styleClass="md-selectonemenu"
+                                          >
+                                <p:selectOneMenu id="somPavilhao"
+                                                 value="#{buscaCelaBean.cela.pavilhao}"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Pavilhão" itemValue=""/>
+                                    <f:selectItems var="pavilhao" itemLabel="#{pavilhao.descricao}"
+                                                   value="#{buscaCelaBean.pavilhoesSelect}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Pavilhão"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgTipoCela" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somTipoCela"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 value="#{buscaCelaBean.tipoCela}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Tipo de Cela" itemValue=""/>
+                                    <f:selectItems var="tipoCela" itemLabel="#{tipoCela.descricao}"
+                                                   value="#{buscaCelaBean.tipoCelas}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Tipo da Cela"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somSituacao"
+                                                 value="#{buscaCelaBean.situacaoCela}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Situação" itemValue=""/>
+                                    <f:selectItems var="situacaoCela"
+                                                   itemLabel="#{situacaoCela.descricao}"
+                                                   value="#{buscaCelaBean.situacaoCelas}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Situação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="ipDescricaoCapacidadeEfetiva" columns="3"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itCela" value="#{buscaCelaBean.cela.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itCela" value="Nome da cela"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputNumber id="inCapacidade" styleClass="ui-custom-inputnumber"
+                                               decimalPlaces="0" thousandSeparator=""
+                                               value="#{buscaCelaBean.cela.capacidade}" style="width: 100%;"/>
+                                <p:outputLabel for="inCapacidade" value="Capacidade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="inCapacidadeEfetiva" styleClass="ui-custom-inputnumber"
+                                             decimalPlaces="0" thousandSeparator=""
+                                             value="#{buscaCelaBean.cela.capacidadeEfetiva}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="inCapacidadeEfetiva"
+                                               value="Capacidade efetiva"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgPerfilCela" columns="4"
+                                     columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmTipoDetento"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaCelaBean.selectedTipoDetentos}" label="Tipo Preso"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaCelaBean.tipoDetentos}"
+                                                   var="tipoDetento" itemLabel="#{tipoDetento.descricao}"
+                                                   itemValue="#{tipoDetento}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmSexo"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaCelaBean.selectedSexos}" label="Sexo"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaCelaBean.sexos}" var="sexo"
+                                                   itemLabel="#{sexo.descricao}" itemValue="#{sexo}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmOrientacaoSexual"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaCelaBean.selectedOrientacaoSexuais}"
+                                                      label="Orientação Sexual"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaCelaBean.orientacaoSexuais}"
+                                                   var="orientacaoSexual"
+                                                   itemLabel="#{orientacaoSexual.descricao}"
+                                                   itemValue="#{orientacaoSexual}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmTipoDeficiencia"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaCelaBean.selectedTipoDeficiencias}"
+                                                      label="Tipo Deficiência"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaCelaBean.tipoDeficiencias}"
+                                                   var="tipoDeficiencia" itemLabel="#{tipoDeficiencia.descricao}"
+                                                   itemValue="#{tipoDeficiencia}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgPerfilCela2" columns="2"
+                                     columnClasses="ui-grid-col-6" layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmFaccao"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaCelaBean.selectedFaccoes}" label="Facção"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaCelaBean.faccoes}"
+                                                   var="faccao" itemLabel="#{faccao.descricao}"
+                                                   itemValue="#{faccao}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmNaturezaCustodia"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaCelaBean.selectedNaturezaCustodias}"
+                                                      label="Natureza Custódia"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaCelaBean.naturezaCustodias}" var="naturezaCustodia"
+                                                   itemLabel="#{naturezaCustodia.descricao}"
+                                                   itemValue="#{naturezaCustodia}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnCadastrarCela"
+                                            value="Cadastrar"
+                                             action="#{buscaCelaBean.onClickCadastrar()}" icon="ui-icon-plus"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton    id="btnBuscarCela"
+                                                value="Buscar"
+                                             actionListener="#{buscaCelaBean.findCelas()}"
+                                             icon="ui-icon-search" update="dtCelas" process="@this somPavilhao
+																					  somTipoCela
+																					  somSituacao
+																					  itCela
+																					  inCapacidade
+																					  inCapacidadeEfetiva"/>
+                            <p:defaultCommand target="btnBuscarCela" />
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Celas</h1>
+                        <p:dataTable id="dtCelas" var="cela"
+                                     value="#{buscaCelaBean.celas}" reflow="true" rowKey="#{cela.id}"
+                                     paginator="true" rows="10">
+                            <p:column headerText="Descrição"
+                                      style="width:180px;text-align: center">
+                                <h:outputText value="#{cela.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão"
+                                      style="width:200px;text-align: center">
+                                <h:outputText value="#{cela.pavilhao.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Estabelecimento"
+                                      style="width:240px;text-align: center">
+                                <h:outputText
+                                        value="#{cela.pavilhao.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column style="width:80px;text-align: center"
+                                      headerText="Capacidade">
+                                <h:outputText value="#{cela.capacidade}"/>
+                            </p:column>
+                            <p:column headerText="Status"
+                                      style="width:80px;text-align: center">
+                                <h:outputText value="#{cela.situacao.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Opções"
+                                      style="width:110px;text-align: center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaCelaBean.onClickVisualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{cela}"
+                                                                 target="#{buscaCelaBean.cela}"/>
+                                </p:commandButton>
+                                <p:commandButton title="Editar" process="@this" update="@form"
+                                                 action="#{buscaCelaBean.onClickEditar()}" icon="ui-icon-edit">
+                                    <f:setPropertyActionListener value="#{cela}"
+                                                                 target="#{buscaCelaBean.cela}"/>
+                                </p:commandButton>
+                                <p:commandButton title="Inativar" process="@this"
+                                                 update="dtCelas"
+                                                 actionListener="#{buscaCelaBean.onClickExcluir(cela)}"
+                                                 icon="ui-icon-trash" styleClass="red-btn">
+                                    <p:confirm header="Confirmação"
+                                               message="Deseja realmente inativar este registro?"
+                                               icon="ui-icon-alert"/>
+                                </p:commandButton>
+                                <p:confirmDialog global="true" showEffect="fade"
+                                                 hideEffect="fade">
+                                    <p:commandButton value="Sim" type="button"
+                                                     styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                    <p:commandButton value="Não" type="button"
+                                                     styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                                </p:confirmDialog>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

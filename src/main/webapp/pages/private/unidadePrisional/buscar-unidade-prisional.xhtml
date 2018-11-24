@@ -1,0 +1,310 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Estabelecimento</b></h1>
+                        <p:panelGrid columns="3" columnClasses="ui-grid-col-6,ui-grid-col-2, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itUnidadePrisional"
+                                             value="#{buscaUnidadePrisionalBean.unidadePrisional.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itUnidadePrisional" value="Estabelecimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itSigla"
+                                             value="#{buscaUnidadePrisionalBean.unidadePrisional.sigla}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itSigla" value="Sigla"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soTipoEstabelecimento"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{buscaUnidadePrisionalBean.unidadePrisional.tipoEstabelecimento}"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o tipo de estabelecimento" itemValue=""/>
+                                    <f:selectItems
+                                            var="tipoEstabelecimento"
+                                            itemLabel="#{tipoEstabelecimento.descricao.toUpperCase()}"
+                                            value="#{buscaUnidadePrisionalBean.tipoEstabelecimentos}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Tipo de Estabelecimento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="3"
+                                     id="pgEstabelecimentoSeguranca"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4,ui-grid-col-4 "
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSeguranca"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{buscaUnidadePrisionalBean.unidadePrisional.nivelSeguranca}"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o nível de segurança" itemValue=""/>
+                                    <f:selectItems var="nivelSeguranca"
+                                                   itemLabel="#{nivelSeguranca.descricao.toUpperCase()}"
+                                                   value="#{buscaUnidadePrisionalBean.nivelSegurancas}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Nível de Segurança"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soMunicicio"
+                                                 filter="true"
+                                                 value="#{buscaUnidadePrisionalBean.endereco.municipio}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Município" itemValue=""/>
+                                    <f:selectItems var="municipio" itemLabel="#{municipio.descricao.toUpperCase()}"
+                                                   value="#{buscaUnidadePrisionalBean.municipios}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Município"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSituacao"
+                                                 value="#{buscaUnidadePrisionalBean.situacaoUnidadePrisional}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Situação" itemValue=""/>
+                                    <f:selectItems var="situacaoUnidadePrisional"
+                                                   itemLabel="#{situacaoUnidadePrisional.descricao}"
+                                                   value="#{buscaUnidadePrisionalBean.situacaoesUnidadePrisional}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Situação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgPerfilCela" columns="4"
+                                     columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmTipoDetento"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaUnidadePrisionalBean.selectedTipoDetentos}"
+                                                      label="Tipo Preso"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaUnidadePrisionalBean.tipoDetentos}"
+                                                   var="tipoDetento" itemLabel="#{tipoDetento.descricao}"
+                                                   itemValue="#{tipoDetento}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmSexo"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaUnidadePrisionalBean.selectedSexos}" label="Sexo"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaUnidadePrisionalBean.sexos}" var="sexo"
+                                                   itemLabel="#{sexo.descricao}" itemValue="#{sexo}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmOrientacaoSexual"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaUnidadePrisionalBean.selectedOrientacaoSexuals}"
+                                                      label="Orientação Sexual"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaUnidadePrisionalBean.orientacaoSexuals}"
+                                                   var="orientacaoSexual"
+                                                   itemLabel="#{orientacaoSexual.descricao}"
+                                                   itemValue="#{orientacaoSexual}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmTipoDeficiencia"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaUnidadePrisionalBean.selectedTipoDeficiencias}"
+                                                      label="Tipo Deficiência"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaUnidadePrisionalBean.tipoDeficiencias}"
+                                                   var="tipoDeficiencia" itemLabel="#{tipoDeficiencia.descricao}"
+                                                   itemValue="#{tipoDeficiencia}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgPerfilCela2" columns="2"
+                                     columnClasses="ui-grid-col-6" layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmFaccao"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaUnidadePrisionalBean.selectedFaccaos}"
+                                                      label="Facção"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaUnidadePrisionalBean.faccaos}"
+                                                   var="faccao" itemLabel="#{faccao.descricao}"
+                                                   itemValue="#{faccao}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu id="scmNaturezaCustodia"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaUnidadePrisionalBean.selectedNaturezaCustodias}"
+                                                      label="Natureza Custódia"
+                                                      filter="true" filterMatchMode="startsWith"
+                                                      style="color:darkGray;width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaUnidadePrisionalBean.naturezaCustodias}"
+                                                   var="naturezaCustodia"
+                                                   itemLabel="#{naturezaCustodia.descricao}"
+                                                   itemValue="#{naturezaCustodia}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton
+                                    id="btnCadastrarUnidadePrisional"
+                                    value="Cadastrar"
+                                    action="#{buscaUnidadePrisionalBean.onClickCadastar()}"
+                                    icon="ui-icon-plus"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton id="btnBuscarUnidadePrisional"
+                                             value="Buscar"
+                                             action="#{buscaUnidadePrisionalBean.findUnidadesPrisionais()}"
+                                             icon="ui-icon-search"
+                                             update="dtUnidadesPrisionais"
+                                             process="@form"/>
+                            <p:defaultCommand target="btnBuscarUnidadePrisional"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Estabelecimentos</b></h1>
+                        <p:dataTable id="dtUnidadesPrisionais"
+                                     var="unidadePrisional"
+                                     value="#{buscaUnidadePrisionalBean.unidadePrisionals}"
+                                     reflow="true"
+                                     rowKey="#{unidadePrisional.id}"
+                                     paginator="true"
+                                     rows="10"
+                                     emptyMessage="Nenhum registro cadastrado encontrado.">
+                            <p:column headerText="Estabelecimento" style="text-align: center">
+                                <h:outputText value="#{unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Capacidade" style="width:110px;text-align: center">
+                                <h:outputText value="#{unidadePrisional.capacidade}"/>
+                            </p:column>
+                            <p:column headerText="Município" style="width:250px;text-align: center">
+                                <h:outputText value="#{unidadePrisional.endereco.municipio.descricao.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Status" style="width:140px;text-align: center">
+                                <h:outputText value="#{unidadePrisional.situacao.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:140px;text-align: center">
+                                <p:commandButton
+                                        title="Visualizar"
+                                        process="@this"
+                                        action="#{buscaUnidadePrisionalBean.onClickVisualizar()}"
+                                        onclick="this.form.target='_blank'" ajax="false"
+                                        icon="ui-icon-remove-red-eye" style="margin-right: 5px">
+                                    <f:setPropertyActionListener value="#{unidadePrisional}"
+                                                                 target="#{buscaUnidadePrisionalBean.unidadePrisional}"/>
+                                </p:commandButton>
+                                <p:commandButton title="Editar"
+                                                 process="@this"
+                                                 update="@form"
+                                                 action="#{buscaUnidadePrisionalBean.onClickEditar()}"
+                                                 icon="ui-icon-edit" style="margin-left: 5px">
+                                    <f:setPropertyActionListener value="#{unidadePrisional}"
+                                                                 target="#{buscaUnidadePrisionalBean.unidadePrisional}"/>
+                                </p:commandButton>
+                                <!--<p:commandButton title="Adicionar Pavilhão"
+                                                 icon="ui-icon-plus"
+                                                 oncomplete="PF('addPavilhao').show();"
+                                                 update="form-dialog:dialogPavilhao" process="@this"
+                                                 action="#{buscaUnidadePrisionalBean.refreshPavilhao()}">
+                                    <f:setPropertyActionListener value="#{unidadePrisional}"
+                                                                 target="#{buscaUnidadePrisionalBean.unidadePrisional}"/>
+                                </p:commandButton>-->
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <h:form id="form-dialog">
+            <p:dialog header="Adicionar Pavilhão" id="dialogPavilhao" widgetVar="addPavilhao" modal="true"
+                      width="1200" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="1"
+                             id="pgPavilhao"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                              background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itPavilhao" value="Nome do Pavilhão"/>
+                        <p:inputText id="itPavilhao"
+                                     value="#{buscaUnidadePrisionalBean.pavilhao.descricao}"
+                                     style="width: 100%;"/>
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton
+                                value="Inserir"
+                                action="#{buscaUnidadePrisionalBean.savePavilhaoUnidadePrisional()}"
+                                update="idPavilhao itPavilhao"
+                                icon="ui-icon-done"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                        <p:commandButton value="Fechar"
+                                         icon="ui-icon-clear"
+                                         onclick="PF('addPavilhao').hide();"/>
+                    </f:facet>
+                </p:toolbar>
+                <p:spacer/>
+                <p:dataTable
+                        id="idPavilhao" paginator="true" rows="10"
+                        paginatorPosition="bottom"
+                        value="#{buscaUnidadePrisionalBean.pavilhaos}"
+                        var="pavilhao"
+                        emptyMessage="Nenhum registro encontrado">
+                    <f:facet name="header">
+                        Pavilhões
+                    </f:facet>
+                    <p:column>
+                        <h:outputText value="#{pavilhao.descricao}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

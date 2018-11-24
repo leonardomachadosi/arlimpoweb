@@ -1,0 +1,369 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">Estabelecimento</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{cadastroUnidadePrisionalBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:tabView id="tab">
+                            <p:tab title="Estabelecimento">
+                                <h:panelGroup style="text-align: left; font-weight: bold">
+                                    <h1>Cadastro de Estabelecimento</h1>
+                                </h:panelGroup>
+                                <p:panelGrid columns="4"
+                                             id="pgUnidadePrisional"
+                                             columnClasses="ui-grid-col-6,ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itDescricao"
+                                                     value="#{cadastroUnidadePrisionalBean.unidadePrisional.descricao}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itDescricao" value="Nome do Estabelecimento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itSigla"
+                                                     value="#{cadastroUnidadePrisionalBean.unidadePrisional.sigla}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itSigla" value="Sigla"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber id="itCapacidade" styleClass="ui-custom-inputnumber"
+                                                       decimalPlaces="0" thousandSeparator=""
+                                                       value="#{cadastroUnidadePrisionalBean.unidadePrisional.capacidade}"
+                                                       style="width: 100%;">
+                                            <p:ajax event="blur" update="itCapacidadeEfetiva" process="@this"/>
+                                        </p:inputNumber>
+                                        <p:outputLabel for="itCapacidade" value="Capacidade"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputNumber id="itCapacidadeEfetiva" styleClass="ui-custom-inputnumber"
+                                                       decimalPlaces="0" thousandSeparator=""
+                                                       value="#{cadastroUnidadePrisionalBean.unidadePrisional.capacidadeEfetiva}"
+                                                       style="width: 100%;">
+                                            <p:ajax event="change" process="@this" update="itCapacidadeEfetiva :form:messages" listener="#{cadastroUnidadePrisionalBean.tratarCapacidade}"/>
+                                        </p:inputNumber>
+                                        <p:outputLabel for="itCapacidadeEfetiva" value="Capacidade Efetiva"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="2"
+                                             id="pgEstabelecimentoSeguranca"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soTipoEstabelecimento"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         value="#{cadastroUnidadePrisionalBean.unidadePrisional.tipoEstabelecimento}"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItems
+                                                    var="tipoEstabelecimento"
+                                                    itemLabel="#{tipoEstabelecimento.descricao.toUpperCase()}"
+                                                    value="#{cadastroUnidadePrisionalBean.tipoEstabelecimentos}"/>
+                                            <p:ajax
+                                                    update="pgPortaEntrada"
+                                                    event="change" listener="#{cadastroUnidadePrisionalBean.alteraPortaEntrada()}"
+                                                    execute="@this"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Tipo de Estabelecimento"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soSeguranca"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         value="#{cadastroUnidadePrisionalBean.unidadePrisional.nivelSeguranca}"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItems var="nivelSeguranca"
+                                                           itemLabel="#{nivelSeguranca.descricao.toUpperCase()}"
+                                                           value="#{cadastroUnidadePrisionalBean.nivelSegurancas}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Nível de Segurança"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="3"
+                                             id="pgMunicipioBairroCep"
+                                             columnClasses="ui-grid-col-4, ui-grid-col-4,ui-grid-col-4" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-selectonemenu">
+                                        <p:selectOneMenu id="soMunicicio"
+                                                         value="#{cadastroUnidadePrisionalBean.endereco.municipio}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         filter="true"
+                                                         style="width: 100%;">
+                                            <f:selectItem noSelectionOption="true"/>
+                                            <f:selectItems var="municipio"
+                                                           itemLabel="#{municipio.descricao.toUpperCase()}"
+                                                           value="#{cadastroUnidadePrisionalBean.municipios}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Município"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itBairro"
+                                                     value="#{cadastroUnidadePrisionalBean.endereco.bairro}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itBairro" value="Bairro"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputMask id="imCep"
+                                                     value="#{cadastroUnidadePrisionalBean.endereco.cep}"
+                                                     mask="99999-999"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="imCep" value="CEP"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="2"
+                                             id="pgLogradouroNumero"
+                                             columnClasses="ui-grid-col-10, ui-grid-col-2"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itLogradouro"
+                                                     value="#{cadastroUnidadePrisionalBean.endereco.logradouro}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itLogradouro" value="Logradouro"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itNumero"
+                                                     value="#{cadastroUnidadePrisionalBean.endereco.numero}"
+                                                     style="width: 100%;"
+                                        />
+                                        <p:outputLabel for="itNumero" value="Número"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <br/>
+                                <p:panelGrid columns="2"
+                                             id="pgReferencia"
+                                             columnClasses="ui-grid-col-8, ui-grid-col-4" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputText id="itReferencia"
+                                                     value="#{cadastroUnidadePrisionalBean.endereco.referencia}"
+                                                     style="width: 100%;"/>
+                                        <p:outputLabel for="itReferencia" value="Referência"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="md-selectonemenu"
+                                                  rendered="#{cadastroUnidadePrisionalBean.unidadePrisional.id != null}">
+                                        <p:selectOneMenu id="soSituacao"
+                                                         value="#{cadastroUnidadePrisionalBean.situacaoUnidadePrisional}"
+                                                         converter="omnifaces.SelectItemsConverter"
+                                                         style="width: 100%;">
+                                            <f:selectItem itemLabel="Selecione a Situação" itemValue=""/>
+                                            <f:selectItems var="situacaoUnidadePrisional"
+                                                           itemLabel="#{situacaoUnidadePrisional.descricao}"
+                                                           value="#{cadastroUnidadePrisionalBean.situacoesUnidadePrisional}"/>
+                                        </p:selectOneMenu>
+                                        <p:outputLabel value="Situação"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             id="pgPortaEntradaTx"
+                                             columnClasses="ui-grid-col-4" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup style="text-align: left; color: darkblue">
+                                        <p:outputLabel value="Porta Entrada"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="1"
+                                             id="pgPortaEntrada"
+                                             columnClasses="ui-grid-col-4" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="md-inputfield">
+                                        <p:inputSwitch id="isPortaEntrada"
+                                                       value="#{cadastroUnidadePrisionalBean.unidadePrisional.portaEntrada}"
+                                                       disabled="#{cadastroUnidadePrisionalBean.unidadePrisional.tipoEstabelecimento.id == 4}"
+                                                       onLabel="#{true}" offLabel="#{false}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="Perfil">
+                                <p:panelGrid columns="4"
+                                             id="pgTipoDetentoSexoOrientacaoTxt"
+                                             columnClasses="ui-grid-col-3, ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:outputLabel for="smTipoDetento"
+                                                       style="color: darkblue; font-weight: bold"
+                                                       value="Tipo Preso"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:outputLabel for="smSexo"
+                                                       style="color: darkblue; font-weight: bold"
+                                                       value="Sexo"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:outputLabel for="smOrientacaoSexual"
+                                                       style="color: darkblue; font-weight: bold"
+                                                       value="Orientação Sexual"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:outputLabel for="smTipoDeficiencia"
+                                                       style="color: darkblue; font-weight: bold"
+                                                       value="Tipo Deficiência"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="4"
+                                             id="pgTipoDetentoSexoOrientacao"
+                                             columnClasses="ui-grid-col-3, ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+                                             layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:selectManyMenu id="smTipoDetento"
+                                                          showCheckbox="true"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          value="#{cadastroUnidadePrisionalBean.selectedTipoDetentos}"
+                                                          style="width: 100%;color: darkBlue">
+                                            <f:selectItems value="#{cadastroUnidadePrisionalBean.tipoDetentos}"
+                                                           var="tipoDetento"
+                                                           itemLabel="#{tipoDetento.descricao}"
+                                                           itemValue="#{tipoDetento}"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:selectManyMenu id="smSexo"
+                                                          showCheckbox="true"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          value="#{cadastroUnidadePrisionalBean.selectedSexos}"
+                                                          style="width: 100%;color: darkBlue">>
+                                            <f:selectItems value="#{cadastroUnidadePrisionalBean.sexos}"
+                                                           var="sexo"
+                                                           itemLabel="#{sexo.descricao}"
+                                                           itemValue="#{sexo}"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:selectManyMenu id="smOrientacaoSexual"
+                                                          showCheckbox="true"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          value="#{cadastroUnidadePrisionalBean.selectedOrientacaoSexuals}"
+                                                          style="width: 100%;color: darkblue">
+                                            <f:selectItems value="#{cadastroUnidadePrisionalBean.orientacaoSexuals}"
+                                                           var="orientacaoSexual"
+                                                           itemLabel="#{orientacaoSexual.descricao}"
+                                                           itemValue="#{orientacaoSexual}"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:selectManyMenu
+                                                id="smTipoDeficiencia"
+                                                converter="omnifaces.SelectItemsConverter"
+                                                showCheckbox="true"
+                                                value="#{cadastroUnidadePrisionalBean.selectedTipoDeficiencias}"
+                                                style="width: 100%;color: darkblue">
+                                            <f:selectItems value="#{cadastroUnidadePrisionalBean.tipoDeficiencias}"
+                                                           var="tipoDeficiencia"
+                                                           itemLabel="#{tipoDeficiencia.descricao}"
+                                                           itemValue="#{tipoDeficiencia}"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2"
+                                             id="pgFaccaoNaturezaCustodiaTxt"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:outputLabel for="smFaccao"
+                                                       style="color: darkblue; font-weight: bold"
+                                                       value="Grupo Criminoso"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:outputLabel for="smNaturezaCustodia"
+                                                       style="color: darkblue; font-weight: bold"
+                                                       value="Natureza Custódia"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid columns="2"
+                                             id="pgFaccaoNaturezaCustodia"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                                             styleClass="ui-panelgrid-blank form-group"
+                                             style="border:0px none; background-color:transparent;">
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:selectManyMenu id="smFaccao"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          showCheckbox="true"
+                                                          style="width: 88%; height: 200px; color: darkblue "
+                                                          value="#{cadastroUnidadePrisionalBean.selectedFaccaos}">
+                                            <f:selectItems value="#{cadastroUnidadePrisionalBean.faccaos}"
+                                                           var="faccao"
+                                                           itemLabel="#{faccao.descricao}"
+                                                           itemValue="#{faccao}"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-selectmanymenu">
+                                        <p:selectManyMenu id="smNaturezaCustodia"
+                                                          value="#{cadastroUnidadePrisionalBean.selectedNaturezaCustodias}"
+                                                          showCheckbox="true"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          style="width: 88%; color: darkblue">
+                                            <f:selectItems value="#{cadastroUnidadePrisionalBean.naturezaCustodias}"
+                                                           var="naturezaCustodia"
+                                                           itemLabel="#{naturezaCustodia.descricao}"
+                                                           itemValue="#{naturezaCustodia}"/>
+                                        </p:selectManyMenu>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarUnidadePrisional"
+                                             action="#{cadastroUnidadePrisionalBean.saveUnidadePrisional()}"
+                                             process="@form" update="@form"
+                                             value="Salvar"
+                                             icon="ui-icon-check"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton id="btnNovaUnidadePrisional"
+                                             process="@form"
+                                             update="@form"
+                                             actionListener="#{cadastroUnidadePrisionalBean.refreshUnidadePrisional()}"
+                                             value="Novo"
+                                             icon="ui-icon-refresh"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

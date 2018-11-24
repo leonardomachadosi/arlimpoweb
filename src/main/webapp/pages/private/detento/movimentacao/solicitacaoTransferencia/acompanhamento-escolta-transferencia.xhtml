@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <p:column>
+                                <h1>Acompanhamento de escolta</h1>
+                            </p:column>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="2"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <p:column>
+                                <h:panelGroup styleClass="md-selectonemenu">
+                                    <p:selectOneMenu id="somSituacao"
+                                                     value="#{acompanhaEscoltaUnidadeBean.situacaoEscolta}"
+                                                     autoWidth="false" appendTo="@(this)"
+                                                     style="width: 100%"
+                                                     converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItem itemValue="" itemLabel=""/>
+                                        <f:selectItems value="#{acompanhaEscoltaUnidadeBean.situacaoEscoltaList}"
+                                                       var="situacaoEscolta"
+                                                       itemValue="#{situacaoEscolta}"
+                                                       itemLabel="#{situacaoEscolta.descricao}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel for="somSituacao" value="Situação"/>
+                                </h:panelGroup>
+                            </p:column>
+                            <p:column>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="itxNumeroSolicitacao"
+                                                 value="#{acompanhaEscoltaUnidadeBean.numeroSolicitacao}"/>
+                                    <p:outputLabel for="itxNumeroSolicitacao" value="Número da solicitação"/>
+                                </h:panelGroup>
+                            </p:column>
+                        </p:panelGrid>
+
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group">
+                            <p:column>
+                                <p:toolbar>
+                                    <f:facet name="left">
+                                        <p:commandButton value="Buscar" title="Buscar" icon="ui-icon-search"
+                                                         actionListener="#{acompanhaEscoltaUnidadeBean.onClickBuscarEscoltas}"
+                                                         process="@form" update="dtHistoricoEscoltaList"/>
+                                    </f:facet>
+                                </p:toolbar>
+                            </p:column>
+                            <p:column>
+                                <p:dataTable id="dtHistoricoEscoltaList"
+                                             value="#{acompanhaEscoltaUnidadeBean.historicoEscoltaList}"
+                                             var="historicoEscolta" styleClass="striped"
+                                             paginator="true" paginatorPosition="bottom" rows="10">
+                                    <f:facet name="header">
+                                        Escoltas
+                                    </f:facet>
+                                    <p:column width="4%">
+                                        <p:rowToggler/>
+                                    </p:column>
+                                    <p:column headerText="Número da solicitação">
+                                        <h:outputText
+                                                value="#{historicoEscolta.escolta.detentoEscoltas.iterator().next().detentoSolicitacaoMovimentacao.solicitacaoTransferencia.id}"/>
+                                    </p:column>
+                                    <p:column headerText="Unidade de origem">
+                                        <h:outputText
+                                                value="#{historicoEscolta.escolta.detentoEscoltas.iterator().next().detentoSolicitacaoMovimentacao.solicitacaoTransferencia.unidadePrisional.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Data da solicitação">
+                                        <h:outputText
+                                                value="#{historicoEscolta.escolta.detentoEscoltas.iterator().next().detentoSolicitacaoMovimentacao.solicitacaoTransferencia.dataSolicitacao}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Data prevista">
+                                        <h:outputText
+                                                value="#{historicoEscolta.escolta.detentoEscoltas.iterator().next().detentoSolicitacaoMovimentacao.dataSaidaPrevista}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Situação">
+                                        <h:outputText value="#{historicoEscolta.situacaoEscolta.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Prioridade">
+                                        <h:outputText
+                                                value="#{historicoEscolta.escolta.detentoEscoltas.iterator().next().detentoSolicitacaoMovimentacao.solicitacaoTransferencia.prioridadeTransferencia.descricao}"/>
+                                    </p:column>
+                                    <p:column styleClass="btn-table">
+                                        <p:commandButton title="Detalhar" icon="ui-icon-remove-red-eye"
+                                                         action="#{acompanhaEscoltaUnidadeBean.onClickDetalharEscolta(historicoEscolta)}"
+                                                         onclick="this.form.target='_blank'" ajax="false"/>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:dataTable value="#{historicoEscolta.escolta.detentoEscoltas}"
+                                                     var="detentoEscolta">
+                                            <p:column headerText="Nome">
+                                                <h:outputText
+                                                        value="#{detentoEscolta.detentoSolicitacaoMovimentacao.detento.pessoa.nome}"/>
+                                            </p:column>
+                                            <p:column headerText="Lotação de destino">
+                                                <h:outputText
+                                                        value="#{detentoEscolta.detentoSolicitacaoMovimentacao.unidadePrisionalDestino.descricao}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </p:column>
+                        </p:panelGrid>
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

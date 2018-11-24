@@ -1,0 +1,556 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{visualizaAtendimentoTerapiaOcupacionalBean.onClickVoltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton id="btnEncaminhar" value="Encaminhar para Dir. Segurança"
+                                             rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizaPendente}"
+                                             action="#{visualizaAtendimentoTerapiaOcupacionalBean.encaminharDiretorSeguranca()}"
+                                             process="@this " update="@form" icon=""/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton id="btnFinalizar" value="Finalizar"
+                                             rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizaBotaoFinalizar}"
+                                             action="#{visualizaAtendimentoTerapiaOcupacionalBean.finalizarSolicitacaoSeguranca()}"
+                                             process="@this " icon=""/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Detalhamento de Atendimento</b></h1>
+                        <p:panelGrid id="pgSetorFuncionarioTipoAtendimentoDataRealizacao" columns="4"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-3, ui-grid-col-3, ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgLotacao" styleClass="md-inputfield">
+                                <p:inputText id="itLotacao"
+                                             value="#{visualizaAtendimentoTerapiaOcupacionalBean.servidorLotacao.lotacaoReal.nome}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itLotacao" value="Lotação"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                <p:inputText id="itNome"
+                                             value="#{visualizaAtendimentoTerapiaOcupacionalBean.servidor.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNome" value="Funcionário"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgTipoSolicitacaoAtendimento" styleClass="md-selectonemenu">
+                                <p:inputText id="itTipoSolicitacaoAtendimento"
+                                             value="#{visualizaAtendimentoTerapiaOcupacionalBean.solicitacaoAtendimento.tipoSolicitacaoAtendimento.descricao}"
+                                             readonly="true"
+                                             style="width: 100%;"/>
+                                <p:outputLabel value="Tipo de Atendimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgDataRealizacao" styleClass="md-inputfield">
+                                <p:inputText id="cdDataRealizacao"
+                                             value="#{visualizaAtendimentoTerapiaOcupacionalBean.solicitacaoAtendimento.dataSolicitacao}"
+                                             readonly="true"
+                                             style="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                                <p:outputLabel for="cdDataRealizacao" value="Data da Realização"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgDataCadastroAvaliacaoPrevistaAvaliadorStatus" columns="2"
+                                     columnClasses="ui-grid-col-2, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgDataCadastro" styleClass="md-inputfield">
+                                <p:inputText id="cdDataCadastro"
+                                             value="#{visualizaAtendimentoTerapiaOcupacionalBean.solicitacaoAtendimento.dataSolicitacao}"
+                                             readonly="true"
+                                             style="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                                <p:outputLabel for="cdDataCadastro" value="Data do Cadastro"/>
+                            </h:panelGroup>
+                            <!--<h:panelGroup id="pgDataAvaliacao" styleClass="md-inputfield">-->
+                                <!--<p:inputText id="cdDataAvaliacao"-->
+                                             <!--value=""-->
+                                             <!--readonly="true"-->
+                                             <!--style="width: 100%">-->
+                                    <!--<f:convertDateTime pattern="dd/MM/yyyy"/>-->
+                                <!--</p:inputText>-->
+                                <!--<p:outputLabel for="cdDataAvaliacao" value="Data da Avaliação"/>-->
+                            <!--</h:panelGroup>-->
+                            <h:panelGroup id="pgAvaliador"
+                                          styleClass="md-inputfield"
+                                          rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.servidorLotacaoAvaliador.servidor.id != null}">
+                                <p:inputText id="itAvaliador"
+                                             value="#{visualizaAtendimentoTerapiaOcupacionalBean.servidorLotacaoAvaliador.servidor.pessoa.nome}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itAvaliador" value="Avaliador"/>
+                            </h:panelGroup>
+                            <!--<h:panelGroup id="pgStatusSolicitacao" styleClass="md-selectonemenu">-->
+                                <!--<p:inputText id="itStatusSolicitacao"-->
+                                             <!--value="#{visualizaAtendimentoTerapiaOcupacionalBean.statusSolicitacaoAtendimento.descricao}"-->
+                                             <!--readonly="true" style="width: 100%;"/>-->
+                                <!--<p:outputLabel value="Status"/>-->
+                            <!--</h:panelGroup>-->
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="1"
+                                     id="pgObervacao"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputTextarea
+                                        id="itaObservacao"
+                                        value="#{visualizaAtendimentoTerapiaOcupacionalBean.solicitacaoAtendimento.observacao}"
+                                        readonly="true"
+                                        rows="1"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="itaObservacao" value="Observação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:outputLabel value="Status da Solicitação" styleClass="customLabel"/>
+                        <p:steps styleClass="stepTimeline"
+                                 activeIndex="#{visualizaAtendimentoTerapiaOcupacionalBean.statusAtual.id - 1}">
+                            <p:menuitem id="menu_1" value="PENDENTE"
+                                        containerStyleClass="#{visualizaAtendimentoTerapiaOcupacionalBean.stepClass(1)}"/>
+                            <p:menuitem id="menu_2" value="PENDENTE DE APROVAÇÃO"
+                                        containerStyleClass="#{visualizaAtendimentoTerapiaOcupacionalBean.stepClass(2)}"/>
+                            <p:menuitem id="menu_3" value="APROVADO"
+                                        containerStyleClass="#{visualizaAtendimentoTerapiaOcupacionalBean.stepClass(3)}"
+                                        rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.exibeAprovadoReprovado(3)}"/>
+                            <p:menuitem id="menu_4" value="REPROVADO"
+                                        containerStyleClass="#{visualizaAtendimentoTerapiaOcupacionalBean.stepClass(4)}"
+                                        rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.exibeAprovadoReprovado(4)}"/>
+                            <p:menuitem id="menu_AR" value="APROVADO/REPROVADO"
+                                        rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.statusAtual.id lt 3}"/>
+                            <p:menuitem id="menu_5" value="EXECUTADO"
+                                        containerStyleClass="#{visualizaAtendimentoTerapiaOcupacionalBean.stepClass(5)}"
+                                        rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.statusAtual.id != 4}"/>
+                        </p:steps>
+                        <p:repeat
+                                value="#{visualizaAtendimentoTerapiaOcupacionalBean.solicitacaoAtendimentoStatusAtendimentos}"
+                                var="solicitacaoAtendimentoStatusAtendimentos">
+                            <p:tooltip
+                                    for="form:menu_#{solicitacaoAtendimentoStatusAtendimentos.statusSolicitacaoAtendimento.id}"
+                                    position="bottom">
+                                De
+                                <h:outputText value="#{solicitacaoAtendimentoStatusAtendimentos.dataInicial}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <h:outputText rendered="#{solicitacaoAtendimentoStatusAtendimentos.dataFim != null}"
+                                              value=" Até "/>
+                                <h:outputText value="#{solicitacaoAtendimentoStatusAtendimentos.dataFim}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:tooltip>
+                        </p:repeat>
+                        <br/>
+                        <p:panelGrid columns="1"
+                                     id="pgDetentosAdicionados"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:dataTable id="dtDetentosAdicionados" var="detento"
+                                         rendered="#{!visualizaAtendimentoTerapiaOcupacionalBean.detentosAtendimentoTerapiaOcupacionalList.isEmpty()}"
+                                         value="#{visualizaAtendimentoTerapiaOcupacionalBean.detentosAtendimentoTerapiaOcupacionalList}"
+                                         reflow="true"
+                                         rowKey="#{detento.codDetento}"
+                                         paginator="true"  paginatorPosition="bottom" rows="5"
+                                         emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                                <f:facet name="header">
+                                    Presos Selecionados
+                                </f:facet>
+                                <p:column headerText="Foto" style="width: 10%; text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:40px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{visualizaAtendimentoTerapiaOcupacionalBean.enconder(detento.foto)}"
+                                            style="max-height:4em;"/>
+                                </p:column>
+                                <p:column headerText="Matrícula"
+                                          style="width:50px;text-align: center">
+                                    <h:outputText
+                                            value="#{visualizaAtendimentoTerapiaOcupacionalBean.getMatricula(detento.matriculaDetento)}"/>
+                                </p:column>
+                                <p:column headerText="Nome"
+                                          style="width:200px;text-align: center">
+                                    <h:outputText value="#{detento.nomeDetento}"/>
+                                </p:column>
+                                <p:column headerText="Opções"
+                                          style="width:60px;text-align: center">
+                                    <p:commandButton
+                                            icon="ui-icon-trash" style="border-bottom: 10px"
+                                            styleClass="red-btn" title="Remover" update="@form"
+                                            actionListener="#{visualizaAtendimentoTerapiaOcupacionalBean.removerDetento(detento)}">
+                                        <p:confirm header="Confirmação"
+                                                   message="Deseja realmente remover este registro?"
+                                                   icon="ui-icon-alert"/>
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade"
+                                                     hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button"
+                                                         styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button"
+                                                         styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup
+                    rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizaPendente or visualizaAtendimentoTerapiaOcupacionalBean.renderizaBotaoFinalizar}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton id="btnAddDetentos" value="Adicionar Presos"
+                                                 oncomplete="PF('dlgAddDetento').show();"
+                                                 update="dlgAdicionarDetento" process="@this"
+                                                 rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizaPendente}"
+                                                 action="#{visualizaAtendimentoTerapiaOcupacionalBean.findDetentosSolicitacao}"
+                                                 icon="ui-icon-plus"/>
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                            </f:facet>
+                            <f:facet name="left">
+                                <h:panelGroup id="btnSalvar">
+                                    <p:commandButton value="Salvar"
+                                                     rendered="#{(visualizaAtendimentoTerapiaOcupacionalBean.renderizaPendente and
+                                                     !visualizaAtendimentoTerapiaOcupacionalBean.detentosAtendimentoTerapiaOcupacionalList.isEmpty()) or
+                                                     !visualizaAtendimentoTerapiaOcupacionalBean.detentosSolicitacaoRemovidos.isEmpty()}"
+                                                     action="#{visualizaAtendimentoTerapiaOcupacionalBean.salvar()}"
+                                                     update="@form"
+                                                     process="@this " icon=""/>
+                                    <span class="ui-separator" style="padding-right: 5px;"/>
+                                </h:panelGroup>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <p:spacer/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Presos</b></h1>
+                        <p:panelGrid columns="1"
+                                     id="pgDetentosSelecionados"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:dataTable id="dtDetentosSelecionados" var="solicitacaoAtendimentoDetento"
+                                         value="#{visualizaAtendimentoTerapiaOcupacionalBean.detentosSolicitacao}"
+                                         reflow="true"
+                                         rowKey="#{solicitacaoAtendimentoDetento.id}"
+                                         paginator="true" rows="10"
+                                         paginatorPosition="bottom"
+                                         emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                                <f:facet name="header">
+                                    Presos Selecionados
+                                </f:facet>
+                                <p:column style="width:16px">
+                                    <p:rowToggler rendered="#{solicitacaoAtendimentoDetento.codStatus == 3}"/>
+                                </p:column>
+                                <p:column headerText="Foto" style="width: 12%; text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{solicitacaoAtendimentoDetento.foto == null or solicitacaoAtendimentoDetento.foto == '' or solicitacaoAtendimentoDetento.foto.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:20px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{solicitacaoAtendimentoDetento.foto != null and solicitacaoAtendimentoDetento.foto != '' and !solicitacaoAtendimentoDetento.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{buscaDetentoBean.enconder(solicitacaoAtendimentoDetento.foto)}"
+                                            style="max-height:4em;"/>
+                                </p:column>
+                                <p:column headerText="Matrícula"
+                                          style="width:10%;text-align: center">
+                                    <h:outputText
+                                            value="#{visualizaAtendimentoTerapiaOcupacionalBean.getMatricula(solicitacaoAtendimentoDetento.matriculaDetento)}"/>
+                                </p:column>
+                                <p:column headerText="Nome"
+                                          style="width:18%;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.nomeDetento}"/>
+                                </p:column>
+                                <p:column headerText="Estabelecimento"
+                                          style="text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.unidadePrisional}"/>
+                                </p:column>
+                                <p:column headerText="Pavilhão"
+                                          style="text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.pavilhao}"/>
+                                </p:column>
+                                <p:column headerText="Cela"
+                                          style="width:8%;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.cela}"/>
+                                </p:column>
+                                <p:column headerText="Status"
+                                          style="width:10%;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.status}"/>
+                                </p:column>
+                                <p:column headerText="Opções"
+                                          rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizarOpcaoVisualizar()}"
+                                          style="width:60px;text-align: center">
+                                    <p:commandButton title="Efetivar Atendimento" process="@this"
+                                                     action="#{visualizaAtendimentoTerapiaOcupacionalBean.efetivarDetentoSolicitacao}"
+                                                     rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizarBotaoEfetivar(solicitacaoAtendimentoDetento)}"
+                                                     icon="ui-icon-send">
+                                        <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                     target="#{visualizaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView}"/>
+                                    </p:commandButton>
+                                    <p:commandButton title="Visualizar Atendimento" process="@this"
+                                                     action="#{visualizaAtendimentoTerapiaOcupacionalBean.efetivarDetentoSolicitacao}"
+                                                     rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizarBotaoVisualizar(solicitacaoAtendimentoDetento)}"
+                                                     icon="ui-icon-remove-red-eye">
+                                        <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                     target="#{visualizaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView}"/>
+                                    </p:commandButton>
+                                    <p:commandButton
+                                            icon="ui-icon-trash" style="border-bottom: 10px"
+                                            styleClass="red-btn" title="Remover" update="@form"
+                                            rendered="#{visualizaAtendimentoTerapiaOcupacionalBean.renderizaPendente}"
+                                            action="#{visualizaAtendimentoTerapiaOcupacionalBean.removerDetentoSolicitacao}">
+                                        <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                     target="#{visualizaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView}"/>
+                                        <p:confirm header="Confirmação"
+                                                   message="Deseja realmente inativar este registro?"
+                                                   icon="ui-icon-alert"/>
+                                        <p:confirmDialog global="true" showEffect="fade"
+                                                         hideEffect="fade">
+                                            <p:commandButton value="Sim" type="button"
+                                                             styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                            <p:commandButton value="Não" type="button"
+                                                             styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                                        </p:confirmDialog>
+                                    </p:commandButton>
+                                </p:column>
+                                <p:rowExpansion>
+                                    <p:panelGrid id="pgMotivoReprovacao" columns="2"
+                                                 columnClasses="label, value"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; background-color:transparent; width: 30%">
+                                        <p:column>
+                                            <h:outputLabel value="Motivo: " style="font-weight: bold"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{solicitacaoAtendimentoDetento.reprovacao}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputLabel value="Observação: " style="font-weight: bold"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText
+                                                    value="#{solicitacaoAtendimentoDetento.observacaoReprovacao}"/>
+                                        </p:column>
+                                    </p:panelGrid>
+                                </p:rowExpansion>
+                            </p:dataTable>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     id="pgDetentosRemovidos"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:dataTable id="dtDetentosRemovidos" var="solicitacaoAtendimentoDetento"
+                                         value="#{visualizaAtendimentoTerapiaOcupacionalBean.detentosSolicitacaoRemovidos}"
+                                         reflow="true"
+                                         rendered="#{!visualizaAtendimentoTerapiaOcupacionalBean.detentosSolicitacaoRemovidos.isEmpty()}"
+                                         rowKey="#{solicitacaoAtendimentoDetento.id}"
+                                         paginator="false" rows="10"
+                                         emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                                <f:facet name="header">
+                                    Presos a Remover
+                                </f:facet>
+                                <p:column headerText="Foto" style="width: 8%; text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{solicitacaoAtendimentoDetento.foto == null or solicitacaoAtendimentoDetento.foto == '' or solicitacaoAtendimentoDetento.foto.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:20px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{solicitacaoAtendimentoDetento.foto != null and solicitacaoAtendimentoDetento.foto != '' and !solicitacaoAtendimentoDetento.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{buscaDetentoBean.enconder(solicitacaoAtendimentoDetento.foto)}"
+                                            style="width: 50%;"/>
+                                </p:column>
+                                <p:column headerText="Matrícula"
+                                          style="width:60px;text-align: center">
+                                    <h:outputText
+                                            value="#{visualizaAtendimentoTerapiaOcupacionalBean.getMatricula(solicitacaoAtendimentoDetento.matriculaDetento)}"/>
+                                </p:column>
+                                <p:column headerText="Nº do Ciclo"
+                                          style="width:60px;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.numeroCiclo}"/>
+                                </p:column>
+                                <p:column headerText="Nome"
+                                          style="width:200px;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.nomeDetento}"/>
+                                </p:column>
+                                <p:column headerText="Estabelecimento"
+                                          style="width:120px;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.unidadePrisional}"/>
+                                </p:column>
+                                <p:column headerText="Pavilhão"
+                                          style="width:100px;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.pavilhao}"/>
+                                </p:column>
+                                <p:column headerText="Cela"
+                                          style="width:100px;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.cela}"/>
+                                </p:column>
+                                <p:column headerText="Status"
+                                          style="width:100px;text-align: center">
+                                    <h:outputText value="#{solicitacaoAtendimentoDetento.status}"/>
+                                </p:column>
+                                <p:column headerText="Opções"
+                                          rendered="#{!visualizaAtendimentoTerapiaOcupacionalBean.verificarPendenteAprovacao()}"
+                                          style="width:60px;text-align: center">
+                                    <p:commandButton
+                                            icon="ui-icon-trash" style="border-bottom: 10px"
+                                            styleClass="red-btn" title="Remover" update="@form"
+                                            action="#{visualizaAtendimentoTerapiaOcupacionalBean.removerDetentoSolicitacaoRemovidos()}">
+                                        <f:setPropertyActionListener value="#{solicitacaoAtendimentoDetento}"
+                                                                     target="#{visualizaAtendimentoTerapiaOcupacionalBean.detentoSolicitacaoView}"/>
+                                    </p:commandButton>
+
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <p:dialog id="dlgAdicionarDetento" header="Adicionar Presos"
+                      widgetVar="dlgAddDetento" modal="true" width="1200" showEffect="fade" hideEffect="fade">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:dataTable id="dtDetentos" var="detento"
+                                     value="#{visualizaAtendimentoTerapiaOcupacionalBean.detentosAtendimentoTerapiaOcupacional}"
+                                     selection="#{visualizaAtendimentoTerapiaOcupacionalBean.selectedDetentosAtendimentoTerapiaOcupacional}"
+                                     reflow="true"
+                                     rowKey="#{detento.codDetento}"
+                                     paginator="true" rows="5" paginatorPosition="bottom"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                            <f:facet name="header">
+                                Presos
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Foto" style="width: 12%; text-align: center">
+                                <h:panelGroup
+                                        rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                    <i class="ui-icon ui-icon-person"
+                                       style="font-size:40px;color:#757575;">
+                                    </i>
+                                </h:panelGroup>
+                                <p:graphicImage
+                                        rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                        value="/foto-detento?foto=#{visualizaAtendimentoTerapiaOcupacionalBean.enconder(detento.foto)}"
+                                        style="max-height:3em;"/>
+                            </p:column>
+                            <p:column headerText="Matrícula"
+                                      style="width:50px;text-align: center">
+                                <h:outputText
+                                        value="#{visualizaAtendimentoTerapiaOcupacionalBean.getMatricula(detento.matriculaDetento)}"/>
+                            </p:column>
+                            <p:column headerText="Nome"
+                                      style="width:200px;text-align: center">
+                                <h:outputText value="#{detento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Unidade Prisional"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value="#{detento.nomeUnidadePrisional}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão"
+                                      style="width:90px;text-align: center">
+                                <h:outputText
+                                        value="#{detento.nomePavilhao}"/>
+                            </p:column>
+                            <p:column headerText="Cela"
+                                      style="width:70px;text-align: center">
+                                <h:outputText
+                                        value="#{detento.nomeCela}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:spacer/>
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton
+                                        value="Inserir" icon="ui-icon-done"
+                                        update="dlgAdicionarDetento dtDetentosSelecionados pgDetentosAdicionados btnSalvar"
+                                        actionListener="#{visualizaAtendimentoTerapiaOcupacionalBean.onClickSelectDetentosSolicitacao()}"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </p:dialog>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

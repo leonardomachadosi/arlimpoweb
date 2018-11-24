@@ -1,0 +1,1719 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">.ui-state-highlight {
+            background-color: #E91E63 !important;
+        }</style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{efetivaAtendimentoSocialBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:tabView id="tab">
+                        <p:tab title="Dados">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h2 class="assistencia-subtitulo">Atendimento Social</h2>
+                                    <br/>
+                                    <p:panelGrid id="pgDetentoUnidadePrisional" columns="4"
+                                                 columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                            <p:inputText id="itNome"
+                                                         value="#{efetivaAtendimentoSocialBean.detento.pessoa.nome}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itNome" value="Nome de Pessoa Presa"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:calendar id="cdNascimento"
+                                                        pattern="dd/MM/yyyy"
+                                                        readonly="true"
+                                                        showOn="none"
+                                                        value="#{efetivaAtendimentoSocialBean.detento.pessoa.dataNascimento}"
+                                                        mask="99/99/9999"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdNascimento" value="Data de Nascimento"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itIdade"
+                                                         value="#{efetivaAtendimentoSocialBean.calcularIdade()}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itIdade" value="Idade"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataAtendimento"
+                                                      rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                      styleClass="md-inputfield">
+                                            <p:calendar id="cdDataAtendimento"
+                                                        pattern="dd/MM/yyyy HH:mm"
+                                                        mask="99/99/9999 99:99"
+                                                        readonly="true"
+                                                        value="#{efetivaAtendimentoSocialBean.atendimentoSocial.dataAtendimento}"
+                                                        showOn="none"
+                                                        inputStyle="width: 96%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataAtendimento" value="Data de Atendimento"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgPavilhaoCelaIdade" columns="4"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-2, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup id="pgUnidadePrisional" styleClass="md-inputfield">
+                                            <p:inputText id="itUnidadePrisional"
+                                                         value="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.unidadePrisional}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itUnidadePrisional" value="Unidade Prisional"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itPavilhao"
+                                                         value="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.pavilhao}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itPavilhao" value="Pavilhão"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText id="itCela"
+                                                         value="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.cela}"
+                                                         readonly="true" style="width: 100%;"/>
+                                            <p:outputLabel for="itCela" value="Cela"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup id="pgDataEntradaUp" styleClass="md-inputfield">
+                                            <p:calendar id="cdDataEntrada"
+                                                        pattern="dd/MM/yyyy"
+                                                        mask="99/99/9999"
+                                                        value="#{efetivaAtendimentoSocialBean.detento.dataInicioCiclo}"
+                                                        readonly="true"
+                                                        showOn="none"
+                                                        inputStyle="width: 96%"
+                                                        locale='pt'
+                                                        style="width: 100%"/>
+                                            <p:outputLabel for="cdDataEntrada" value="Data de Ingresso"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="2"
+                                                 id="ipsMae"
+                                                 columnClasses="ui-grid-col-5,ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup id="pgMae"
+                                                      styleClass="md-inputfield">
+                                            <p:inputText id="itMae"
+                                                         value="#{efetivaAtendimentoSocialBean.pessoaMae.nome}"
+                                                         readonly="true"
+                                                         style="width: 100%;"
+                                                         inputStyle="width: 100%;"/>
+                                            <p:outputLabel for="itMae" value="Mãe"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup
+                                                rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}">
+                                            <p:commandButton title="Adicionar Mãe"
+                                                             icon="ui-icon-plus"
+                                                             rendered="#{efetivaAtendimentoSocialBean.pessoaMae.nome == null}"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.setarTipoParente('mae')}"
+                                                             oncomplete="PF('addPessoa').show();"
+                                                             update="form-dialog-pessoa-atendimentoSocial:dialogPessoaAtendimentoSocial"
+                                                             process="@this"/>
+                                            <p:commandButton title="Remover"
+                                                             icon="ui-icon-trash"
+                                                             styleClass="red-btn"
+                                                             rendered="#{efetivaAtendimentoSocialBean.pessoaMae.nome != null}"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.refreshParente('mae')}"
+                                                             update="ipsMae" process="@this"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="2"
+                                                 id="ipsPai"
+                                                 columnClasses="ui-grid-col-5,ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup id="pgPai"
+                                                      styleClass="md-inputfield">
+                                            <p:inputText id="itPai"
+                                                         value="#{efetivaAtendimentoSocialBean.pessoaPai.nome}"
+                                                         readonly="true"
+                                                         style="width: 100%;"
+                                                         inputStyle="width: 100%;"/>
+                                            <p:outputLabel for="itPai" value="Pai"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup
+                                                rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}">
+                                            <p:commandButton title="Adicionar Pai"
+                                                             icon="ui-icon-plus"
+                                                             rendered="#{efetivaAtendimentoSocialBean.pessoaPai.nome == null}"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.setarTipoParente('pai')}"
+                                                             oncomplete="PF('addPessoa').show();"
+                                                             update="form-dialog-pessoa-atendimentoSocial:dialogPessoaAtendimentoSocial"
+                                                             process="@this"/>
+                                            <p:commandButton title="Remover"
+                                                             icon="ui-icon-trash"
+                                                             styleClass="red-btn"
+                                                             rendered="#{efetivaAtendimentoSocialBean.pessoaPai.nome != null}"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.refreshParente('pai')}"
+                                                             update="ipsPai" process="@this"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="2"
+                                                 id="pgTelefone"
+                                                 columnClasses="ui-grid-col-2, ui-grid-col-4"
+                                                 rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itTelefone"
+                                                         value="#{efetivaAtendimentoSocialBean.telefone.descricao}"
+                                                         mask="(99)?999999999"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itTelefone" value="Telefone"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup>
+                                            <p:commandButton title="Adicionar Telefone"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.adicionarTelefone()}"
+                                                             process="@this pgTelefone"
+                                                             update="pgDtTelefone pgTelefone"
+                                                             icon="ui-icon-plus"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="2"
+                                                 id="pgDtTelefone"
+                                                 columnClasses="ui-grid-col-3"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <p:dataTable value="#{efetivaAtendimentoSocialBean.telefones}"
+                                                     var="telefone"
+                                                     type="ordered" emptyMessage="">
+                                            <p:column headerText="Telefone">
+                                                <h:outputText value="#{telefone.descricao}"/>
+                                            </p:column>
+                                            <p:column style="width: 30px"
+                                                      rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}">
+                                                <p:commandButton
+                                                        icon="ui-icon-trash"
+                                                        style="border-bottom: 10px"
+                                                        styleClass="red-btn"
+                                                        title="Remover"
+                                                        process="@this"
+                                                        update="form:tab:pgTelefone form:tab:pgDtTelefone"
+                                                        action="#{efetivaAtendimentoSocialBean.removerTelefone()}">
+                                                    <f:setPropertyActionListener value="#{telefone}"
+                                                                                 target="#{efetivaAtendimentoSocialBean.telefone}"/>
+                                                </p:commandButton>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgDocumentos" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="Documentos "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgTituloRgCertidaoCasamentoCtpsEtc"
+                                                 columns="4"
+                                                 columnClasses="ui-grid-col-3"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputNumber id="itRg"
+                                                           styleClass="ui-custom-inputnumber"
+                                                           decimalPlaces="0" thousandSeparator=""
+                                                           readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                           value="#{efetivaAtendimentoSocialBean.rg.numero}"
+                                                           style="width: 100%"/>
+                                            <p:outputLabel for="itRg" value="RG"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itCpf"
+                                                         mask="999.999.999-99"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.cpf}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itCpf" value="CPF"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itNumeroCtps"
+                                                         mask="999999?999"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.numeroCtps}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itNumeroCtps" value="CTPS"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itSus"
+                                                         mask="999 9999 9999 9999"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.sus}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itSus" value="SUS"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgRestante"
+                                                 columns="6"
+                                                 columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-2, ui-grid-col-1, ui-grid-col-1, ui-grid-col-2"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itCertidaoCasamento"
+                                                         mask="999999 99 99 9999 9 99999 999 9999999 99"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.certidaoCasamento}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itCertidaoCasamento" value="Certidão Casamento"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itCertidaoNascimento"
+                                                         mask="999999 99 99 9999 9 99999 999 9999999 99"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.certidaoNascimento}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itCertidaoNascimento" value="Certidão de Nascimento"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itTituloEleitor"
+                                                         mask="9999 9999 9999"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.tituloEleitor}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itTituloEleitor" value="Título de Eleitor"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itZona"
+                                                         mask="999"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.zona}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itZona" value="Zona"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itSecao"
+                                                         mask="9999"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.secao}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itSecao" value="Seção"/>
+                                        </h:panelGroup>
+
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputMask id="itCertificadoReservista"
+                                                         mask="999999"
+                                                         readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                         value="#{efetivaAtendimentoSocialBean.documento.reservista}"
+                                                         style="width: 100%"/>
+                                            <p:outputLabel for="itCertificadoReservista"
+                                                           value="Cert. Reservista"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgResponsavelDocumento" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="Com quem estão esses documentos? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid
+                                            id="pgParenteResponsavel"
+                                            columns="1"
+                                            columnClasses="ui-grid-col-12"
+                                            layout="grid"
+                                            styleClass="ui-panelgrid-blank form-group"
+                                            style="border:0px none; ">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText
+                                                    id="itResponsavelDocumento"
+                                                    readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSocialBean.atendimentoSocial.responsavelDocumento}"
+                                                    rows="3"
+                                                    style="width: 100%"/>
+                                            <p:outputLabel for="itResponsavelDocumento" value="Descreva"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+
+                        <p:tab title="Familiar">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <p:panelGrid id="pgRelacaoFamiliar" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="1. Relação Familiar "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgSituacaoFamiliar" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="console"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             value="#{efetivaAtendimentoSocialBean.atendimentoSocial.situacaoFamiliar}"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"
+                                                              itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                <f:selectItems var="situacaoFamiliar"
+                                                               value="#{efetivaAtendimentoSocialBean.situacaoFamiliares}"
+                                                               itemLabel="#{situacaoFamiliar.descricao}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Situação Familiar"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgObervacao"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itObservacao"
+                                                    readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSocialBean.atendimentoSocial.observacaoSituacaoFamiliar}"
+                                                    rows="1"
+                                                    style="width: 100%"/>
+                                            <p:outputLabel for="itObservacao" value="Observações"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgComposicaoFamiliar" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="2. Composição Familiar: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="1"
+                                                 id="pgDtPessoasParentesco"
+                                                 columnClasses="ui-grid-col-12" layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none;">
+                                        <h:panelGroup>
+                                            <p:dataTable id="dtPessoasParentesco"
+                                                         reflow="true"
+                                                         var="pessoaParentesco"
+                                                         value="#{efetivaAtendimentoSocialBean.pessoasParentescoFamilia}"
+                                                         rows="15"
+                                                         paginator="false"
+                                                         editable="true"
+                                                         emptyMessage=""
+                                                         style="width: 100%">
+                                                <f:facet name="header">
+                                                    Familiares
+                                                </f:facet>
+                                                <p:ajax event="rowEdit"
+                                                        listener="#{efetivaAtendimentoSocialBean.onRowEdit}"
+                                                        update=":form:messages"/>
+                                                <p:column headerText="Nome" style="text-align: center">
+                                                    <h:outputText value="#{pessoaParentesco.pessoaParente.nome}"/>
+                                                </p:column>
+                                                <p:column headerText="Parentesco" style="text-align: center">
+                                                    <h:outputText value="#{pessoaParentesco.parentesco.descricao}">
+                                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column headerText="Renda" style="text-align: center">
+                                                    <p:cellEditor>
+                                                        <f:facet name="output"><h:outputText
+                                                                value="#{pessoaParentesco.pessoaParente.renda}"/></f:facet>
+                                                        <f:facet name="input"><p:inputText id="modelInput"
+                                                                                           value="#{pessoaParentesco.pessoaParente.renda}"
+                                                                                           style="width:100%;"/></f:facet>
+                                                    </p:cellEditor>
+                                                </p:column>
+                                                <p:column headerText="Benefício Social" style="text-align: center">
+                                                    <p:cellEditor>
+                                                        <f:facet name="output"><h:outputText
+                                                                value="#{pessoaParentesco.pessoaParente.beneficioSocial.descricao}"/></f:facet>
+                                                        <f:facet name="input">
+                                                            <p:selectOneMenu
+
+                                                                    value="#{pessoaParentesco.pessoaParente.beneficioSocial}"
+                                                                    converter="omnifaces.SelectItemsConverter"
+                                                                    style="width: 100%;">
+                                                                <f:selectItem noSelectionOption="true"
+                                                                />
+                                                                <f:selectItems var="beneficioSocial"
+                                                                               itemLabel="#{beneficioSocial.descricao}"
+                                                                               value="#{efetivaAtendimentoSocialBean.beneficioSociais}"/>
+                                                            </p:selectOneMenu>
+                                                        </f:facet>
+                                                    </p:cellEditor>
+                                                </p:column>
+                                                <p:column headerText="Telefone" style="text-align: center">
+                                                    <h:outputText
+                                                            value="#{pessoaParentesco.pessoaParente.telefones[0].descricao}"/>
+                                                </p:column>
+                                                <p:column headerText="Opções" style="text-align: center"
+                                                          rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}">
+                                                    <p:commandButton title="Remover"
+                                                                     icon="ui-icon-trash"
+                                                                     styleClass="red-btn"
+                                                                     action="#{efetivaAtendimentoSocialBean.removerPessoaParentesco()}"
+                                                                     update="dtPessoasParentesco" process="@this">
+                                                        <f:setPropertyActionListener value="#{pessoaParentesco}"
+                                                                                     target="#{efetivaAtendimentoSocialBean.pessoaParentesco}"/>
+                                                    </p:commandButton>
+                                                </p:column>
+                                                <p:column style="width:32px">
+                                                    <p:rowEditor/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgPessoaParentesco" columns="1"
+                                                 rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup style="float: right">
+                                            <p:commandButton title="Adicionar Familiar"
+                                                             icon="ui-icon-plus"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.setarTipoParente('pessoaFamilia')}"
+                                                             oncomplete="PF('addPessoa').show();"
+                                                             update="form-dialog-pessoa-compFamiliar-atendimentoSocial:dialogPessoaCompFamiliarAtendimentoSocial"
+                                                             process="@this"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgProcessoCriminal" columns="2"
+                                                 columnClasses="ui-grid-col-7, ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="3. Alguém da sua família responde ou já respondeu a algum procedimento/processo criminal?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgProcessoCriminalSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorProcessoCriminal"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              value="#{efetivaAtendimentoSocialBean.atendimentoSocial.familiarRespondeCriminal}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpObservacaoProcessoCriminal"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpObservacaoProcessoCriminal">
+                                        <p:panelGrid id="pgObservacaoProcessoCriminal" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.atendimentoSocial.familiarRespondeCriminal}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itObservacaoProcessoCriminal"
+                                                        value="#{efetivaAtendimentoSocialBean.atendimentoSocial.descricaoFamiliarRespondeCriminal}"
+                                                        readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        rows="3"
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itObservacaoProcessoCriminal" value="Observação"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgFilhoEnteado" columns="4"
+                                                 columnClasses="ui-grid-col-3, ui-grid-col-6,ui-grid-col-3"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="4. Tem filhos/enteados? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgFilhoEnteadoSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="filhoEnteado"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              value="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                              converter="omnifaces.SelectItemsConverter">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpFilhosEnteados"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpFilhosEnteados">
+                                        <p:panelGrid columns="1"
+                                                     id="pgDtPessoasParentescoFilhosEnteados"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columnClasses="ui-grid-col-12" layout="grid"
+                                                     styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; ">
+                                            <h:panelGroup>
+                                                <p:dataTable
+                                                        id="dtPessoasParentescoFilhosEnteados"
+                                                        value="#{efetivaAtendimentoSocialBean.pessoasParentescoFilhoEnteado}"
+                                                        var="pessoaParentesco"
+                                                        emptyMessage="Nenhum registro encontrado"
+                                                        style="text-align: center"
+                                                        paginator="false"
+                                                        rows="10">
+                                                    <f:facet name="header">
+                                                        Filhos/Enteados
+                                                    </f:facet>
+                                                    <p:column headerText="Nome" style="text-align: center">
+                                                        <h:outputText value="#{pessoaParentesco.pessoaParente.nome}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Idade" style="text-align: center">
+                                                        <h:outputText
+                                                                value="#{efetivaAtendimentoSocialBean.calcularIdadeParente(pessoaParentesco.pessoaParente.dataNascimento)}">
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column headerText="Registrado" style="text-align: center">
+                                                        <h:outputText
+                                                                value="#{pessoaParentesco.registrado? 'Sim': 'Não'}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Benefício Social" style="text-align: center">
+                                                        <h:outputText
+                                                                value="#{pessoaParentesco.pessoaParente.beneficioSocial.descricao}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Parentesco" style="text-align: center">
+                                                        <h:outputText
+                                                                value="#{pessoaParentesco.parentesco.descricao}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Opções" style="text-align: center"
+                                                              rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}">
+                                                        <p:commandButton title="Remover"
+                                                                         icon="ui-icon-trash"
+                                                                         styleClass="red-btn"
+                                                                         action="#{efetivaAtendimentoSocialBean.removerPessoaFilhoEnteado()}"
+                                                                         update="dtPessoasParentescoFilhosEnteados"
+                                                                         process="@this">
+                                                            <f:setPropertyActionListener value="#{pessoaParentesco}"
+                                                                                         target="#{efetivaAtendimentoSocialBean.pessoaParentesco}"/>
+                                                        </p:commandButton>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgPessoaParentescoFilhoEnteado" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos and efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup style="float: right">
+                                                <p:commandButton title="Adicionar Familiar"
+                                                                 icon="ui-icon-plus"
+                                                                 actionListener="#{efetivaAtendimentoSocialBean.setarTipoParente('filhoEnteado')}"
+                                                                 oncomplete="PF('addPessoa').show();"
+                                                                 update="form-dialog-pessoa-filhoEnteado-atendimentoSocial:dialogPessoaFilhoEnteadoAtendimentoSocial"
+                                                                 process="@this"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgFilhoPaiMae"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:black;font-weight: bold"
+                                                               value="5. Os filhos são do mesmo pai/mãe?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgFilhoPaiMaeSn"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio id="sorFilhoPaiMae"
+                                                                  style="color:darkBlue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoSocialBean.atendimentoSocial.filhosMesmaMae}"
+                                                                  disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgObservacaoFilhoPaiMae"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itObservacaoFilhoPaiMae"
+                                                        readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        value="#{efetivaAtendimentoSocialBean.atendimentoSocial.descricaoFilhos}"
+                                                        rows="3"
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itObservacaoFilhoPaiMae" value="Especifique"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgFilhoEstudo"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:outputLabel for="console"
+                                                               style="color:black;font-weight: bold"
+                                                               value="6. Seus filhos estudam? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid id="pgFilhoEstudoSn"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-5"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:selectOneRadio id="filhoEstudo"
+                                                                  style="color:darkblue;"
+                                                                  layout="responsive" columns="3"
+                                                                  converter="omnifaces.SelectItemsConverter"
+                                                                  value="#{efetivaAtendimentoSocialBean.atendimentoSocial.filhosEstudam}"
+                                                                  disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                    <f:selectItem itemLabel="Sim" itemValue="#{false}"/>
+                                                    <f:selectItem itemLabel="Não" itemValue="#{true}"/>
+                                                    <f:ajax event="change"
+                                                            execute="@this" render="hpFilhoEstudoPorque"/>
+                                                </p:selectOneRadio>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <h:panelGroup id="hpFilhoEstudoPorque">
+                                            <p:panelGrid id="pgFilhoEstudoPorque"
+                                                         rendered="#{efetivaAtendimentoSocialBean.temfilhos and efetivaAtendimentoSocialBean.atendimentoSocial.filhosEstudam}"
+                                                         columns="1"
+                                                         columnClasses="ui-grid-col-12"
+                                                         layout="grid"
+                                                         styleClass="ui-panelgrid-blank form-group"
+                                                         style="border:0px none; ">
+                                                <h:panelGroup styleClass="md-inputfield">
+                                                    <p:inputText
+                                                            id="itaFilhoEstudoPorque"
+                                                            readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                            value="#{efetivaAtendimentoSocialBean.atendimentoSocial.descricaoFilhosEstudam}"
+                                                            rows="3"
+                                                            style="width: 100%"/>
+                                                    <p:outputLabel for="itaFilhoEstudoPorque" value="Por que?"/>
+                                                </h:panelGroup>
+                                            </p:panelGrid>
+                                        </h:panelGroup>
+                                        <br/>
+                                        <p:panelGrid id="pgGuardaFilho"
+                                                     rendered="#{efetivaAtendimentoSocialBean.temfilhos}"
+                                                     columns="1"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <p:outputLabel for="itGuardaFilho"
+                                                           style="color:black;font-weight: bold"
+                                                           value="7. Atualmente com quem está(ão) seu(s) filho(s)? "/>
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itGuardaFilho"
+                                                        readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        value="#{efetivaAtendimentoSocialBean.atendimentoSocial.responsavelFilho}"
+                                                        rows="3"
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itGuardaFilho" value="Especifique"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                    </h:panelGroup>
+                                    <p:panelGrid id="pgEncaminhaDpe" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel
+                                                    style="color:black;font-weight: bold"
+                                                    value="8. Necessita de encaminhamento a DPE para reconhecimento de paternidade? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgEncaminhaDpeSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="encaminhaDpe"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.atendimentoSocial.reconhecimentoPaternidade}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgOrientacaoSexualReligiosa" columns="2"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel
+                                                    style="color:black;font-weight: bold"
+                                                    value="9. Qual a sua Orientação Espiritual/Religiosa? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgOrientacaoReligiosa" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="somOrientacaoReligiosa"
+                                                             value="#{efetivaAtendimentoSocialBean.detento.pessoa.religiao}"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"
+                                                              itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                <f:selectItems var="religiao"
+                                                               itemLabel="#{religiao.descricao}"
+                                                               value="#{efetivaAtendimentoSocialBean.religioes}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Orientação Religiosa"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgParticipaGrupoReligioso" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold;"
+                                                           value="10. Você tem interesse em participar de algum grupo espiritualista/religioso? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgParticipaGrupoReligiosoSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px;"
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorParticipaGrupoReligioso"
+
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.atendimentoSocial.grupoReligioso}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+
+                        <p:tab title="Socioeconômica">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <p:panelGrid id="pgPossuiProgramaSocial" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="1. A família esta em algum programa social?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgPossuiProgramaSocialSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup id="pgProgramaSocial">
+                                            <p:selectOneRadio id="sorProgramaSocial"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              required="true"
+                                                              requiredMessage="A família esta em algum programa social?"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.programaSocial}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpProgramaSocialSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpProgramaSocialSim">
+                                        <p:panelGrid id="pgPossuiProgramaSocialQual" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.programaSocial}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkblue;"
+                                                               value="Qual? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgProgramaSocialSim" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.programaSocial}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="somProgramaSocial"
+                                                                 required="#{efetivaAtendimentoSocialBean.programaSocial}"
+                                                                 requiredMessage="Antes de ser pessoa presa, qual a sua posição econômica dentro da família?"
+                                                                 value="#{efetivaAtendimentoSocialBean.beneficioSocial}"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"
+                                                                  itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                    <f:selectItems var="beneficioSocial"
+                                                                   itemLabel="#{beneficioSocial.descricao}"
+                                                                   value="#{efetivaAtendimentoSocialBean.beneficioSociais}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="Programa Social"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgPosicaoEconomicaFamilia" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="2. Antes de ser pessoa presa, qual a sua posição econômica dentro da família? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgPosicaoEconomica" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="somPosicaoEconomica"
+                                                             value="#{efetivaAtendimentoSocialBean.detento.pessoa.posicaoEconomica}"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"
+                                                              itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                <f:selectItems var="posicaoEconomica"
+                                                               itemLabel="#{posicaoEconomica.descricao}"
+                                                               value="#{efetivaAtendimentoSocialBean.posicaoEconomicas}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Posição Econômica"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgResponsavelSustento" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="3. Atualmente quem é o responsável pelo sustento da família? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgParenteResponsavelFamiliaSustento" columns="2"
+                                                 columnClasses="ui-grid-col-4, ui-grid-col-2"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup id="pgParenteResponsavelFamilia"
+                                                      styleClass="md-inputfield">
+                                            <p:inputText id="itParenteResponsavel"
+                                                         required="true"
+                                                         requiredMessage="Atualmente quem é o responsável pelo sustento da família?"
+                                                         value="#{efetivaAtendimentoSocialBean.pessoaParentescoParenteResponsavel.pessoaParente.nome}"
+                                                         readonly="true"
+                                                         style="width: 100%;"
+                                                         inputStyle="width: 100%;"/>
+                                            <p:outputLabel for="itParenteResponsavel" value="Pessoa Responsável"/>
+                                        </h:panelGroup>
+                                        <h:panelGroup
+                                                rendered="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus != 7}">
+                                            <p:commandButton title="Adicionar Responsável"
+                                                             icon="ui-icon-plus"
+                                                             rendered="#{efetivaAtendimentoSocialBean.pessoaParentescoParenteResponsavel.pessoaParente.nome == null}"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.setarTipoParente('parenteResponsavel')}"
+                                                             oncomplete="PF('addPessoa').show();"
+                                                             update="form-dialog-pessoa-parenteResponsavel-atendimentoSocial:dialogPessoaParenteResponsavelAtendimentoSocial"
+                                                             process="@this"/>
+                                            <p:commandButton title="Remover"
+                                                             icon="ui-icon-trash"
+                                                             styleClass="red-btn"
+                                                             rendered="#{efetivaAtendimentoSocialBean.pessoaParentescoParenteResponsavel.pessoaParente.nome != null}"
+                                                             actionListener="#{efetivaAtendimentoSocialBean.refreshParente('parenteResponsavel')}"
+                                                             update="pgParenteResponsavelFamiliaSustento"
+                                                             process="@this"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgIngressoSistema" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="4. Trabalhava antes de ingressar no sistema prisional? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgIngressoSistemaSn" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup id="pgIngressoSistemaPriosional">
+                                            <p:selectOneRadio id="sorIngressoSistemaPriosional"
+                                                              style="color:darkBlue;"
+                                                              required="true"
+                                                              requiredMessage="Trabalhava antes de ingressar no sistema prisional?"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.trabalhavaAntesPreso}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpTipoTrabalho"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpTipoTrabalho">
+                                        <p:panelGrid id="pgTipoTrablho" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.trabalhavaAntesPreso}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="somTipoTrabalho"
+                                                                 value="#{efetivaAtendimentoSocialBean.tipoTrabalho}"
+                                                                 required="#{efetivaAtendimentoSocialBean.trabalhavaAntesPreso}"
+                                                                 requiredMessage="Informe o tipo de trabalho"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"
+                                                                  itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                    <f:selectItems var="tipoTrabalho"
+                                                                   itemLabel="#{tipoTrabalho.descricao}"
+                                                                   value="#{efetivaAtendimentoSocialBean.tipoTrabalhos}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="Tipo de Trabalho"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgObservacaoTipoTrabalho" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.trabalhavaAntesPreso}"
+                                                     columnClasses="ui-grid-col-12"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itObservacaoTipoTrabalho"
+                                                        readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        value="#{buscaAcolhimentoSocialBean.solicitacaoAtendimento.observacao}"
+                                                        rows="3"
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itObservacaoTipoTrabalho" value="Observações"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgContribuiPrevidencia" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="5. Você contribui para a previdência social? "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgContribuiPrevidenciaSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorContribuiPrevidencia"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              required="true"
+                                                              requiredMessage="Você contribui para a previdência social?"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.contribuiPrevidencia}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpTempoContribuiPrevidencia"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpTempoContribuiPrevidencia">
+                                        <p:panelGrid id="pgTempoContribuiPrevidencia" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.contribuiPrevidencia}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-inputfield">
+                                                <p:inputText
+                                                        id="itTempoContribuiPrevidencia"
+                                                        required="#{efetivaAtendimentoSocialBean.contribuiPrevidencia}"
+                                                        requiredMessage="Informe o tempo de contruibuiçao da previdência social"
+                                                        value="#{efetivaAtendimentoSocialBean.atendimentoSocial.contribuiPrevidencia}"
+                                                        rows="3"
+                                                        style="width: 100%"/>
+                                                <p:outputLabel for="itTempoContribuiPrevidencia"
+                                                               value="Quanto tempo? "/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgPossuiProfissao" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="6. Você possui uma profissão?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgPossuiProfissaoSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup id="sorPossuiProfissao">
+                                            <p:selectOneRadio id="sorProfissao"
+                                                              style="color:darkBlue;"
+                                                              required="true"
+                                                              requiredMessage="Você possui uma profissão?"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.possuiProfissao}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpProfissao"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <h:panelGroup id="hpProfissao">
+                                        <p:panelGrid id="pgProfissao" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.possuiProfissao}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="somProfissao"
+                                                                 required="#{efetivaAtendimentoSocialBean.possuiProfissao}"
+                                                                 requiredMessage="Informe uma profissão"
+                                                                 value="#{efetivaAtendimentoSocialBean.profissao}"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"
+                                                                  itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                    <f:selectItems var="profissao"
+                                                                   itemLabel="#{profissao.descricao}"
+                                                                   value="#{efetivaAtendimentoSocialBean.profissoes}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="Profissão"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgPossuiEscolaridade" columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="7. Qual a sua escolaridade?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgEscolaridade" columns="1"
+                                                 columnClasses="ui-grid-col-4"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup styleClass="md-selectonemenu">
+                                            <p:selectOneMenu id="somEscolaridade"
+                                                             required="true"
+                                                             requiredMessage="Qual a sua escolaridade?"
+                                                             value="#{efetivaAtendimentoSocialBean.pessoaEscolaridade.escolaridade}"
+                                                             converter="omnifaces.SelectItemsConverter"
+                                                             style="width: 100%;">
+                                                <f:selectItem noSelectionOption="true"
+                                                              itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                <f:selectItems var="escolaridade"
+                                                               itemLabel="#{escolaridade.descricao}"
+                                                               value="#{efetivaAtendimentoSocialBean.escolaridades}"/>
+                                            </p:selectOneMenu>
+                                            <p:outputLabel value="Escolaridade"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgCursoProfissionalizante" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="8. Você já fez curso profissionalizante?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgCursoProfissionalizanteSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorCursoProfinalizante"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              required="true"
+                                                              requiredMessage="Você já fez curso profissionalizante?"
+                                                              value="#{efetivaAtendimentoSocialBean.cursoProfissionalizante}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpCursoProfissionalizanteSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpCursoProfissionalizanteSim">
+                                        <p:panelGrid id="pgCursoProfissionalizanteQual" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.cursoProfissionalizante}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkBlue;"
+                                                               value="Qual?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgCursoProfissionalizanteSim" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.cursoProfissionalizante}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="somCursoProfissionalizante"
+                                                                 value="#{efetivaAtendimentoSocialBean.pessoaCurso.curso}"
+                                                                 required="#{efetivaAtendimentoSocialBean.cursoProfissionalizante}"
+                                                                 requiredMessage="Informe um curso profissionalizante"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"
+                                                                  itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                    <f:selectItems var="curso"
+                                                                   itemLabel="#{curso.descricao}"
+                                                                   value="#{efetivaAtendimentoSocialBean.cursos}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="Curso Profissionalizante"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                    <p:panelGrid id="pgAprendeProfissao" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="9. Você tem interesse em aprender uma profissão?"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgAprendeProfissaoSn" columns="1"
+                                                 columnClasses="ui-grid-col-5"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; margin-bottom:-10px; "
+                                                 cellpadding="5">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorAprendeProfissao"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              required="true"
+                                                              requiredMessage="Você tem interesse em aprender uma profissão?"
+                                                              value="#{efetivaAtendimentoSocialBean.interesseProfissao}"
+                                                              disabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}">
+                                                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                                                <f:ajax event="change"
+                                                        execute="@this" render="hpProfissaoSim"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <h:panelGroup id="hpProfissaoSim">
+                                        <p:panelGrid id="pgAprendeProfissaoQual" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.interesseProfissao}"
+                                                     columnClasses="ui-grid-col-6"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="color:darkblue;"
+                                                               value="Qual?"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <br/>
+                                        <p:panelGrid id="pgProfissaoSim" columns="1"
+                                                     rendered="#{efetivaAtendimentoSocialBean.interesseProfissao}"
+                                                     columnClasses="ui-grid-col-4"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0px none; margin-bottom:-10px; "
+                                                     cellpadding="5">
+                                            <h:panelGroup styleClass="md-selectonemenu">
+                                                <p:selectOneMenu id="somProfissaoSim"
+                                                                 value="#{efetivaAtendimentoSocialBean.profissaoInteresse}"
+                                                                 converter="omnifaces.SelectItemsConverter"
+                                                                 required="#{efetivaAtendimentoSocialBean.interesseProfissao}"
+                                                                 requiredMessage="Informe qual profissão tem interrese de aprender"
+                                                                 style="width: 100%;">
+                                                    <f:selectItem noSelectionOption="true"
+                                                                  itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"/>
+                                                    <f:selectItems var="profissao"
+                                                                   itemLabel="#{profissao.descricao}"
+                                                                   value="#{efetivaAtendimentoSocialBean.profissoesInteresse}"/>
+                                                </p:selectOneMenu>
+                                                <p:outputLabel value="Profissão"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </h:panelGroup>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+
+                        <p:tab title="Habitacional">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:dataTable id="dtEndereco"
+                                                         var="enderecoPessoa"
+                                                         reflow="true"
+                                                         value="#{efetivaAtendimentoSocialBean.enderecoPessoas}"
+                                                         rows="1"
+                                                         emptyMessage=""
+                                                         style="width: 100%">
+                                                <f:facet name="header">
+                                                    Endereço
+                                                </f:facet>
+                                                <p:column headerText="Município"
+                                                          style=" width:150px; text-align: center">
+                                                    <h:outputText
+                                                            value="#{enderecoPessoa.endereco.municipio.descricao.toUpperCase()}"/>
+                                                </p:column>
+                                                <p:column headerText="Bairro" style="width:170px; text-align: center">
+                                                    <h:outputText value="#{enderecoPessoa.endereco.bairro}"/>
+                                                </p:column>
+                                                <p:column headerText="CEP" style="width:70px;text-align: center">
+                                                    <h:outputText value="#{enderecoPessoa.endereco.cep}"/>
+                                                </p:column>
+                                                <p:column headerText="Logradouro" style="text-align: center">
+                                                    <h:outputText value="#{enderecoPessoa.endereco.logradouro}"/>
+                                                </p:column>
+                                                <p:column headerText="Referência" style="text-align: center">
+                                                    <h:outputText value="#{enderecoPessoa.endereco.referencia}"/>
+                                                </p:column>
+                                                <p:column headerText="Número" style="width:50px;text-align: center">
+                                                    <h:outputText value="#{enderecoPessoa.endereco.numero}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                    <p:panelGrid id="pgResidencia" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="1. Sua Residência é: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgResidenciaOr" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorResidencia"
+                                                              style="color:darkBlue;"
+                                                              required="true"
+                                                              requiredMessage="Informe qual a sua Residência"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.tipoResidencia}">
+                                                <f:selectItems value="#{efetivaAtendimentoSocialBean.tipoResidencias}"
+                                                               itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                               var="tipoResidencia"
+                                                               itemLabel="#{tipoResidencia.descricao}"/>
+
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgSituacao" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="2. Situação: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgSituacaoOr" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorSituacao"
+                                                              style="color:darkBlue;"
+                                                              required="true"
+                                                              requiredMessage="Informe a situação da sua residencia"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.situacaoResidencia}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSocialBean.situacaoResidencias}"
+                                                        itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        var="situacaoResidencia"
+                                                        itemLabel="#{situacaoResidencia.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgTipoConstrucao" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold;"
+                                                           value="3. Tipo de Construção: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgTipoConstrucaoSo" columns="1"
+                                                 columnClasses="ui-grid-col-8"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorTipoConstrucao"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="4"
+                                                              required="true"
+                                                              requiredMessage="Informe o Tipo de Construção"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.tipoConstrucao}">
+                                                <f:selectItems value="#{efetivaAtendimentoSocialBean.tipoConstrucoes}"
+                                                               itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                               var="tipoConstrucao"
+                                                               itemLabel="#{tipoConstrucao.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgTipoAbestecimentoAgua" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="4. Tipo de Abastecimento de Água: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgTipoAbestecimentoAguaSo" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorTipoAbestecimentoAgua"
+                                                              style="color:darkBlue;"
+                                                              required="true"
+                                                              requiredMessage="Informe o Tipo de Abastecimento de Água"
+                                                              layout="responsive" columns="3"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.tipoAbastecimentoAgua}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSocialBean.tipoAbastecimentoAguas}"
+                                                        itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        var="tipoAbastecimentoAgua"
+                                                        itemLabel="#{tipoAbastecimentoAgua.descricao}"/>
+
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgTipoIluminacao" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="5. Tipo de Iluminação: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgTipoIluminacaoSo" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorTipoIluminacao"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              required="true"
+                                                              requiredMessage="Informe o Tipo de Iluminação"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.tipoIluminacao}">
+                                                <f:selectItems value="#{efetivaAtendimentoSocialBean.tipoIluminacoes}"
+                                                               itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                               var="tipoIluminacao"
+                                                               itemLabel="#{tipoIluminacao.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgEscoamentoSanitario" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel style="color:black;font-weight: bold"
+                                                           value="6. Escoamento Sanitário: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgEscoamentoSanitarioSo" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorEscoamentoSanitario"
+                                                              style="color:darkBlue;"
+                                                              layout="responsive" columns="3"
+                                                              required="true"
+                                                              requiredMessage="Informe o tipo de Escoamento Sanitário"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.escoamentoSanitario}">
+                                                <f:selectItems
+                                                        value="#{efetivaAtendimentoSocialBean.escoamentoSanitarios}"
+                                                        itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                        var="escoamentoSanitario"
+                                                        itemLabel="#{escoamentoSanitario.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgLixo" columns="1"
+                                                 columnClasses="ui-grid-col-6"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:outputLabel for="sorLixo"
+                                                           style="color:black;font-weight: bold;"
+                                                           value="7. Lixo: "/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <p:panelGrid id="pgLixoSo" columns="1"
+                                                 columnClasses="ui-grid-col-8"
+                                                 layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup>
+                                            <p:selectOneRadio id="sorLixo"
+                                                              style="color:darkBlue;"
+                                                              required="true"
+                                                              requiredMessage="Informe o tipo de lixo"
+                                                              layout="responsive" columns="4"
+                                                              converter="omnifaces.SelectItemsConverter"
+                                                              value="#{efetivaAtendimentoSocialBean.coletaLixo}">
+                                                <f:selectItems value="#{efetivaAtendimentoSocialBean.coletaLixos}"
+                                                               itemDisabled="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                               var="coletaLixo"
+                                                               itemLabel="#{coletaLixo.descricao}"/>
+                                            </p:selectOneRadio>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <p:tab title="Síntese">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <br/>
+                                    <p:panelGrid columns="1"
+                                                 id="pgSintese"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0px none; ">
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputTextarea
+                                                    id="itaSintese"
+                                                    required="true"
+                                                    requiredMessage="Informe a sintese"
+                                                    readonly="#{efetivaAtendimentoSocialBean.detentoSolicitacaoView.codStatus == 7}"
+                                                    value="#{efetivaAtendimentoSocialBean.atendimentoSocial.sintese}"
+                                                    rows="1"
+                                                    style="width: 100%"/>
+                                            <p:outputLabel for="itaSintese" value="Síntese para o CTC"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                    <br/>
+                                </div>
+                            </div>
+                        </p:tab>
+                    </p:tabView>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton id="btnSalvarCela" value="Salvar"
+                                                     process="@form" update="@form"
+                                                     action="#{efetivaAtendimentoSocialBean.salvar()}"
+                                                     icon="ui-icon-check"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-pessoa-atendimentoSocial.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-pessoa-filhoEnteado-atendimentoSocial.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-pessoa-parenteResponsavel-atendimentoSocial.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="modals/modal-pessoa-compFamiliar-atendimentoSocial.xhtml"/>
+        </ui:insert>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,444 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style>
+            .galeriaOcorrencia {
+                text-align: right;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="card card-w-title">
+                    <h1>Cadastro de Ocorrência</h1>
+                    <div class="ui-g-12">
+                        <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-4"
+                                     styleClass="ui-panelgrid-blank form-group" style="margin-top: 20px">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataOcorrencia"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            locale='pt'
+                                            maxdate="#{cadastroOcorrenciaBean.today.time}"
+                                            mask="99/99/9999"
+                                            styleClass="input-auto"
+                                            required="true"
+                                            requiredMessage="Informe a data da Ocorrência"
+                                            value="#{cadastroOcorrenciaBean.dataCadastro}"/>
+                                <p:outputLabel for="cdDataOcorrencia" value="Data da Ocorrência"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soTitulo"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 styleClass="input-auto"
+                                                 required="true"
+                                                 requiredMessage="Informe o Título da Ocorrência"
+                                                 value="#{cadastroOcorrenciaBean.titulo}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{cadastroOcorrenciaBean.tituloList}"
+                                                   var="titulo" itemLabel="#{titulo.descricao}"/>
+                                    <p:ajax listener="#{cadastroOcorrenciaBean.onSelectTitulo()}" update="soSubTitulo"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Título" for="soTitulo"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSubTitulo"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 required="true"
+                                                 requiredMessage="Informe o Subtítulo da Ocorrência"
+                                                 styleClass="input-auto"
+                                                 style="max-width: 100%"
+                                                 value="#{cadastroOcorrenciaBean.subtitulo}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{cadastroOcorrenciaBean.subtituloList}" var="subtitulo"
+                                                   itemLabel="#{subtitulo.descricao}"/>
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Subtítulo" for="soSubTitulo"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSetor"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 required="true"
+                                                 requiredMessage="Informe o Setor da Ocorrência"
+                                                 styleClass="input-auto"
+                                                 value="#{cadastroOcorrenciaBean.setor}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{cadastroOcorrenciaBean.setorList}" var="setor"
+                                                   itemLabel="#{setor.descricao}"/>
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Setor" for="soSetor"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soSeveridade"
+                                                 required="true"
+                                                 requiredMessage="Informe a Severidade da Ocorrência"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 styleClass="input-auto" value="#{cadastroOcorrenciaBean.severidade}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{cadastroOcorrenciaBean.severidadeList}" var="severidade"
+                                                   itemLabel="#{severidade.descricao}"/>
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Severidade" for="soSeveridade"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Galeria" styleClass="customLabel"/>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12,ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group galeriaOcorrencia"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup>
+                                <p:dataTable id="dtOcorrenciaArquivos"
+                                             value="#{cadastroOcorrenciaBean.arquivoList}"
+                                             var="arquivo"
+                                             reflow="true"
+                                             rowKey="#{arquivo.id}"
+                                             rows="5"
+                                             emptyMessage="Nenhum arquivo adicionado."
+                                             style="width: 100%;text-align: left;">
+                                    <f:facet name="header">
+                                        Galeria
+                                    </f:facet>
+                                    <p:column headerText="Arquivo" style="width: 10%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{cadastroOcorrenciaBean.getThumbnail(arquivo.path)}"
+                                                style="width: 100%;"/>
+                                    </p:column>
+                                    <p:column headerText="Descrição" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo de arquivo" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Ação" style="width: 78px; text-align: center;">
+                                        <!--<p:commandButton id="btnVisualizarRequerimento"-->
+                                        <!--title="Visualizar"-->
+                                        <!--ajax="false"-->
+                                        <!--onclick="this.form.target='_blank'"-->
+                                        <!--icon="ui-icon-file-download"-->
+                                        <!--action="#{visualizaSolicitacaoVisitaBean.mostrarPdf()}">-->
+                                        <!--<f:setPropertyActionListener value="#{arquivo}"-->
+                                        <!--target="#{visualizaSolicitacaoVisitaBean.arquivo}"/>-->
+                                        <!--</p:commandButton>-->
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                title="Remover"
+                                                styleClass="red-btn"
+                                                update="dtOcorrenciaArquivos"
+                                                process="@this"
+                                                action="#{cadastroOcorrenciaBean.removeArquivo(arquivo)}">
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:commandButton icon="ui-icon-plus" oncomplete="PF('addOcorrenciaArquivo').show();"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Envolvidos" styleClass="customLabel"/>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12,ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group galeriaOcorrencia"
+                                     style="border:0px none; background-color:transparent;">
+                            <p:dataTable
+                                    id="dtEnvolvidos"
+                                    emptyMessage="Nenhum envolvido adicionado"
+                                    value="#{cadastroOcorrenciaBean.envolvidoList}"
+                                    var="envolvido"
+                                    paginator="#{cadastroOcorrenciaBean.envolvidoList.size() > 10}"
+                                    paginatorPosition="bottom"
+                                    rows="10" style="text-align: left;">
+                                <f:facet name="header">Envolvidos</f:facet>
+                                <p:column headerText="Foto" width="10%" style="text-align: center">
+                                    <h:panelGroup rendered="#{envolvido.foto == null}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:78px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage rendered="#{envolvido.foto != null}"
+                                                    value="/foto-detento?foto=#{buscaDetentoBean.enconder(envolvido.foto)}"
+                                                    style="width: 90%;"/>
+                                </p:column>
+                                <p:column headerText="Nome" style="text-align: center;">
+                                    <h:outputText value="#{envolvido.nome}"/>
+                                </p:column>
+                                <p:column headerText="Tipo" style="text-align: center;">
+                                    <h:outputText value="#{envolvido.tipo}"/>
+                                </p:column>
+                                <p:column headerText="Envolvimento" style="text-align: center;">
+                                    <h:outputText value="#{envolvido.envolvimento}"/>
+                                </p:column>
+                                <p:column headerText="Ação" style="width: 5%; text-align: center">
+                                    <p:commandButton
+                                            icon="ui-icon-trash"
+                                            style="border-bottom: 10px"
+                                            title="Remover"
+                                            styleClass="red-btn"
+                                            update="dtEnvolvidos"
+                                            process="@this"
+                                            action="#{cadastroOcorrenciaBean.removeEnvolvido()}">
+                                        <f:setPropertyActionListener value="#{envolvido}" target="#{cadastroOcorrenciaBean.envolvidoItem}"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <h:panelGroup>
+                                <p:commandButton icon="ui-icon-plus" oncomplete="PF('addOcorrenciaEnvolvido').show();"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel value="Ocorrência" styleClass="customLabel"/>
+                        <p:textEditor widgetVar="editor2" height="300" style="margin-bottom:10px"
+                                      converter="textEditorConverter"
+                                      value="#{cadastroOcorrenciaBean.relatoOcorrencia}">
+                            <f:facet name="toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"/>
+                                    <select class="ql-size"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"/>
+                                    <button class="ql-italic"/>
+                                    <button class="ql-underline"/>
+                                    <button class="ql-strike"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"/>
+                                    <select class="ql-background"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-script" value="sub"/>
+                                    <button class="ql-script" value="super"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"/>
+                                    <button class="ql-header" value="2"/>
+                                    <button class="ql-blockquote"/>
+                                    <button class="ql-code-block"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"/>
+                                    <button class="ql-list" value="bullet"/>
+                                    <button class="ql-indent" value="-1"/>
+                                    <button class="ql-indent" value="+1"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-direction" value="rtl"/>
+                                    <select class="ql-align"/>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"/>
+                                </span>
+                            </f:facet>
+                        </p:textEditor>
+                    </div>
+
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarOcorrencia" value="Salvar"
+                                             action="#{cadastroOcorrenciaBean.salvar()}"
+                                             process="@form"
+                                             icon="ui-icon-check"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+
+            <p:dialog header="Adicionar Arquivo" id="dialogOcorrenciaArquivo" widgetVar="addOcorrenciaArquivo" modal="true" width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12, ui-grid-col-12"
+                             id="pgOcorrenciaArquivo"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                             background-color:transparent;"
+                             layout="grid">
+                    <h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">
+                        <p:inputText id="itArquivoDescricao" style="width: 98%;"
+                                     value="#{cadastroOcorrenciaBean.arquivoDescricao}">
+                            <p:ajax process="@this" event="blur" resetValues="true"/>
+                        </p:inputText>
+                        <p:outputLabel for="itArquivoDescricao" value="Descrição"/>
+                    </h:panelGroup>
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                update="form:dtOcorrenciaArquivos form:itArquivoDescricao"
+                                oncomplete="PF('addOcorrenciaArquivo').hide();"
+                                label="Carregar Arquivo"
+                                fileUploadListener="#{cadastroOcorrenciaBean.uploadArquivo}"
+                                sizeLimit="#{utilBean.sizeFile}"
+                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                allowTypes="/(\.|\/)(gif|jpe?g|png|pdf|mp4|avi|flv)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+
+            <p:dialog header="Adicionar Envolvido" id="dialogOcorrenciaEnvolvido" widgetVar="addOcorrenciaEnvolvido" modal="true" width="600" height="240"
+                      showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="2"
+                             columnClasses="ui-grid-col-11, ui-grid-col-1"
+                             id="pgOcorrenciaEnvolvido"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                             background-color:transparent;"
+                             layout="grid">
+                    <h:panelGroup styleClass="md-selectonemenu" style="margin-top: 1em;">
+                        <p:selectOneMenu id="soTipoEnvolvimento"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         style="width: 95%"
+                                         value="#{cadastroOcorrenciaBean.tipoEnvolvimento}">
+                            <f:selectItem noSelectionOption="true"/>
+                            <p:ajax update="pnEnvolvidos" event="change"/>
+                            <f:selectItems value="#{cadastroOcorrenciaBean.tipoEnvolvimentoList}" var="tipoEnvolvimento"
+                                           itemLabel="#{tipoEnvolvimento.descricao}"/>
+
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Tipo de Envolvimento" for="soTipoEnvolvimento"/>
+                    </h:panelGroup>
+                    <p:spacer/>
+                    <h:panelGroup>
+                        <p:selectOneRadio layout="responsive" columns="3"
+                                          value="#{cadastroOcorrenciaBean.selTipoEnvolvido}">
+                            <f:selectItem itemLabel="Preso" itemValue="1"/>
+                            <f:selectItem itemLabel="Visitante" itemValue="2"/>
+                            <f:selectItem itemLabel="Servidor" itemValue="3"/>
+                            <p:ajax update="pnEnvolvidos" event="change"/>
+                        </p:selectOneRadio>
+                    </h:panelGroup>
+                    <p:spacer style="margin-bottom: 1em;"/>
+                    <p:panel id="pnEnvolvidos" style="border: 0;width: 100%;">
+                        <h:panelGroup styleClass="md-inputfield" id="hpDetento"
+                                      rendered="#{cadastroOcorrenciaBean.selTipoEnvolvido == 1}">
+                            <p:autoComplete id="acDetento"
+                                            style="width: 100%;" inputStyle="width: 100%;"
+                                            completeMethod="#{cadastroOcorrenciaBean.completeDetentoView}"
+                                            minQueryLength="3"
+                                            converter="detentoViewConverter"
+                                            value="#{cadastroOcorrenciaBean.detentoView}"
+                                            var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                            itemValue="#{detentoView}">
+                                <p:column style="width: 10%; text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{detentoView.foto == null or detentoView.foto == '' or detentoView.foto.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:40px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{detentoView.foto != null and detentoView.foto != '' and !detentoView.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{buscaDetentoBean.enconder(detentoView.foto)}"
+                                            style="width: 70%;"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{detentoView.nomeDetento}"/>
+                                </p:column>
+                            </p:autoComplete>
+                            <p:outputLabel for="acDetento" value="Preso"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield" id="hpVisitante"
+                                      rendered="#{cadastroOcorrenciaBean.selTipoEnvolvido == 2}">
+                            <p:autoComplete id="acVisitante"
+                                            style="width: 100%"
+                                            inputStyle="width: 80%"
+                                            completeMethod="#{cadastroOcorrenciaBean.completeVisitanteView}"
+                                            minQueryLength="3"
+                                            value="#{cadastroOcorrenciaBean.visitanteView}"
+                                            var="visitanteView"
+                                            itemValue="#{visitanteView}"
+                                            itemLabel="#{visitanteView.nome}"
+                                            converter="visitanteViewConverter">
+                                <p:column style="width: 10%; text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{visitanteView == null or visitanteView.path == '' or visitanteView.path.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:40px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{visitanteView.path != null and visitanteView.path != '' and !visitanteView.path.contains('\\')}"
+                                            value="/foto-detento?foto=#{vinculoVisitanteBean.enconder(visitanteView.path)}"
+                                            style="width: 90%;"/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{visitanteView.nome}"/>
+                                </p:column>
+                            </p:autoComplete>
+                            <p:outputLabel for="acVisitante" value="Visitante"/>
+                        </h:panelGroup>
+
+                        <h:panelGroup styleClass="md-inputfield" id="hpServidor"
+                                      rendered="#{cadastroOcorrenciaBean.selTipoEnvolvido == 3}">
+                            <p:autoComplete id="acServidor"
+                                            style="width: 100%"
+                                            inputStyle="width: 80%"
+                                            completeMethod="#{cadastroOcorrenciaBean.completeServidor}"
+                                            minQueryLength="3"
+                                            value="#{cadastroOcorrenciaBean.servidor}"
+                                            var="servidor"
+                                            itemValue="#{servidor}"
+                                            itemLabel="#{servidor.pessoa.nome}"
+                                            converter="servidorConverter">
+                                <p:column style="width: 10%; text-align: center">
+                                    <h:panelGroup>
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:40px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{servidor.pessoa.nome}"/>
+                                </p:column>
+                            </p:autoComplete>
+                            <p:outputLabel for="acServidor" value="Servidor"/>
+                        </h:panelGroup>
+                    </p:panel>
+                </p:panelGrid>
+                <p:toolbar>
+                    <f:facet name="right">
+                        <p:commandButton title="Adicionar" action="#{cadastroOcorrenciaBean.adicionaEnvolvido()}" id="btnAdicionaEnvolvido" value="Adicionar"
+                                         process="@this,acDetento, acVisitante, acServidor" update="acDetento, acVisitante, acServidor, dtEnvolvidos"
+                                         oncomplete="PF('addOcorrenciaEnvolvido').hide();"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

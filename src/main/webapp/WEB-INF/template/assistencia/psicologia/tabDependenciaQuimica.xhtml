@@ -1,0 +1,85 @@
+<ui:composition xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank" id="pnlDependenciaQuimica">
+        <h:panelGroup>
+            <p:outputLabel for="bolUsoDrogas" value="É usuário de substância psicoativas (SPA's)?" styleClass="questao"/>
+            <p:selectOneRadio id="bolUsoDrogas" value="#{efetivaAtendimentoPsicologicoBean.usaDroga}" style="margin-top: 10px;">
+                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                <p:ajax event="change" process="@this pnlDependenciaQuimica" update="pnlDependenciaQuimica"/>
+            </p:selectOneRadio>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:outputLabel for="checkSubsPsicoAtiva" value="Faz uso de quais substâncias psicoativas abaixo:" styleClass="questao"/>
+            <p:selectManyCheckbox id="checkSubsPsicoAtiva" converter="omnifaces.SelectItemsConverter" style="margin-top: 10px;"
+                                  value="#{efetivaAtendimentoPsicologicoBean.substanciaPsicoativaParaSalvarList}" layout="responsive" columns="4">
+                <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.substanciaPsicoativaList}" var="subsPsicoAtiva" itemValue="#{subsPsicoAtiva}" itemLabel="#{subsPsicoAtiva.descricao}"/>
+            </p:selectManyCheckbox>
+        </h:panelGroup>
+
+
+        <h:panelGroup styleClass="md-inputfield ui-grid-col-3" rendered="#{efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:calendar id="txtDataInicioDrogas" navigator="true" pattern="dd/MM/yyyy" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.dataInicioUsoDroga}"
+                        styleClass="input-auto" locale="pt" maxdate="today">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </p:calendar>
+            <p:outputLabel for="txtDataInicioDrogas" value="Quando iniciou?"/>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-inputfield" rendered="#{efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:inputTextarea id="txtDescricaoUsoDrogas" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.descricaoPrecipitacaoUsoDroga}" styleClass="input-auto"/>
+            <p:outputLabel for="txtDescricaoUsoDrogas" value="O que precipitou?"/>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-inputfield" rendered="#{efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:inputTextarea id="txtAlteracaoComporta" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.alteracaoComportamental}" styleClass="input-auto"/>
+            <p:outputLabel for="txtAlteracaoComporta" value="Sintomas físicos e alterações comportamentais (personalidade, capacidade cognitiva, apetite, peso, padrão de sono, irritabilidade, ansiedade, humor e funcionamento sexual)"/>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-inputfield" rendered="#{efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:inputTextarea id="txtImpactosSociais" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.impactoSocial}" styleClass="input-auto"/>
+            <p:outputLabel for="txtImpactosSociais" value="Impactos sociais na vida da pessoa presa (Se a droga criou conflitos na vida familiar, no trabalho e nas relações pessoais)"/>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:outputLabel for="radioFoiInternado" value="Já foi internado para tratamento relacionado ao uso de drogas?" styleClass="questao"/>
+            <p:selectOneRadio id="radioFoiInternado" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.pessoa.internacaoUsoDroga}" style="margin-top: 10px;">
+                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                <p:ajax event="change" process="@this pnlDependenciaQuimica" update="pnlDependenciaQuimica"/>
+            </p:selectOneRadio>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-inputfield" rendered="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.pessoa.internacaoUsoDroga
+                and efetivaAtendimentoPsicologicoBean.usaDroga}">
+            <p:inputText value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.localInternacao}" id="txtLocalInternacaoDrogas" styleClass="input-auto"/>
+            <p:outputLabel value="Local de internação" for="txtLocalInternacaoDrogas"/>
+        </h:panelGroup>
+
+        <h:panelGroup>
+            <p:outputLabel value="Quer participar do Projeto Nova Vida?" styleClass="questao" for="radioQuerParticiparNV"/>
+            <p:selectOneRadio id="radioQuerParticiparNV" style="margin-top: 10px;" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.projetoNovaVida}">
+                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+            </p:selectOneRadio>
+        </h:panelGroup>
+
+        <h:panelGroup>
+            <p:outputLabel value="A prisão atual tem relação com uso de drogas?" styleClass="questao" for="radioPrisaoRelacioUsoDrogas"/>
+            <p:selectOneRadio id="radioPrisaoRelacioUsoDrogas" style="margin-top: 10px;" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.prisaoUsoDroga}">
+                <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                <p:ajax event="change" process="@this pnlDependenciaQuimica" update="pnlDependenciaQuimica"/>
+            </p:selectOneRadio>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-inputfield" rendered="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.prisaoUsoDroga}">
+            <p:inputTextarea id="txtDescricaoPrisoPorDrogas" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.modoRelacaoDroga}" styleClass="input-auto"/>
+            <p:outputLabel value="De que modo?" for="txtDescricaoPrisoPorDrogas"/>
+        </h:panelGroup>
+    </p:panelGrid>
+</ui:composition>

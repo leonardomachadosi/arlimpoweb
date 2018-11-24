@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jstl/core">
+    <p:steps id="detNatCust" styleClass="stepTimeline" rendered="#{detentoNaturezaCustodiaList.size() > 0}"
+             activeIndex="#{detentoNaturezaCustodiaList.size() - 1}">
+        <c:forEach items="#{detentoNaturezaCustodiaList}" var="custodia" varStatus="loop">
+            <p:menuitem id="detNatCust_${custodia.id}" value="#{custodia.naturezaCustodia.descricao}"/>
+        </c:forEach>
+    </p:steps>
+    <p:repeat value="#{detentoNaturezaCustodiaList}" var="custodia"
+              rendered="#{detentoNaturezaCustodiaList.size() > 0}">
+        <p:tooltip for="detNatCust_#{custodia.id}" position="bottom">
+            De
+            <h:outputText value="#{custodia.dataInicial}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+            <h:outputText rendered="#{custodia.dataFinal != null}" value=" Até "/>
+            <h:outputText value="#{custodia.dataFinal}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:tooltip>
+    </p:repeat>
+</ui:composition>

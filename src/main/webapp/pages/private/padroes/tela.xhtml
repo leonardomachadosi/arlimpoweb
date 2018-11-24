@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:button id="btnVoltar" value="Voltar" icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton id="btnSalvar" value="Salvar" icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Tela Padrão</h1>
+                        <p:commandButton icon="ui-icon-remove-red-eye" title="Visualizar modal" type="button" onclick="PF('dlgPadrao').show();" immediate="true"/>
+                    </div>
+                </div>
+            </div>
+
+            <p:dialog id="dlgAddModal" widgetVar="dlgPadrao" modal="true" closable="true" header="Modal Padrão" width="700">
+
+                <p:panelGrid id="pnlAddModal" layout="grid" columns="3" columnClasses="ui-grid-col-4" styleClass="ui-panelgrid-blank form-group" style="margin-top: 20px;">
+                    <h:panelGroup styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="som1" value="#{padraoBean.select1}" styleClass="input-auto" required="true" requiredMessage="O campo Select one menu é obrigatório">
+                            <f:selectItem noSelectionOption="true" />
+                            <f:selectItem itemLabel="Opção 1" itemValue="1"/>
+                            <f:selectItem itemLabel="Opção 2" itemValue="2"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="som1" value="Select one menu"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="it1" value="#{padraoBean.inputText1}" styleClass="input-auto"/>
+                        <p:outputLabel for="it1" value="Input text 1"/>
+                    </h:panelGroup>
+
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="it2" value="#{padraoBean.inputText2}" styleClass="input-auto" required="true" requiredMessage="O campo Input text 2 é obrigatório"/>
+                        <p:outputLabel for="it2" value="Input text 2"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+
+                <p:toolbar style="margin-top: 20px; margin-left: 10px; margin-right: 10px;">
+                    <f:facet name="right">
+                        <p:commandButton value="Salvar" actionListener="#{padraoBean.onclickSalvarModal}" icon="ui-icon-check"
+                                         oncomplete="handleAddModalRequest(args)" update="pnlAddModal"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+        </h:form>
+
+        <script type="text/javascript">
+            function handleAddModalRequest(args) {
+                if(args.ehValido) PF('dlgPadrao').hide();
+            }
+        </script>
+    </ui:define>
+
+</ui:composition>

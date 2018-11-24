@@ -1,0 +1,84 @@
+<ui:composition xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:dialog widgetVar="modalDetalheEscolta" header="Detalhes da escolta" modal="true" closable="true" width="900">
+        <p:dataTable id="tblEscoltaView" value="#{escoltaBean.detentoEscoltaList}" var="detentoEscolta" reflow="true"
+                     emptyMessage="Nenhuma escolta adicionada">
+            <f:facet name="header">Detalhes da escolta</f:facet>
+            <p:column>
+                <p:rowToggler/>
+            </p:column>
+            <p:column headerText="Código" style="text-align: center;">
+                <h:outputText value="#{detentoEscolta.escolta.numeroFormatado}"/>
+            </p:column>
+            <p:column headerText="Data Início" style="text-align: center;">
+                <h:outputText value="#{detentoEscolta.dataInicio}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Data Fim" style="text-align: center;">
+                <h:outputText value="#{detentoEscolta.dataFim}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column headerText="Situação" style="text-align: center;">
+                <h:outputText value="#{detentoEscolta.escolta.ultimoHistorico.situacaoEscolta.descricao}"/>
+            </p:column>
+            <p:column headerText="Ações" style="text-align: center;">
+                <p:commandButton icon="ui-icon-check" immediate="true" update="tblEscoltaView"
+                                 action="#{escoltaBean.onClickConcluirEscolta(detentoEscolta.escolta)}"
+                                 disabled="#{detentoEscolta.escolta.ultimoHistorico.situacaoEscolta.id != 3}"
+                                 title="Concluir Escolta">
+                    <p:confirm header="Confirmação" message="Deseja realmente concluir a escolta?"
+                               icon="ui-icon-alert"/>
+                </p:commandButton>
+            </p:column>
+            <p:columnGroup rendered="#{detentoEscolta.escolta.ultimoHistorico.situacaoEscolta.id == 3}">
+
+            </p:columnGroup>
+
+            <p:rowExpansion styleClass="table-no-padding">
+                <p:dataTable id="tblServidores" value="#{detentoEscolta.escolta.escoltaServidores}"
+                             var="servidorEscolta">
+                    <f:facet name="header">Servidores</f:facet>
+                    <p:column>
+                        <h:outputText value="#{escoltaBean.getServidorById(servidorEscolta.servidorId).pessoa.nome}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputText
+                                value="#{escoltaBean.getServidorById(servidorEscolta.servidorId).cargo.descricao}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:dataTable value="#{detentoEscolta.escolta.escoltaEquipamentos}" var="escoltaEquipamento">
+                    <f:facet name="header">Equipamentos</f:facet>
+                    <p:column headerText="Descricao">
+                        <h:outputText value="#{escoltaEquipamento.equipamento.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Quantidade">
+                        <h:outputText value="#{escoltaEquipamento.quantidade}"/>
+                    </p:column>
+                    <p:column headerText="Tipo">
+                        <h:outputText value="#{escoltaEquipamento.equipamento.tipoEquipamento.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Letal?">
+                        <h:outputText value="#{escoltaEquipamento.equipamento.letal == true ? 'Sim' : 'Não'}"/>
+                    </p:column>
+                </p:dataTable>
+                <p:panelGrid id="pgMotivoReprovacao" columns="1"
+                             columnClasses="label, value"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             rendered="#{detentoEscolta.escolta.ultimoHistorico.observacao != null}"
+                             style="border:0px none; background-color:transparent; width: 100%">
+                    <p:column>
+                        <h:outputLabel style="font-weight: bold;" value="Observação: "/>
+                        <h:outputText
+                                value="#{detentoEscolta.escolta.ultimoHistorico.observacao}"/>
+                    </p:column>
+                </p:panelGrid>
+            </p:rowExpansion>
+        </p:dataTable>
+    </p:dialog>
+
+</ui:composition>

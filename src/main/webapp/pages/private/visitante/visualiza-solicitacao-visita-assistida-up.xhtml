@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style>
+            .ui-steps .ui-steps-item {
+                font-size: 13px;
+            }
+
+            ul[role=tablist] {
+                display: flex;
+                justify-content: space-between;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             ajax="false"
+                                             action="/pages/private/visitante/acompanhamento-solicitacao-visita-assistida-up.xhtml?faces-redirect=true"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <!--<f:facet name="right">-->
+                            <!--<p:commandButton-->
+                                    <!--styleClass="btnEmiteRequerimento"-->
+                                    <!--value="Emitir Requerimento"-->
+                                    <!--ajax="false"-->
+                                    <!--onclick="this.form.target='_blank'"-->
+                                    <!--action="#{visualizaSolicitacaoVisitaAssistidaUPBean.emitirRequerimento()}"-->
+                                    <!--rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id == 3}"-->
+                                    <!--icon="ui-icon-file-download"/>-->
+                        <!--</f:facet>-->
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Visualizar Solicitação de Visita Assistida</b></h1>
+                        <p:outputLabel value="Dados da Solicitação" styleClass="customLabel"/>
+                        <ui:include src="fragments/dados-solicitacao-visita-assistida-panelgrid.xhtml">
+                            <ui:param name="statusAtual"
+                                      value="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual}"/>
+                            <ui:param name="solicitacaoVisitaAssistida"
+                                      value="#{visualizaSolicitacaoVisitaAssistidaUPBean.solicitacaoVisitaAssistida}"/>
+                        </ui:include>
+
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+
+                        </p:panelGrid>
+                        <p:outputLabel value="Status da Solicitação" styleClass="customLabel"/>
+                        <p:steps styleClass="stepTimeline"
+                                 activeIndex="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id - 1}">
+                            <p:menuitem id="menu_1" value="PENDENTE"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaUPBean.stepClass(1)}"/>
+                            <p:menuitem id="menu_2" value="ENCAMINHADO PARA UNIDADE PRISIONAL"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaUPBean.stepClass(2)}"/>
+                            <p:menuitem id="menu_3" value="APROVADO"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaUPBean.stepClass(3)}"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.exibeAprovadoReprovado(3)}"/>
+                            <p:menuitem id="menu_4" value="REPROVADO"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaUPBean.stepClass(4)}"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.exibeAprovadoReprovado(4)}"/>
+                            <p:menuitem id="menu_AR" value="APROVADO/REPROVADO"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id lt 3}"/>
+                            <p:menuitem id="menu_5" value="FINALIZADO"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaUPBean.stepClass(5)}"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id != 4}"/>
+                        </p:steps>
+                        <p:repeat value="#{visualizaSolicitacaoVisitaAssistidaUPBean.historico}" var="historico">
+                            <p:tooltip for="form:menu_#{historico.situacaoSolicitacaoVisitaAssistida.id}"
+                                       position="bottom">
+                                De
+                                <h:outputText value="#{historico.dataInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <h:outputText rendered="#{historico.dataFim != null}" value=" Até "/>
+                                <h:outputText value="#{historico.dataFim}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:tooltip>
+                        </p:repeat>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.exibeToolbar()}">
+                        <f:facet name="left">
+                            <p:commandButton rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id == 2}"
+                                             icon="ui-icon-check" value="Aprovar"
+                                             onclick="PF('dlgAprovaSolicitacao').show();"
+                                             process="@form"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton value="Reprovar"
+                                             onclick="PF('dlgReprovaSolicitacao').show();"
+                                             rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id == 2}"
+                                             process="@form"
+                                             icon="ui-icon-close"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton value="Finalizar"
+                                             action="#{visualizaSolicitacaoVisitaAssistidaUPBean.finalizar()}"
+                                             rendered="#{visualizaSolicitacaoVisitaAssistidaUPBean.exibeFinaliza()}"
+                                             process="@form" update="@form"
+                                             icon="ui-icon-cancel"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:outputPanel styleClass="cars-datalist">
+                            <ui:include src="fragments/detentoView-panel.xhtml">
+                                <ui:param name="detentoView"
+                                          value="#{visualizaSolicitacaoVisitaAssistidaUPBean.detentoView}"/>
+                            </ui:include>
+                            <p:spacer/>
+                            <ui:include src="fragments/visitanteView-panel.xhtml">
+                                <ui:param name="visitanteView"
+                                          value="#{visualizaSolicitacaoVisitaAssistidaUPBean.visitanteView}"/>
+                            </ui:include>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </div>
+
+            <p:dialog header="Deseja reprovar esta solicitação?" widgetVar="dlgReprovaSolicitacao"
+                      id="dlgReprovaSolicitacao" style="width: 25em; height: 20em;"
+                      modal="true" responsive="true">
+                <br/>
+
+                <h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">
+                    <p:inputTextarea id="modalItObservacao"
+                                     value="#{visualizaSolicitacaoVisitaAssistidaUPBean.solicitacaoVisitaAssistida.observacao}"
+                                     disabled="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id != 2}"
+                                     rows="1"
+                                     cols="80"
+                                     style="width: 90%"/>
+                    <p:outputLabel for="modalItObservacao" value="Informe o motivo"/>
+                </h:panelGroup>
+
+                <p:commandButton value="Não"
+                                 style="margin-top: 2em;"
+                                 oncomplete="PF('dlgReprovaSolicitacao').hide();"/>
+
+                <p:commandButton value="Sim"
+                                 style="margin-top: 2em; margin-right: 0.5em;"
+                                 update="@form"
+                                 actionListener="#{visualizaSolicitacaoVisitaAssistidaUPBean.reprovar()}"
+                                 oncomplete="PF('dlgReprovaSolicitacao').hide();"/>
+
+            </p:dialog>
+
+            <p:dialog header="Deseja aprovar esta solicitação?" widgetVar="dlgAprovaSolicitacao"
+                      style="width: 25em; height: 20em;"
+                      modal="true" responsive="true">
+                <br/>
+                <h:panelGroup styleClass="md-inputfield" style="margin-top: 1em;">
+                    <p:calendar id="cdDataPrevista"
+                                value="#{visualizaSolicitacaoVisitaAssistidaUPBean.solicitacaoVisitaAssistida.dataPrevista}"
+                                disabled="#{visualizaSolicitacaoVisitaAssistidaUPBean.statusAtual.id != 2}"
+                                pattern="dd/MM/yyyy HH:mm"
+                                locale='pt'
+                                mask="99/99/9999 99:99"
+                                mindate="#{now}"
+                                style="width: 100%"/>
+                    <p:outputLabel for="cdDataPrevista" value="Data Prevista"/>
+                </h:panelGroup>
+
+                <p:commandButton value="Não"
+                                 style="margin-top: 2em;"
+                                 oncomplete="PF('dlgAprovaSolicitacao').hide();"/>
+
+                <p:commandButton value="Sim"
+                                 style="margin-top: 2em; margin-right: 0.5em;"
+                                 update="@form"
+                                 actionListener="#{visualizaSolicitacaoVisitaAssistidaUPBean.aprovar()}"
+                                 oncomplete="PF('dlgAprovaSolicitacao').hide();"/>
+            </p:dialog>
+
+            <p:confirmDialog global="true">
+                <p:commandButton type="button" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton type="button" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

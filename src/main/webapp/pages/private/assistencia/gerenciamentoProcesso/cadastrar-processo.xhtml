@@ -1,0 +1,132 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{cadastroProcessoBean.voltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:tabView id="tab">
+                        <p:tab title="Dados">
+                            <ui:include src="fragments/dados-detento.xhtml">
+                                <ui:param name="detentoView" value="#{cadastroProcessoBean.detentoView}"/>
+                            </ui:include>
+
+                            <ui:include src="fragments/processo-originario.xhtml">
+                                <ui:param name="bean" value="#{cadastroProcessoBean}"/>
+                                <ui:param name="processo" value="#{cadastroProcessoBean.processo}"/>
+                                <ui:param name="processoNaturezaCustodia"
+                                          value="#{cadastroProcessoBean.processoNaturezaCustodia}"/>
+                                <ui:param name="situacaoProcesso" value="#{cadastroProcessoBean.situacaoProcesso}"/>
+                                <ui:param name="statusProcesso" value="#{cadastroProcessoBean.statusProcesso}"/>
+                                <ui:param name="processoTipoPrisao" value="#{cadastroProcessoBean.processoTipoPrisao}"/>
+
+                                <ui:param name="comarcaList" value="#{cadastroProcessoBean.comarcaList}"/>
+                                <ui:param name="varaList" value="#{cadastroProcessoBean.varaList}"/>
+                                <ui:param name="assuntoList" value="#{cadastroProcessoBean.assuntoList}"/>
+                                <ui:param name="classeList" value="#{cadastroProcessoBean.classeList}"/>
+                                <ui:param name="subsecaoList" value="#{cadastroProcessoBean.subsecaoList}"/>
+                            </ui:include>
+
+                            <ui:include src="fragments/inquerito-panelgrid.xhtml">
+                                <ui:param name="inquerito" value="#{cadastroProcessoBean.inquerito}"/>
+                            </ui:include>
+                        </p:tab>
+
+                        <p:tab title="Incidência Penal">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h3>Descrição da Incidência Penal</h3>
+                                    <br/>
+                                    <ui:include src="fragments/processo-artigo-panelgrid.xhtml">
+                                        <ui:param name="processoArtigoList"
+                                                  value="#{cadastroProcessoBean.processoArtigoList}"/>
+                                        <ui:param name="bean" value="#{cadastroProcessoBean}"/>
+                                        <ui:param name="processo" value="#{cadastroProcessoBean.processo}"/>
+                                    </ui:include>
+                                    <p:panelGrid columns="1"
+                                                 columnClasses="ui-grid-col-12"
+                                                 layout="grid"
+                                                 styleClass="ui-panelgrid-blank form-group"
+                                                 style="border:0 none; background-color:transparent;">
+                                        <h:panelGroup style="float: right">
+                                            <p:commandButton id="btnAdicionarIncidenciaPenal"
+                                                             oncomplete="PF('addIncidenciaPenal').show();"
+                                                             update="form-dialog-incidenciaPenal-processo"
+                                                             process="@this"
+                                                             icon="ui-icon-plus"/>
+                                        </h:panelGroup>
+                                    </p:panelGrid>
+                                </div>
+                            </div>
+                        </p:tab>
+
+                        <p:tab title="Guia">
+                            <div class="ui-g">
+                                <div class="ui-g-12">
+                                    <h3>Descrição da Guia</h3>
+                                    <br/>
+                                    <ui:include src="fragments/guia-form.xhtml">
+                                        <ui:param name="guia" value="#{cadastroProcessoBean.guia}"/>
+                                        <ui:param name="bean" value="#{cadastroProcessoBean}"/>
+                                    </ui:include>
+                                </div>
+                            </div>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarProcesso" value="Salvar"
+                                             update="@form"
+                                             action="#{cadastroProcessoBean.salvar()}"
+                                             icon="ui-icon-check"/>
+                            <p:defaultCommand target="btnSalvarProcesso"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+        </h:form>
+
+        <ui:insert name="form">
+            <ui:include src="modals/modal-incidenciaPenal-processo.xhtml">
+                <ui:param name="processoArtigoList"
+                          value="#{cadastroProcessoBean.processoArtigoList}"/>
+            </ui:include>
+        </ui:insert>
+    </ui:define>
+
+</ui:composition>

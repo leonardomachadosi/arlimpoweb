@@ -1,0 +1,342 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:tabView id="tabDadosPrisionais">
+        <p:tab title="Dados da Prisão">
+            <p:spacer/>
+            <p:panelGrid columns="3"
+                         id="pgEstadoMunicipioOriundo"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soEstadoPrisao"
+                                     value="#{cadastroDetentoBean.estadoPrisao}"
+                                     filter="true"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.estados}"
+                                       var="estado"
+                                       itemLabel="#{estado.descricao}"/>
+                        <p:ajax process="@this" update="soCidadePrisao"
+                                listener="#{cadastroDetentoBean.carregarMunicipiosPrisao()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soEstadoPrisao" value="Estado da Prisão"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soCidadePrisao"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.detento.municipio}"
+                                     filter="true"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{cadastroDetentoBean.municipios}"
+                                       var="municipio"
+                                       itemLabel="#{municipio.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soCidadePrisao" value="Cidade da Prisão"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soOriundo"
+                                     filter="true"
+                                     filterMatchMode="contains"
+                                     value="#{cadastroDetentoBean.detento.delegaciaOrigem}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.delegaciaOrigems}"
+                                       var="delegaciaOrigem"
+                                       itemLabel="#{delegaciaOrigem.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soOriundo" value="Oriundo"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="3"
+                         id="pgTipoDataPrisaoCiclo"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soTipoPrisao"
+                                     value="#{cadastroDetentoBean.detentoTipoPrisao.tipoPrisao}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.tipoPrisaos}"
+                                       var="tipoPrisao"
+                                       itemLabel="#{tipoPrisao.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soTipoPrisao" value="Tipo Prisão"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar id="cdDataPrisao"
+                                value="#{cadastroDetentoBean.detento.dataPrisao}"
+                                pattern="dd/MM/yyyy"
+                                mask="99/99/9999"
+                                locale='pt'
+                                maxdate="#{cadastroDetentoBean.today()}"
+                                style="width: 100%"/>
+                    <p:outputLabel for="cdDataPrisao" value="Data da Prisão"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar id="cdInicioCiclo"
+                                value="#{cadastroDetentoBean.detento.dataInicioCiclo}"
+                                pattern="dd/MM/yyyy"
+                                mask="99/99/9999"
+                                maxdate="#{cadastroDetentoBean.today()}"
+                                locale="pt"
+                                style="width: 100%"/>
+                    <p:outputLabel for="cdInicioCiclo" value="Início do Ciclo"/>
+                </h:panelGroup>
+
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgSistemaOrigem"
+                         columnClasses="ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soEsferaOrigem"
+                                     value="#{cadastroDetentoBean.detento.esferaOrigem}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.esferaOrigems}"
+                                       var="esferaOrigem"
+                                       itemLabel="#{esferaOrigem.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soEsferaOrigem" value="Esfera de Origem"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgObervacao"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputTextarea
+                            id="itaObservacao"
+                            value="#{cadastroDetentoBean.detento.observacao}"
+                            rows="3"
+                            style="width: 100%"/>
+                    <p:outputLabel for="itaObservacao" value="Observação"/>
+                </h:panelGroup>
+            </p:panelGrid>
+        </p:tab>
+        <p:tab title="Documentação">
+            <p:spacer/>
+            <p:panelGrid
+                    id="pgArquivoDetento"
+                    columns="2"
+                    columnClasses="ui-grid-col-5, ui-grid-col-7"
+                    layout="grid"
+                    styleClass="ui-panelgrid-blank form-group"
+                    style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soTipoArquivo"
+                                     value="#{cadastroDetentoBean.arquivo.tipoArquivo}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems var="tipoArquivo"
+                                       value="#{cadastroDetentoBean.tipoArquivos}"
+                                       itemLabel="#{tipoArquivo.descricao}"/>
+                        <p:ajax process="@this" event="itemSelect"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soTipoArquivo" value="Tipo do Documento"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itDescricaoArquivo"
+                                 value="#{cadastroDetentoBean.arquivo.descricao}"
+                                 style="width: 100%;">
+                        <p:ajax process="@this" event="blur"/>
+                    </p:inputText>
+                    <p:outputLabel for="itDescricaoArquivo" value="Descrição Documento"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <p:fileUpload
+                        cancelLabel="Cancelar"
+                        fileUploadListener="#{cadastroDetentoBean.uploadDocumentoDetento}"
+                        uploadLabel="Anexar"
+                        label="Escolher"
+                        mode="advanced"
+                        update="pgDocumentosDetento pgArquivoDetento"
+                        dragDropSupport="false"
+                        invalidFileMessage="Tipo de arquivo inválido."
+                        invalidSizeMessage="O Arquivo selecionado é muito grande."
+                        sizeLimit="#{utilBean.sizeFile}"
+                        multiple="false" allowTypes="/(\.|\/)(pdf)$/" style="width:100%"/>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         id="pgDocumentosDetento"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+
+                <h:panelGroup id="pdDoc" rendered="#{!cadastroDetentoBean.arquivosDetento.isEmpty()}">
+                    <h2>Documentos</h2>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:dataTable id="dtDocumentosDetento"
+                                 var="arquivo"
+                                 reflow="true"
+                                 rendered="#{!cadastroDetentoBean.arquivosDetento.isEmpty()}"
+                                 value="#{cadastroDetentoBean.arquivosDetento}"
+                                 rows="5"
+                                 emptyMessage=""
+                                 style="width: 100%">
+                        <f:facet name="header">Documentos</f:facet>
+                        <p:column headerText="Descrição" style="text-align: center;">
+                            <h:outputText value="#{arquivo.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Tipo do Documento" style="text-align: center;">
+                            <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Opção" style="width: 78px; text-align: center;">
+                            <p:commandButton title="Visualizar"
+                                             icon="ui-icon-file-download" process="@this"
+                                             update="dtDocumentosDetento pdDoc"
+                                             action="#{cadastroDetentoBean.mostrarPdf()}"
+                                             onclick="this.form.target='_blank'" ajax="false">
+                                <f:setPropertyActionListener value="#{arquivo}"
+                                                             target="#{cadastroDetentoBean.arquivo}"/>
+                            </p:commandButton>
+                            <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                             action="#{cadastroDetentoBean.removerDocumentoDetento()}"
+                                             update="form:tabDadosPrisionais:pgDocumentosDetento form:tabDadosPrisionais:pdDoc">
+                                <f:setPropertyActionListener value="#{arquivo}"
+                                                             target="#{cadastroDetentoBean.arquivo}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </p:panelGrid>
+        </p:tab>
+        <p:tab title="Incidência Penal">
+            <h:panelGroup id="pgProcessoArtigo">
+                <p:panelGrid columns="1"
+                             id="pgDtProcessoArtigo"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup>
+                        <p:dataTable id="dtProcessoArtigos" var="processoArtigo"
+                                     value="#{cadastroDetentoBean.processoArtigos}"
+                                     reflow="true"
+                                     rowKey="#{processoArtigo.id}"
+                                     paginator="false" rows="5"
+                                     emptyMessage="Nenhum registro encontrado"
+                                     style="text-align: center">
+                            <f:facet name="header">
+                                Incidência Penal
+                            </f:facet>
+                            <p:column style="width: 5px;">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:column headerText="Lei Origem"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value="#{cadastroDetentoBean.onStartLoadLeiOrigemLabel(processoArtigo)}"/>
+                            </p:column>
+                            <p:column headerText="Artigo"
+                                      style="width:100px;text-align: center">
+                                <h:outputText
+                                        value=" Art. #{cadastroDetentoBean.onStartLoadArtigoLabel(processoArtigo)}"/>
+                            </p:column>
+                            <p:column style="width: 5px">
+                                <p:commandButton
+                                        icon="ui-icon-trash"
+                                        style="border-bottom: 10px"
+                                        styleClass="red-btn"
+                                        title="Remover Incidência Penal"
+                                        process="@this"
+                                        update="form:tabDadosPrisionais:dtProcessoArtigos"
+                                        actionListener="#{cadastroDetentoBean.onClickRemoverIncidenciaPenal(processoArtigo)}">
+                                    <f:actionListener
+                                            binding="#{cadastroDetentoBean.carregarProcessoArtigos()}"/>
+                                </p:commandButton>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:dataTable var="leiParagrafo" emptyMessage="Sem Parágrafos."
+                                             value="#{processoArtigo.leiParagrafoList}">
+                                    <p:column headerText="Parágrafo(s)"
+                                              style="text-align: left;">
+                                        <h:outputText
+                                                value="#{leiParagrafo.numeroFormatado} #{leiParagrafo.descricao}"/>
+                                    </p:column>
+                                    <p:column style="width: 30px">
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                styleClass="red-btn"
+                                                title="Remover Parágrafo"
+                                                process="@this"
+                                                update="form:tabDadosPrisionais:dtProcessoArtigos"
+                                                action="#{cadastroDetentoBean.carregarProcessoArtigos}">
+                                            <f:actionListener
+                                                    binding="#{cadastroDetentoBean.onClickRemoverProcessoArtigoByParagrafo(leiParagrafo, processoArtigo)}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                                <p:dataTable var="inciso"
+                                             value="#{processoArtigo.leiIncisoList}"
+                                             emptyMessage="Sem Incisos.">
+                                    <p:column headerText="Inciso(s)" style="text-align: left;">
+                                        <h:outputText
+                                                value="#{inciso.leiParagrafo.numeroFormatado} #{inciso.numeroFormatado} #{inciso.descricao}"/>
+                                    </p:column>
+                                    <p:column style="width: 30px">
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                styleClass="red-btn"
+                                                title="Remover Inciso"
+                                                process="@this"
+                                                update="form:tabDadosPrisionais:pgProcessoArtigo"
+                                                action="#{cadastroDetentoBean.carregarProcessoArtigos}">
+                                            <f:actionListener
+                                                    binding="#{cadastroDetentoBean.onClickRemoverProcessoArtigoByInciso(inciso, processoArtigo)}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup style="float: right">
+                        <p:commandButton id="btnAdicionarIncidenciaPenal"
+                                         oncomplete="PF('addIncidenciaPenal').show();"
+                                         update="form-dialog-incidenciaPenal-processo"
+                                         action="#{cadastroDetentoBean.refreshIncidenciaPenal()}"
+                                         process="@this"
+                                         icon="ui-icon-plus"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+        </p:tab>
+    </p:tabView>
+</ui:composition>

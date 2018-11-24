@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-pessoa-acolhimentoSocial">
+        <p:dialog header="Adicionar Pessoa" id="dialogPessoaAcolhimentoSocial" widgetVar="addPessoa" modal="true"
+                  width="900" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgPessoa"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="itNomePesquisa" value="Nome"/>
+                    <p:inputText id="itNomePesquisa"
+                                 value="#{efetivaAcolhimentoSocialBean.pessoaPesquisa.nome}"
+                                 style="width: 100%;"/>
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton value="Buscar"
+                                     id="btnbuscar"
+                                     icon="ui-icon-search"
+                                     action="#{efetivaAcolhimentoSocialBean.buscarPessoasByNome()}"
+                                     update="dtPessoas tbBtn"
+                                     process="@form"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                    <p:commandButton
+                            value="Inserir Novo"
+                            id="btnInserir"
+                            update="form:tab:pgMae form:tab:pgPai form:tab:pgEstadoCivilConjuge"
+                            oncomplete="PF('addPessoa').hide();"
+                            actionListener="#{efetivaAcolhimentoSocialBean.adicionarPessoa()}"
+                            rendered="#{efetivaAcolhimentoSocialBean.renderizaInsercao}"
+                            icon="ui-icon-done"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+
+                </f:facet>
+            </p:toolbar>
+            <p:spacer/>
+            <p:dataTable
+                    id="dtPessoas" paginator="true" rows="10"
+                    paginatorPosition="bottom"
+                    value="#{efetivaAcolhimentoSocialBean.pessoas}"
+                    var="pessoa"
+                    emptyMessage="Nenhum registro encontrado">
+                <f:facet name="header">
+                    Pessoas
+                </f:facet>
+                <p:column>
+                    <h:outputText value="#{pessoa.nome}"/>
+                </p:column>
+                <p:column style="width: 30px;">
+                    <p:commandButton title="Adicionar Pessoa"
+                                     icon="ui-icon-check"
+                                     update="form:tab:pgMae form:tab:pgPai form:tab:pgEstadoCivilConjuge"
+                                     oncomplete="PF('addPessoa').hide();"
+                                     action="#{efetivaAcolhimentoSocialBean.adicionarPessoa()}"
+                                     process="@this">
+                        <f:setPropertyActionListener value="#{pessoa}"
+                                                     target="#{efetivaAcolhimentoSocialBean.pessoaPesquisa}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </h:form>
+</ui:composition>

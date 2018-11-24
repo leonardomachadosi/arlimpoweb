@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-pessoa">
+        <p:dialog header="Adicionar Pessoa" id="dialogPessoa" widgetVar="addPessoa" modal="true"
+                  style="max-width: 65%;max-height: 85%;"
+                  responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgPessoa"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0 none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="itNomePesquisa" value="Nome"/>
+                    <p:inputText id="itNomePesquisa"
+                                 value="#{cadastroVisitanteBean.pessoaPesquisa.nome}"
+                                 style="width: 100%;"/>
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton value="Buscar"
+                                     id="btnbuscar"
+                                     icon="ui-icon-search"
+                                     action="#{cadastroVisitanteBean.buscarPessoasByNome()}"
+                                     update="dtPessoas tbBtn"
+                                     process="@form"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                    <p:commandButton
+                            value="Inserir Novo"
+                            id="btnInserir"
+                            update="form:tabDadosPessoais:pgMae form:tabDadosPessoais:pgPai"
+                            oncomplete="PF('addPessoa').hide();"
+                            actionListener="#{cadastroVisitanteBean.adicionarPessoa()}"
+
+                            icon="ui-icon-done"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+
+                </f:facet>
+            </p:toolbar>
+            <p:spacer/>
+            <p:dataTable
+                    id="dtPessoas" paginator="true" rows="3"
+                    liveScroll="true"
+                    paginatorPosition="bottom"
+                    value="#{cadastroVisitanteBean.pessoas}"
+                    var="pessoa"
+                    emptyMessage="Nenhum registro encontrado">
+                <f:facet name="header">
+                    Pessoas
+                </f:facet>
+                <p:column headerText="Foto" width="15%" style="text-align: center;">
+                    <h:graphicImage style="max-height:3em;"
+                                    value="#{fotoBean.getFotoFrontalPath(pessoa.id)}"/>
+                </p:column>
+                <p:column>
+                    <h:outputText value="#{pessoa.nome}"/>
+                </p:column>
+                <p:column style="width: 30px;">
+                    <p:commandButton title="Adicionar Pessoa"
+                                     icon="ui-icon-check"
+                                     update="form:tabDadosPessoais:pgMae form:tabDadosPessoais:pgPai"
+                                     oncomplete="PF('addPessoa').hide();"
+                                     action="#{cadastroVisitanteBean.adicionarPessoa()}"
+                                     process="@this"
+                    >
+                        <f:setPropertyActionListener value="#{pessoa}"
+                                                     target="#{cadastroVisitanteBean.pessoaPesquisa}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </h:form>
+</ui:composition>

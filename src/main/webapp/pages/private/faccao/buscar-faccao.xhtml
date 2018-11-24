@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Grupo Criminoso</b></h1>
+                        <p:panelGrid id="pgFaccaoEstado" columns="2"
+                                     columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itFaccao"
+                                             value="#{buscaFaccaoBean.faccao.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itFaccao" value="Facção"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soEstado"
+                                                 value="#{buscaFaccaoBean.faccao.estado}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o estado" itemValue=""/>
+                                    <f:selectItems var="estado"
+                                                   itemLabel="#{estado.descricao.toUpperCase()}"
+                                                   value="#{buscaFaccaoBean.estados}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estado"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+
+                            <p:commandButton id="btnCadastrarFaccao"
+                                             value="Cadastar"
+                                             process="@this"
+                                             update="@form"
+                                             action="#{buscaFaccaoBean.onClickCadastrar()}"
+                                             icon="ui-icon-plus"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton id="btnBuscarFaccao" value="Buscar"
+                                             process="@form" update="@form"
+                                             action="#{buscaFaccaoBean.buscarFaccoes()}"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Grupos Criminosos</b></h1>
+                        <p:dataTable
+                                id="dtFaccoes"
+                                var="faccao"
+                                value="#{buscaFaccaoBean.faccaos}"
+                                reflow="true"
+                                rowKey="#{faccao.id}"
+                                paginator="true"
+                                rows="10"
+                                emptyMessage="Nenhum registro encontrado">
+                            <p:column headerText="Nome" style="text-align: center">
+                                <h:outputText value="#{faccao.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Estado" style="width:180px;text-align: center">
+                                <h:outputText value="#{faccao.estado.descricao.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:70px;text-align: center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaFaccaoBean.onClickVisualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{faccao}"
+                                                                 target="#{buscaFaccaoBean.faccao}" />
+                                </p:commandButton>
+                                <p:commandButton title="Editar"
+                                                 process="@this"
+                                                 update="@form"
+                                                 action="#{buscaFaccaoBean.onClickEditar()}"
+                                                 icon="ui-icon-edit">
+                                    <f:setPropertyActionListener value="#{faccao}"
+                                                                 target="#{buscaFaccaoBean.faccao}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

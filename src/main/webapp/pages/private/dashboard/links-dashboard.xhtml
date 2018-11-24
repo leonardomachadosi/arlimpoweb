@@ -1,0 +1,307 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="ui-g dashboard">
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaDetento')}"
+                       rendered="#{p:ifAnyGranted
+            ('SI_GESTOR, SI_SAF, SI_AGENTE_ADMIN, SI_DIRETOR_ADMIN, SI_DIRETOR_SEGURANCA, SI_DIRETOR_GERAL, SI_SUP_PEDAGOGIA, SI_ENFERMAGEM, SI_ESP_JURIDICO, SI_SUP_JURIDICO, SI_PSICOLOGO, SI_PSICOLOGO, SI_SUP_OCUPACIONAL, SI_SUP_OCUPACIONAL')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-1">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">search</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Buscar Preso</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('identificacaoPessoa')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_SAF, SI_AGENTE_ADMIN')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-2">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">portrait</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Buscar Pessoa</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('transferenciaAdmissao')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_AGENTE_ADMIN')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-2">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">transfer_within_a_station</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Admissão de Trasnferência</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaVisitante')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_SAF')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-1">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">search</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Buscar Visitante</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('solicitacaoTransferenciaAdministrativa')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-3">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">transfer_within_a_station</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Solicitação de Transferência</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaAcolhimentoEnfermagem')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-3">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">local_hospital</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Acolhimento Enfermagem</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaMovimentacaoDetento')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">directions_walk</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Movimentação de Preso</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaGerenciamentoProcesso')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_ESP_JURIDICO, SI_SUP_JURIDICO')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">gavel</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Jurídico</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('agendaAtendimento')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-3">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">move_to_inbox</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Acolhimento Administrativo</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaAcolhimentoSeguranca')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-3">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">security</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Acolhimento Segurança</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaAtendimentoSeguranca')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">security</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Atendimento Segurança</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaAcolhimentoPsicologico')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_PSICOLOGO')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-3">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">security</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Acolhimento Psicologia</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3" action="#{dashboardBean.goTo('buscaAtendimentoPsicologico')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_PSICOLOGO')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">security</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Atendimento Psicologia</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaAtendimentoPedagogico')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">local_hospital</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Atendimento Pedagogia</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaAtendimentoEnfermagem')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">local_hospital</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Atendimento Enfermagem</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaAcolhimentoSocial')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_ASSISTENTE_SOCIAL')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-3">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">local_hospital</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Acolhimento Social</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaAtendimentoSocial')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_ASSISTENTE_SOCIAL')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">local_hospital</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Atendimento Social</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaAtendimentoTerapiaOcupacional')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_SUP_OCUPACIONAL')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">local_hospital</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Atendimento Terapia Ocupacional</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('vinculoVisitante')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_SAF')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">group_add</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Vincular Visitante</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('vinculoVisitante')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_SAF')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">list_alt</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Gerenciar Solicitação de Visita</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaSolicitacaoTransferenciaSupervisao')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_SGV')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">transfer_within_a_station</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Solicitação de Transferência - SGV</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+
+        <p:commandLink styleClass="ui-g-12 ui-md-6 ui-lg-3"
+                       action="#{dashboardBean.goTo('buscaSolicitacaoTransferenciaNEC')}"
+                       rendered="#{p:ifAnyGranted('SI_GESTOR, SI_NEC')}">
+            <p:outputPanel styleClass="ui-g card colorbox colorbox-4">
+                <p:outputPanel styleClass="ui-g-4">
+                    <i class="material-icons">transfer_within_a_station</i>
+                </p:outputPanel>
+                <p:outputPanel styleClass="ui-g-8">
+                    <span class="colorbox-name">Solicitação de Transferência - NEC</span>
+                </p:outputPanel>
+
+            </p:outputPanel>
+        </p:commandLink>
+    </div>
+</ui:composition>

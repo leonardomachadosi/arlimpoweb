@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:panelGrid columns="2" style="max-width: 27em;"
+                 styleClass="customImgFrontalHeader"
+                 columnClasses="ui-grid-col-3,ui-grid-col-8, ui-grid-col-1 customButtonAlign" layout="grid"
+                 rendered="#{visitanteView != null and visitanteView.codPessoa != null}">
+
+        <f:facet name="header">
+            <p:commandButton title="Visualizar" process="@this" style="float: right;"
+                             action="#{utilBean.visualizaVisitante(visitanteView)}"
+                             ajax="false" onclick="this.form.target='_blank'"
+                             icon="ui-icon-remove-red-eye"/>
+                <p:graphicImage style="max-width: 22em; border: transparent;background-color: transparent;"
+                                value="#{fotoBean.getFotoFrontalPath(visitanteView.codPessoa, 2)}"/>
+        </f:facet>
+
+        <h:outputLabel style="font-weight: bold" value="Nome: "/>
+        <h:outputText value="#{visitanteView.nome} "/>
+
+
+        <h:outputLabel style="font-weight: bold" value="Pai: "/>
+        <h:outputText value="#{visitanteView.pai} "/>
+
+        <h:outputLabel style="font-weight: bold" value="Mãe: "/>
+        <h:outputText value="#{visitanteView.mae} "/>
+
+        <h:outputLabel style="font-weight: bold" value="Data de Nascimento: "/>
+        <h:outputText
+                value="#{visitanteView.nascimento}">
+            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+        </h:outputText>
+
+        <h:outputLabel style="font-weight: bold" value="Situação: "/>
+        <h:outputText value="#{visitanteView.situacaoVisitante}"
+                      styleClass="#{utilBean.addStyleByStatus(visitanteView.situacaoVisitante)}"/>
+    </p:panelGrid>
+
+</ui:composition>

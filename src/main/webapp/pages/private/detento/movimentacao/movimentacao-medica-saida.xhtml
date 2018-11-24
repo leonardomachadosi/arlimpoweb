@@ -1,0 +1,315 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Saída por Questão Médica</h1>
+                        <p:panelGrid id="pgDetentoUnidadePrisional" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-6,ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <!--<p:selectCheckboxMenu style="width: 100%;color: darkgray"
+                                                      value="#{movimentacaoMedicaSaidaBean.selectedUnidadesPrisionais}"
+                                                      converter="omnifaces.SelectItemsConverter" filter="true"
+                                                      filterMatchMode="startsWith"
+                                                      id="soEstabelecimentoOrigem" label="Estabelecimento de Origem">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{movimentacaoMedicaSaidaBean.unidadePrisionals}"
+                                                   var="unidadePrisionalDestino"
+                                                   itemDisabled="true"
+                                                   itemLabel="#{unidadePrisionalDestino.descricao}"/>
+                                    <p:ajax event="change" process="@this"/>
+                                </p:selectCheckboxMenu>-->
+                                <p:inputText id="itUnidadePrisional"
+                                             value="#{movimentacaoMedicaSaidaBean.unidadePrisional.descricao}"
+                                             style="width: 100%"
+                                             readonly="true" />
+                                <p:outputLabel for="itUnidadePrisional" value="Estabelecimento" />
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento" style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{movimentacaoMedicaSaidaBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                value="#{movimentacaoMedicaSaidaBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}" itemValue="#{detentoView}">
+                                    <p:column style="width: 10%; text-align: center">
+                                        <h:panelGroup
+                                                rendered="#{detentoView.foto == null or detentoView.foto == '' or detentoView.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:40;color:#757575;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <p:graphicImage
+                                                rendered="#{detentoView.foto != null and detentoView.foto != '' and !detentoView.foto.contains('\\')}"
+                                                value="/foto-detento?foto=#{buscaDetentoBean.enconder(detentoView.foto)}"
+                                                style="width: 90%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                    </p:column>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Detento"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:commandButton id="btn" icon="ui-icon-plus"
+                                                 action="#{movimentacaoMedicaSaidaBean.adicionarDetento()}"
+                                                 process="@this,acDetento"
+                                                 update="acDetento, dtDetentos"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDigital"
+                                     columns="1"
+                                     columnClasses="ui-grid-col-1"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:commandButton title="Digital"
+                                                 id="btnDigital" icon="ui-icon-fingerprint"
+                                                 process="@this"
+                                                 update="@this"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Dados</h1>
+                        <p:panelGrid id="pgTransferenciaDetento" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{movimentacaoMedicaSaidaBean.movimentacaoDetento.tipoMovimentacao}"
+                                                 id="soTipoSaidaTemporaria">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{movimentacaoMedicaSaidaBean.tiposMovimentacao}"
+                                                   var="tipoMovimentacao"
+                                                   itemLabel="#{tipoMovimentacao.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soTipoSaidaTemporaria" value="Tipo de Saída"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar style="width: 100%"
+                                            value="#{movimentacaoMedicaSaidaBean.movimentacaoDetento.dataSaida}"
+                                            inputStyle="width: 60%"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            maxdate="#{movimentacaoMedicaSaidaBean.dataAtual}"
+                                            id="cdDataSaidaTemporaria"/>
+                                <p:outputLabel for="cdDataSaidaTemporaria" value="Data e Hora da Saída"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar style="width: 100%"
+                                            inputStyle="width: 60%"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            value="#{movimentacaoMedicaSaidaBean.movimentacaoDetento.dataPrevistaRetorno}"
+                                            id="cdDataRetorno"/>
+                                <p:outputLabel for="cdDataRetorno" value="Data e Hora Prevista do Retorno"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     id="pgDocumentosDetento"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup rendered="#{!movimentacaoMedicaSaidaBean.arquivos.isEmpty()}">
+                                <p:dataTable id="dtDocumentosDetento"
+                                             var="arquivo"
+                                             reflow="true"
+                                             value="#{movimentacaoMedicaSaidaBean.arquivos}"
+                                             rows="5"
+                                             emptyMessage=""
+                                             style="width: 100%">
+                                    <f:facet name="header">
+                                        Documentos
+                                    </f:facet>
+                                    <p:column headerText="Descrição" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Opção" style="width: 78px; text-align: center;">
+                                        <p:commandButton title="Visualizar"
+                                                         icon="ui-icon-file-download" process="@this"
+                                                         update="dtDocumentosDetento"
+                                                         action="#{movimentacaoMedicaSaidaBean.mostrarPdf()}"
+                                                         onclick="this.form.target='_blank'" ajax="false">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{movimentacaoMedicaSaidaBean.arquivo}"/>
+                                        </p:commandButton>
+                                        <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                         action="#{movimentacaoMedicaSaidaBean.removerDocumentoDetento()}"
+                                                         process="@this"
+                                                         update="form:pgDocumentosDetento form:pgAnexo">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{movimentacaoMedicaSaidaBean.arquivo}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgAnexo" columns="2"
+                                     columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:commandButton title="Anexo" oncomplete="PF('addDocumentoSaidaTemporaria').show();"
+                                                 rendered="#{movimentacaoMedicaSaidaBean.arquivos.isEmpty()}"
+                                                 actionListener="#{movimentacaoMedicaSaidaBean.refreshArquivo()}"
+                                                 process="@this"
+                                                 update="dialogDocumentoSaidaTemporaria"
+                                                 icon="ui-icon-attach-file"
+                                                 value="Anexo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarTransferenciaSaida" value="Salvar"
+                                             action="#{movimentacaoMedicaSaidaBean.salvar()}"
+                                             process="@form"
+                                             icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:dataTable
+                                id="dtDetentos"
+                                value="#{movimentacaoMedicaSaidaBean.detentosView}"
+                                var="detento"
+                                emptyMessage=""
+                                paginator="true"
+                                paginatorPosition="bottom"
+                                rows="10">
+                            <f:facet name="header">
+                                Presos
+                            </f:facet>
+                            <p:column headerText="Foto" width="10%" style="text-align: center">
+                                <h:panelGroup
+                                        rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                    <i class="ui-icon ui-icon-person"
+                                       style="font-size:78px;color:#757575;">
+                                    </i>
+                                </h:panelGroup>
+                                <p:graphicImage
+                                        rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                        value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                        style="width: 90%;"/>
+                            </p:column>
+                            <p:column headerText="Preso" style="text-align: center">
+                                <h:outputText value="#{detento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Data da Entrada" style="text-align: center">
+                                <h:outputText value="#{detento.dataEntrada}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estabelecimento" style="text-align: center">
+                                <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão" style="text-align: center">
+                                <h:outputText value="#{detento.nomePavilhao}"/>
+                            </p:column>
+                            <p:column headerText="Cela" style="text-align: center">
+                                <h:outputText value="#{detento.nomeCela}"/>
+                            </p:column>
+                            <p:column headerText="Ação" style="width: 5%; text-align: center">
+                                <p:commandButton
+                                        icon="ui-icon-trash"
+                                        style="border-bottom: 10"
+                                        title="Remover"
+                                        styleClass="red-btn"
+                                        update="dtDetentos"
+                                        process="@this"
+                                        action="#{movimentacaoMedicaSaidaBean.removerDetento()}">
+                                    <f:setPropertyActionListener value="#{detento}"
+                                                                 target="#{movimentacaoMedicaSaidaBean.detentoView}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Anexar Documentacao" id="dialogDocumentoSaidaTemporaria" widgetVar="addDocumentoSaidaTemporaria" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             id="pgDescricaoDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0 none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoDocumento" value="Descrição do Documento"/>
+                        <p:inputText  id="itDescricaoDocumento" value="#{movimentacaoMedicaSaidaBean.arquivo.descricao}" style="width: 100%">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="soTipoDocumento" value="Tipo do Documento"/>
+                        <p:selectOneMenu
+                                id="soTipoDocumento"
+                                value="#{movimentacaoMedicaSaidaBean.arquivo.tipoArquivo}"
+                                style="width: 100%"
+                                converter="omnifaces.SelectItemsConverter">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems value="#{movimentacaoMedicaSaidaBean.tiposArquivo}" var="tipoArquivo" itemLabel="#{tipoArquivo.descricao}" />
+                            <p:ajax process="@this" event="blur"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0 none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                oncomplete="PF('addDocumentoSaidaTemporaria').hide();"
+                                process="pgDescricaoDocumento"
+                                label="Carregar Documento"
+                                update="pgDocumentosDetento pgAnexo"
+                                cancelLabel="Cancelar"
+                                uploadLabel="Anexar"
+                                fileUploadListener="#{movimentacaoMedicaSaidaBean.uploadDocumentoDetento}"
+                                sizeLimit="#{utilBean.sizeFile}"
+                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                allowTypes="/(\.|\/)(pdf)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

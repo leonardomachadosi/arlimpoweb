@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2fd8ff44-6363-4bb8-b475-76b2126695d6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="nomeSupervisor" class="java.lang.String"/>
+	<parameter name="nomeVisitante" class="java.lang.String"/>
+	<parameter name="grauParentesco" class="java.lang.String"/>
+	<parameter name="numAva" class="java.lang.String"/>
+	<parameter name="enderecoVisitante" class="java.lang.String"/>
+	<parameter name="nomeDetento" class="java.lang.String"/>
+	<parameter name="bairrovisitante" class="java.lang.String"/>
+	<parameter name="cidadeVisitante" class="java.lang.String"/>
+	<parameter name="rgVisitante" class="java.lang.String"/>
+	<parameter name="cpfVisitante" class="java.lang.String"/>
+	<parameter name="imagem_seap" class="java.awt.image.BufferedImage"/>
+	<parameter name="imagem_saf" class="java.awt.image.BufferedImage"/>
+	<parameter name="estabelecimentoPenal" class="java.lang.String"/>
+	<parameter name="motivacao" class="java.lang.String"/>
+	<parameter name="uf" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="90" y="10" width="370" height="71" uuid="7fc024bd-79ef-4bce-8b9b-fafe0e36a96c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ESTADO DO MARANHÃO	
+SECRETARIA DE ESTADO DE ADMINISTRAÇÃO PENITENCIÁRIA
+SECRETARIA ADJUNTA DE ATENDIMENTO E HUMANIZAÇÃO PENITENCIÁRIA 
+	SUPERVISÃO DE ASSISTÊNCIA ÀS FAMÍLIAS]]></text>
+			</staticText>
+			<image>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="10" width="60" height="70" uuid="16b5ffa9-7a09-4e5b-8009-fdc89a14dcd0"/>
+				<imageExpression><![CDATA[$P{imagem_seap}]]></imageExpression>
+			</image>
+			<image evaluationTime="Page">
+				<reportElement x="474" y="10" width="81" height="70" uuid="a11de79b-3a87-4e7f-b97a-2b15fcb032e2"/>
+				<imageExpression><![CDATA[$P{imagem_saf}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="620" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="109" width="558" height="17" uuid="5784f904-2c2e-4ad9-a6cd-74bf1b983810"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[AUTORIZAÇÃO PARA VISITA ASSISTIDA (AVA)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="251" width="120" height="20" uuid="89de68bb-f2d9-4609-957f-9499a9f5e41d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Visitante:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="250" width="390" height="21" uuid="0628e521-ca64-476f-bec6-b6ef14169f50"/>
+				<textFieldExpression><![CDATA[$P{nomeVisitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="20" width="40" height="20" uuid="28a5ce28-b26e-4df3-b7e4-73912af5f377"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVA Nº]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="60" y="20" width="219" height="20" uuid="63876cd2-93f3-4186-aaf4-181fff3d7e53"/>
+				<textElement textAlignment="Justified">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numAva} + " SAF/SAAHP/SEAP"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="370" y="40" width="50" height="16" uuid="613f3e9f-83f6-4d68-88db-be53e92156c5"/>
+				<text><![CDATA[São Luís, ]]></text>
+			</staticText>
+			<textField pattern="d &apos;de&apos;  MMMM &apos;de&apos; yyyy">
+				<reportElement x="420" y="40" width="131" height="16" uuid="4019cfcf-9c5e-43b9-9901-f3cf918023ee"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="150" width="500" height="80" uuid="27899a25-57c4-4065-a8f1-176d6566eddc"/>
+				<textElement textAlignment="Justified">
+					<font size="12"/>
+					<paragraph firstLineIndent="20"/>
+				</textElement>
+				<text><![CDATA[Solicito junto à direção desse estabelecimento penal, que autorizem a entrada da pessoa mencionada abaixo para a realização de Visita Assistida, isto é, acompanhada de um funcionário do Estabelecimento Prisional, por um período de no máximo 10 minutos, tendo em vista que já ocorreu a análise necessária por parte da Equipe da SAF, o que viabiliza a emissão dessa autorização.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="271" width="390" height="20" uuid="0d493cc4-7ee0-4ffb-986b-fba276cca627"/>
+				<textFieldExpression><![CDATA[$P{grauParentesco}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="271" width="120" height="20" uuid="2913fcee-9bc2-4fc2-b8df-f7fdb223056d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grau de Parentesco:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="291" width="390" height="20" uuid="e99d740e-8ef5-4af7-95ff-82eaa4c5da4e"/>
+				<textFieldExpression><![CDATA[$P{rgVisitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="291" width="120" height="20" uuid="f5712fca-e421-4830-a090-95deb368a97a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="311" width="120" height="20" uuid="18df5cf1-9793-4e04-ab7a-a134986a1151"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="311" width="390" height="20" uuid="b1d348be-8e11-4051-81ba-812d1e6e4029"/>
+				<textFieldExpression><![CDATA[$P{cpfVisitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="331" width="120" height="20" uuid="68334bf1-d1c3-48ff-95d9-e746b6285074"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="331" width="390" height="20" uuid="1250ab90-3b9a-4e0c-acc6-7a39f02d3262"/>
+				<textFieldExpression><![CDATA[$P{enderecoVisitante} + " Bairro " + $P{bairrovisitante}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="351" width="390" height="20" uuid="23d54bf3-ae9f-42ae-9081-94da9f809ea7"/>
+				<textFieldExpression><![CDATA[$P{cidadeVisitante} + " - " + $P{uf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="351" width="120" height="20" uuid="5cf25957-aed2-426f-9144-b8e4d0a095a1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="371" width="390" height="20" uuid="70e4944f-2a70-43f0-bc0b-331fb1b8e9a5"/>
+				<textFieldExpression><![CDATA[$P{nomeDetento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="371" width="120" height="20" uuid="a4c6298b-40dd-422c-b8c0-4933b8174551"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interno:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="410" width="120" height="20" uuid="294a07e0-a409-41ae-940f-82c5e89f9e99"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Motivação:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="410" width="390" height="90" uuid="4e565f28-c164-4d26-9e12-80e959d0bcc9"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA[$P{motivacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="520" width="86" height="22" uuid="8359373e-59f9-44d6-bd83-a132d835936d"/>
+				<text><![CDATA[Atenciosamente,]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="560" width="200" height="18" uuid="43f79c35-d56a-4e0b-a4c2-988007c97965"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nomeSupervisor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="578" width="200" height="19" uuid="9249c492-5ccd-4279-80f2-b4139ad29e78"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Supervisor de Assistência às Famílias]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="20" y="59" width="340" height="20" uuid="9d96e513-9cbe-46c5-a64d-6df1da8553cd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ao diretor (a)do estabelecimento penal: " + $P{estabelecimentoPenal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch"/>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="59" y="20" width="461" height="30" uuid="0177f679-acd1-477b-867d-a46ba9df4115"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Rua Antonio Raposo, Nº 405, Outeiro da Cruz – CEP: 65045-215. São Luís/MA
+e-mail: assistencia.familias@seap.ma.gov.br/ Fone: (98)992045458/ Ramal 2408]]></text>
+			</staticText>
+			<line>
+				<reportElement x="100" y="10" width="390" height="1" uuid="47417ef9-4ef9-42d6-b0cc-eead5b6b18cc"/>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

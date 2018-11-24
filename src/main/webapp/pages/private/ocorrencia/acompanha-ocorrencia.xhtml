@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Acompanhamento de Ocorrências</h1>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeEnvolvido"
+                                             value="#{acompanhaOcorrenciaBean.nomeEnvolvido}"
+                                             style="width: 100%;"
+                                             inputStyle="width:100%;"
+                                />
+                                <p:outputLabel for="itNomeEnvolvido" value="Nome do Envolvido"/>
+                            </h:panelGroup>
+
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnBuscar" value="Buscar"
+                                             actionListener="#{acompanhaOcorrenciaBean.buscar()}"
+                                             update="@form"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Ocorrências</h1>
+                        <p:dataTable id="dtOcorrencias"
+                                     reflow="true"
+                                     value="#{acompanhaOcorrenciaBean.ocorrenciaList}"
+                                     var="ocorrencia"
+                                     paginator="#{acompanhaOcorrenciaBean.ocorrenciaList.size() > 10}" rows="10"
+                                     paginatorPosition="bottom"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                            <f:facet name="header">Ocorrências</f:facet>
+                            <p:column style="width: 12px;">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:rowExpansion>
+                                <ui:include src="fragments/envolvidos-ocorrencia-panelgrid.xhtml">
+                                    <ui:param name="envolvidoList"
+                                              value="#{acompanhaOcorrenciaBean.getEnvolvidosPorOcorrencia(ocorrencia)}"/>
+                                </ui:include>
+                            </p:rowExpansion>
+                            <p:column headerText="Ocorrência">
+                                <h:outputText value="#{acompanhaOcorrenciaBean.formataNumOcorrencia(ocorrencia.id)}"/>
+                            </p:column>
+                            <p:column headerText="Data de Cadastro">
+                                <h:outputText
+                                        value="#{ocorrencia.dataCadastro}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Subtítulo">
+                                <h:outputText value="#{ocorrencia.tipoMovimentacao.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Setor">
+                                <h:outputText value="#{acompanhaOcorrenciaBean.getSetor(ocorrencia).setor.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Severidade">
+                                <h:outputText value="#{ocorrencia.severidade.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Situação">
+                                <h:outputText value="#{acompanhaOcorrenciaBean.getUltimaSituacao(ocorrencia).descricao}"/>
+                            </p:column>
+                            <p:column headerText="Ação">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{acompanhaOcorrenciaBean.visualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{ocorrencia}"
+                                                                 target="#{acompanhaOcorrenciaBean.ocorrencia}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

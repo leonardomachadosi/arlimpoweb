@@ -1,0 +1,370 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h2 class="assistencia-subtitulo">Acolhimento Social</h2>
+
+    <p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-8, ui-grid-col-4"
+                 styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtNomePessoa" readonly="true"
+                         value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.nome}"
+                         styleClass="input-auto"/>
+            <p:outputLabel for="txtNomePessoa" value="Nome"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:calendar id="txtDataIngresso"
+                        value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.dataInicioCiclo}"
+                        styleClass="input-auto"
+                        pattern="dd/MM/yyyy" locale="pt" navigator="true" disabled="true">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </p:calendar>
+            <p:outputLabel for="txtDataIngresso" value="Data do Ingresso"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-4" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:calendar id="txtDataNascimento"
+                        value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.dataNascimento}"
+                        styleClass="input-auto"
+                        pattern="dd/MM/yyyy" disabled="true" locale="pt" navigator="true">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </p:calendar>
+            <p:outputLabel for="txtDataNascimento" value="Data de nascimento"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtIdade" readonly="true" value="#{efetivaAcolhimentoSocialBean.pessoaIdade}"
+                         styleClass="input-auto"/>
+            <p:outputLabel for="txtIdade" value="Idade (anos)"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somPessoaEtnia" value="#{efetivaAcolhimentoSocialBean.detentoDadoFisico.etnia}"
+                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.etniaList}" var="etnia" itemValue="#{etnia}"
+                               itemLabel="#{etnia.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="Como a pessoa presa se identifica?"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtNomeMae" readonly="true"
+                         value="#{efetivaAcolhimentoSocialBean.maeParentesco.pessoaParente.nome}"
+                         styleClass="input-auto"/>
+            <p:outputLabel for="txtNomeMae" value="Nome da mãe"/>
+        </h:panelGroup>
+        <h:panelGroup>
+            <h:panelGrid columns="2">
+                <p:outputLabel for="bolMaeFalecido" value="Falecido?" styleClass="questao"/>
+                <p:selectOneRadio id="bolMaeFalecido"
+                                  value="#{efetivaAcolhimentoSocialBean.maeParentesco.pessoaParente.falecido}">
+                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                </p:selectOneRadio>
+            </h:panelGrid>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtNomePai" readonly="true"
+                         value="#{efetivaAcolhimentoSocialBean.paiParentesco.pessoaParente.nome}"
+                         styleClass="input-auto"/>
+            <p:outputLabel for="txtNomePai" value="Nome da pai"/>
+        </h:panelGroup>
+        <h:panelGroup>
+            <h:panelGrid columns="2">
+                <p:outputLabel for="bolPaiFalecido" value="Falecido?" styleClass="questao"/>
+                <p:selectOneRadio id="bolPaiFalecido"
+                                  value="#{efetivaAcolhimentoSocialBean.paiParentesco.pessoaParente.falecido}">
+                    <f:selectItem itemLabel="Não" itemValue="#{false}"/>
+                    <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                </p:selectOneRadio>
+            </h:panelGrid>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-4" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somIdentificacaoSexual"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.sexo}"
+                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.sexoList}" var="sexo" itemValue="#{sexo}"
+                               itemLabel="#{sexo.descricao}"/>
+                <p:ajax process="@this" update="pnlInfoGestante" event="change"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="Identificação sexual" for="somIdentificacaoSexual"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somOrientacaoSexual"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.orientacaoSexual}"
+                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.orientacaoSexualList}" var="orientacaoSexual"
+                               itemValue="#{orientacaoSexual}" itemLabel="#{orientacaoSexual.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somOrientacaoSexual" value="Orientação sexual"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somIdentidadeGenero"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.identidadeGenero}"
+                             style="width: 100%;" converter="omnifaces.SelectItemsConverter">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.identidadeGeneroList}" var="identidadeGenero"
+                               itemValue="#{identidadeGenero}" itemLabel="#{identidadeGenero.descricao}"/>
+                <f:ajax event="change" render="hpNomeSocial" execute="@this" />
+            </p:selectOneMenu>
+            <p:outputLabel for="somIdentidadeGenero" value="Identidade de gênero"/>
+        </h:panelGroup>
+
+    </p:panelGrid>
+    <h:panelGroup id="hpNomeSocial">
+        <p:panelGrid rendered="#{efetivaAcolhimentoSocialBean.renderizaCampoNomeSocial()}" layout="grid" columns="1" columnClasses="ui-grid-col-8" styleClass="form-group ui-panelgrid-blank">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itNomeSocial"
+                             value="#{efetivaAcolhimentoSocialBean.nomeSocial.nome}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itNomeSocial" value="Nome Social"/>
+            </h:panelGroup>
+        </p:panelGrid>
+    </h:panelGroup>
+    <h:panelGroup id="pnlInfoGestante">
+        <p:panelGrid layout="grid" columns="5"
+                     columnClasses="ui-grid-col-3, ui-grid-col-1, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+                     styleClass="form-group ui-panelgrid-blank" rendered="#{efetivaAcolhimentoSocialBean.feminino}">
+            <h:panelGroup>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="bolFilhosDoisAnos" value="Tem filhos menor de dois anos?" styleClass="questao"/>
+                    <p:selectBooleanCheckbox id="bolFilhosDoisAnos"
+                                             value="#{efetivaAcolhimentoSocialBean.atendimentoSocial.temFilhosAteDoisAnos}">
+                        <p:ajax process="@this" update="pnlGetante pnlLactante"/>
+                    </p:selectBooleanCheckbox>
+                </h:panelGrid>
+            </h:panelGroup>
+
+            <h:panelGroup id="pnlLactante">
+                <h:panelGrid columns="2" cellpadding="5"
+                             rendered="#{efetivaAcolhimentoSocialBean.atendimentoSocial.temFilhosAteDoisAnos}">
+                    <p:outputLabel for="bolLactante" value="Lactante?" styleClass="questao"/>
+                    <p:selectBooleanCheckbox id="bolLactante"
+                                             value="#{efetivaAcolhimentoSocialBean.atendimentoSocial.lactante}">
+                        <p:ajax process="@this" update="pnlPeriodoLactacao"/>
+                    </p:selectBooleanCheckbox>
+                </h:panelGrid>
+            </h:panelGroup>
+
+            <h:panelGroup id="pnlPeriodoLactacao">
+                <h:panelGroup styleClass="md-inputfield"
+                              rendered="#{efetivaAcolhimentoSocialBean.atendimentoSocial.lactante}">
+                    <p:inputNumber id="txtPeriodoLactacao" minValue="0" maxValue="200" styleClass="input-auto"
+                                   value="#{efetivaAcolhimentoSocialBean.atendimentoSocial.periodoLactacao}"/>
+                    <p:outputLabel for="txtPeriodoLactacao" value="Período de lactação"/>
+                </h:panelGroup>
+            </h:panelGroup>
+
+            <h:panelGroup id="pnlGetante">
+                <h:panelGrid columns="2" cellpadding="5"
+                             rendered="#{efetivaAcolhimentoSocialBean.atendimentoSocial.temFilhosAteDoisAnos}">
+                    <p:outputLabel for="bolGestante" value="É gestante?" styleClass="questao"/>
+                    <p:selectBooleanCheckbox id="bolGestante"
+                                             value="#{efetivaAcolhimentoSocialBean.atendimentoSocial.gestante}">
+                        <p:ajax process="@this" update="pnlPeriodoGestante"/>
+                    </p:selectBooleanCheckbox>
+                </h:panelGrid>
+            </h:panelGroup>
+
+            <h:panelGroup id="pnlPeriodoGestante">
+                <h:panelGroup styleClass="md-inputfield"
+                              rendered="#{efetivaAcolhimentoSocialBean.atendimentoSocial.gestante}">
+                    <p:inputNumber value="#{efetivaAcolhimentoSocialBean.atendimentoSocial.periodoGestacao}"
+                                   styleClass="input-auto" id="txtQuantidadeSemanas" minValue="0" maxValue="200"/>
+                    <p:outputLabel for="txtQuantidadeSemanas" value="Período (em semanas)"/>
+                </h:panelGroup>
+            </h:panelGroup>
+        </p:panelGrid>
+    </h:panelGroup>
+
+    <p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-4, ui-grid-col-8"
+                 styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somEstadoCivil"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.estadoCivil}"
+                             style="width: 100%;" converter="omnifaces.SelectItemsConverter">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.estadoCivilList}" var="estadoCivil"
+                               itemValue="#{estadoCivil}" itemLabel="#{estadoCivil.descricao}"/>
+                <p:ajax event="change" process="@this" update="pnlConjuge"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somEstadoCivil" value="Estado Civil"/>
+        </h:panelGroup>
+        <h:panelGroup id="pnlConjuge">
+            <h:panelGroup styleClass="md-inputfield" rendered="#{efetivaAcolhimentoSocialBean.renderizaCampoConjuge()}">
+                <p:inputText id="txtNomeConjuge"
+                             value="#{efetivaAcolhimentoSocialBean.conjugeParentesco.pessoaParente.nome}"
+                             readonly="true" styleClass="input-auto"/>
+                <p:outputLabel for="txtNomeConjuge" value="Conjuge"/>
+            </h:panelGroup>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-3" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somNacionalidade"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.nacionalidade}"
+                             style="width: 100%;" converter="omnifaces.SelectItemsConverter">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.nacionalidadeList}" var="nacionalidade"
+                               itemLabel="#{nacionalidade.descricao}" itemValue="#{nacionalidade}"/>
+                <p:ajax event="change" process="@this" update="somPais"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="Nacionalidade" for="somNacionalidade"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somPais"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.paisOrigem}"
+                             converter="omnifaces.SelectItemsConverter"
+                             style="width: 100%;"
+                             styleClass="#{efetivaAcolhimentoSocialBean.brasileiroNato ? 'select-disabled' : ''}"
+                             filter="true" filterMatchMode="startsWith">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.paisList}" var="pais" itemValue="#{pais}"
+                               itemLabel="#{pais.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="País de Origem" for="somPais"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somEstadoOrigem" value="#{efetivaAcolhimentoSocialBean.selectedEstadoOrigem}"
+                             converter="omnifaces.SelectItemsConverter" style="width: 100%;"
+                             filter="true" filterMatchMode="startsWith">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.estadoList}" var="estado" itemValue="#{estado}"
+                               itemLabel="#{estado.descricao}"/>
+                <p:ajax event="change" listener="#{efetivaAcolhimentoSocialBean.onChangeEstadoOrigem}"
+                        update="somMunicipioOrigem" process="somEstadoOrigem"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somEstadoOrigem" value="Estado de origem"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somMunicipioOrigem"
+                             value="#{efetivaAcolhimentoSocialBean.solicitacaoAtendimentoDetento.detento.pessoa.municipioNascimento}"
+                             style="width: 100%;" converter="omnifaces.SelectItemsConverter"
+                             filter="true" filterMatchMode="startWith">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAcolhimentoSocialBean.municipioList}" var="municipio"
+                               itemLabel="#{municipio.descricao}" itemValue="#{municipio}"/>
+            </p:selectOneMenu>
+            <p:outputLabel value="Município de origem" for="somMunicipioOrigem"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <h2 class="assistencia-subtitulo">Endereço</h2>
+    <p:panelGrid layout="grid" id="pnlListEndereco" columns="2" columnClasses="ui-grid-col-11, ui-grid-col-1"
+                 styleClass="ui-panelgrid-blank">
+        <p:dataTable value="#{efetivaAcolhimentoSocialBean.enderecoPessoaList}" var="enderecoPessoa"
+                     emptyMessage="Nenhum endereço cadastrado.">
+            <f:facet name="header">Endereços cadastrados</f:facet>
+            <p:column headerText="Logradouro"><h:outputText value="#{enderecoPessoa.endereco.logradouro}"/></p:column>
+            <p:column headerText="Número"><h:outputText value="#{enderecoPessoa.endereco.numero}"/></p:column>
+            <p:column headerText="Cidade"><h:outputText
+                    value="#{enderecoPessoa.endereco.municipio.descricao}"/></p:column>
+            <p:column headerText="Bairro"><h:outputText value="#{enderecoPessoa.endereco.bairro}"/></p:column>
+            <p:column headerText="Opções" style="text-align: center; width: 10%">
+                <p:commandButton icon="ui-icon-remove-red-eye" title="Visualizar endereço"
+                                 oncomplete="PF('dlgEndereco').show()" process="@this" update=":form:pnlFormEndereco"
+                                 actionListener="#{efetivaAcolhimentoSocialBean.setEnderecoPessoa(enderecoPessoa)}"
+                                 action="#{efetivaAcolhimentoSocialBean.preparaEnderecoModal('VISUALIZA')}"
+                                 immediate="true"/>
+            </p:column>
+        </p:dataTable>
+
+        <p:commandButton icon="ui-icon-plus" title="Adicionar novo endereço" oncomplete="PF('dlgEndereco').show()"
+                         process="@this" update=":form:pnlFormEndereco" immediate="true"
+                         action="#{efetivaAcolhimentoSocialBean.preparaEnderecoModal('CADASTRA')}"/>
+    </p:panelGrid>
+
+    <h2 class="assistencia-subtitulo">Documentação Civil Básica</h2>
+    <p:panelGrid layout="grid" columns="5"
+                 columnClasses="ui-grid-col-4, ui-grid-col-2,ui-grid-col-2,ui-grid-col-3, ui-grid-col-3"
+                 styleClass="ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999999 99 99 9999 9 99999 999 9999999 99" id="txtCertidaoNascimento"
+                         value="#{efetivaAcolhimentoSocialBean.documento.certidaoNascimento}" styleClass="input-auto"/>
+            <p:outputLabel value="Certidão de nascimento" for="txtCertidaoNascimento"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtLivro" value="#{efetivaAcolhimentoSocialBean.documento.livro}" styleClass="input-auto"/>
+            <p:outputLabel value="Livro" for="txtLivro"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtFolha" value="#{efetivaAcolhimentoSocialBean.documento.pagina}"
+                         styleClass="input-auto"/>
+            <p:outputLabel value="Pagina" for="txtFolha"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999.999.999-99" id="txtCPF" styleClass="input-auto"
+                         value="#{efetivaAcolhimentoSocialBean.documento.cpf}"/>
+            <p:outputLabel value="CPF" for="txtCPF"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtCNH" value="#{efetivaAcolhimentoSocialBean.documento.cnh}" styleClass="input-auto"/>
+            <p:outputLabel for="txtCNH" value="CNH"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                 styleClass="ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999999?999" styleClass="input-auto" id="txtCarteiraTrabalho"
+                         value="#{efetivaAcolhimentoSocialBean.documento.numeroCtps}"/>
+            <p:outputLabel value="Número da carteira de trabalho" for="txtCarteiraTrabalho"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="9999" value="#{efetivaAcolhimentoSocialBean.documento.serieCtps}" id="txtSerieTrabalho"
+                         styleClass="input-auto"/>
+            <p:outputLabel for="txtSerieTrabalho" value="Série da carteira de trabalho"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999999" value="#{efetivaAcolhimentoSocialBean.documento.reservista}"
+                         id="txtCertificadoReservista" styleClass="input-auto"/>
+            <p:outputLabel value="Certificado de reservista" for="txtCertificadoReservista"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-6, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+                 styleClass="ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="9999 9999 9999" id="txtTituloEleitor" styleClass="input-auto"
+                         value="#{efetivaAcolhimentoSocialBean.documento.tituloEleitor}"/>
+            <p:outputLabel for="txtTituloEleitor" value="Título de eleitor"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="9999" id="txtTituloSecao" styleClass="input-auto"
+                         value="#{efetivaAcolhimentoSocialBean.documento.secao}"/>
+            <p:outputLabel for="txtTituloSecao" value="Seção"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999" styleClass="input-auto" id="txtTituloZona"
+                         value="#{efetivaAcolhimentoSocialBean.documento.zona}"/>
+            <p:outputLabel for="txtTituloZona" value="Zona"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-3" styleClass="ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999999 99 99 9999 9 99999 999 9999999 99" id="txtCertidaoCasamento"
+                         value="#{efetivaAcolhimentoSocialBean.documento.certidaoCasamento}" styleClass="input-auto"/>
+            <p:outputLabel for="txtCertidaoCasamento" value="Certidão de casamento"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputMask mask="999 9999 9999 9999" value="#{efetivaAcolhimentoSocialBean.documento.sus}"
+                         styleClass="input-auto" id="txtNumeroSus"/>
+            <p:outputLabel value="Número do SUS" for="txtNumeroSus"/>
+        </h:panelGroup>
+    </p:panelGrid>
+</ui:composition>

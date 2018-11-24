@@ -1,0 +1,372 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.voltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton id="btnAdicionar" value="Anexar"
+                                             oncomplete="PF('addDocumentoTransferencia').show();"
+                                             actionListener="#{visualizaSolicitacaoTransferenciaSupervisaoBean.refreshArquivo()}"
+                                             process="@this"
+                                             update="dialogDocumentoTransferencia"
+                                             icon="ui-icon-attach-file"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Visualizar Solicitação de Transferência</b></h1>
+                        <p:panelGrid id="pgEstabelecimentoSituacaoPrioridade" columns="4"
+                                     columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNumeroSolicitacao"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.numeroFormatado}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itNumeroSolicitacao" value="Número da Solicitação"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itUnidadeOrigem"
+                                             readonly="true"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.unidadePrisional.descricao}"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itUnidadeOrigem" value="Unidade de Origem"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itFuncionarioSolicitante"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.servidor.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itFuncionarioSolicitante" value="Funcionário Solicitante"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:calendar id="cdDataSolicitacao"
+                                                readonly="true"
+                                                showOn="false"
+                                                value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.dataSolicitacao}"
+                                                pattern="dd/MM/yyyy"
+                                                mask="99/99/9999"
+                                                locale='pt'
+                                                inputStyle="width: 70%"
+                                                style="width: 100%"/>
+                                    <p:outputLabel for="cdDataSolicitacao" value="Data da Solicitação"/>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgSituacaoPrioridadeMotivoDataAvaliacao" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-3,ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itSituacao"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia.situacaoSolicitacaoTransferencia.descricao}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itSituacao" value="Situação"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itPrioridade"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.prioridadeTransferencia.descricao}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itPrioridade" value="Prioridade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itTipoSolicitacao"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.tipoSolicitacaoMovimentacao.descricao}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itTipoSolicitacao" value="Motivo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup
+                                rendered="#{!visualizaSolicitacaoTransferenciaSupervisaoBean.arquivosSolicitacaoTransferencia.isEmpty()}">
+                            <h2><b>Documentos</b></h2>
+                        </h:panelGroup>
+                        <p:panelGrid id="pgDtListaArquivos" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:dataTable id="dtDocumentosDetento"
+                                             var="arquivoSolicitacaoTransferencia"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.arquivosSolicitacaoTransferencia}"
+                                             reflow="true"
+                                             rows="5"
+                                             emptyMessage=""
+                                             style="width: 100%">
+                                    <f:facet name="header">
+                                        Documentos
+                                    </f:facet>
+                                    <p:column headerText="Descrição" style="text-align: center;">
+                                        <h:outputText value="#{arquivoSolicitacaoTransferencia.arquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{arquivoSolicitacaoTransferencia.arquivo.tipoArquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Opção" style="width: 10%; text-align: center;">
+                                        <p:commandButton title="Visualizar"
+                                                         icon="ui-icon-file-download" process="@this"
+                                                         action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.mostrarPdf()}"
+                                                         onclick="this.form.target='_blank'" ajax="false">
+                                            <f:setPropertyActionListener
+                                                    value="#{arquivoSolicitacaoTransferencia.arquivo}"
+                                                    target="#{visualizaSolicitacaoTransferenciaSupervisaoBean.arquivo}"/>
+                                        </p:commandButton>
+                                        <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                         action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.removerDocumentoDetento(arquivoSolicitacaoTransferencia)}"
+                                                         process="@this"
+                                                         styleClass="red-btn"
+                                                         rendered="#{arquivoSolicitacaoTransferencia.id == null}"
+                                                         update="dtDocumentosDetento">
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h2><b>Presos</b></h2>
+                        <p:panelGrid id="pgDtDetentos" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <!--<ui:include src="../../fragments/tablePreso.xhtml">
+                                    <ui:param name="beanName" value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.detentosSolicitacaoTransferencia}"/>
+                                </ui:include>-->
+                                <p:dataTable id="dtSolicitacaoTransferencia" var="detentoSolicitacaoTransferencia"
+                                             value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.detentosSolicitacaoTransferencia}"
+                                             reflow="true"
+                                             paginator="#{visualizaSolicitacaoTransferenciaSupervisaoBean.detentosSolicitacaoTransferencia.size() > 10}"
+                                             rows="10"
+                                             emptyMessage="Nenhum registro encontrado" >
+                                    <f:facet name="header">
+                                        Presos
+                                    </f:facet>
+
+                                    <p:column width="5%">
+                                        <p:rowToggler/>
+                                    </p:column>
+                                    <p:column headerText="Foto" width="15%" style="text-align: center;">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(detentoSolicitacaoTransferencia.detento.pessoa.id, 1)}"
+                                                style="max-height:5em;"/>
+                                    </p:column>
+                                    <p:column headerText="Nome" style="text-align: center">
+                                        <h:outputText value="#{detentoSolicitacaoTransferencia.detento.pessoa.nome}"/>
+                                    </p:column>
+                                    <p:column headerText="Situação" style="text-align: center; width: 15% ">
+                                        <h:outputText
+                                                value="#{detentoSolicitacaoTransferencia.situacaoDetentoSolicitacaoTransferencia.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Destino" style="text-align: center;" >
+                                        <h:outputText value="#{detentoSolicitacaoTransferencia.unidadePrisionalDestino.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Ação" style="text-align: center; width: 10%">
+                                        <p:commandButton title="Visualizar"
+                                                         update="form:messages"
+                                                         action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.detalharDetentoSolicitacaoTransferencia()}"
+                                                         ajax="false" onclick="this.form.target='_blank'"
+                                                         icon="ui-icon-remove-red-eye" process="@this">
+                                            <f:setPropertyActionListener value="#{detentoSolicitacaoTransferencia}"
+                                                                         target="#{visualizaSolicitacaoTransferenciaSupervisaoBean.detentoSolicitacaoTransferencia}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid id="pgJustificativa" columns="1"
+                                                     columnClasses="label, value"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     rendered="#{detentoSolicitacaoTransferencia.justificativa != null}"
+                                                     style="border:0px none; background-color:transparent; width: 100%">
+                                            <h:panelGroup>
+                                                <p:outputLabel style="font-weight: bold;"
+                                                               value="Justificativa: "/>
+                                                <p:outputLabel
+                                                        value="#{detentoSolicitacaoTransferencia.justificativa}"/>
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                        <p:panelGrid layout="grid" columns="2"
+                                                     columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                                     styleClass="ui-panelgrid-blank form-group">
+                                            <p:column>
+                                                <p:outputLabel style="font-weight: bold;"
+                                                               value="Precisa de servidor da saúde? "/>
+                                                <p:outputLabel
+                                                        value="#{detentoSolicitacaoTransferencia.precisaServidorSaude ? 'SIM' : 'NÃO'}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel style="font-weight: bold;"
+                                                               value="Precisa de ambulância? "/>
+                                                <p:outputLabel
+                                                        value="#{detentoSolicitacaoTransferencia.precisaAmbulancia ? 'SIM' : 'NÃO'}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel style="font-weight: bold;" value="Informe de Resgate? "/>
+                                                <p:outputLabel
+                                                        value="#{detentoSolicitacaoTransferencia.detento.informeResgate ? 'SIM' : 'NÃO'}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <p:outputLabel style="font-weight: bold;"
+                                                               value="O preso corre risco de morte (por ameaça de terceiros)? "/>
+                                                <p:outputLabel
+                                                        value="#{detentoSolicitacaoTransferencia.detento.riscoMorte ? 'SIM' : 'NÃO'}"/>
+                                            </p:column>
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup
+                    rendered="#{visualizaSolicitacaoTransferenciaSupervisaoBean.renderizarBotaoCancelar() or visualizaSolicitacaoTransferenciaSupervisaoBean.renderizarBotaoEncaminharNucleoEscolta()}">
+                <div class="ui-g" style="margin-top: -13px;">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton value="Cancelar"
+                                                 icon="ui-icon-cancel"
+                                                 id="btnCancelar"
+                                                 rendered="#{visualizaSolicitacaoTransferenciaSupervisaoBean.renderizarBotaoCancelar()}"
+                                                 action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.cancelar()}"
+                                                 update="@form"
+                                                 process="@form">
+                                    <p:confirm header="Confirmação" message="Deseja realmente cancelar a solicitação?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlg">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                                <p:commandButton value="Salvar"
+                                                 icon="ui-icon-check"
+                                                 id="btnSalvar"
+                                                 action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.salvarArquivoSolicitacaoTransferencia()}"
+                                                 update="@form"
+                                                 process="@form">
+                                    <p:confirm header="Confirmação" message="Deseja salvar alterações?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog id="cfSalvar" global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlg">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                                <p:commandButton value="Encaminhar Para o Núcleo de Escolta e Custódia"
+                                                 icon="ui-icon-send"
+                                                 id="btnFinalizar"
+                                                 rendered="#{visualizaSolicitacaoTransferenciaSupervisaoBean.renderizarBotaoEncaminharNucleoEscolta()}"
+                                                 action="#{visualizaSolicitacaoTransferenciaSupervisaoBean.encaminharNucleoEscoltaCustodia()}"
+                                                 update="@form"
+                                                 process="@form">
+                                    <p:confirm header="Confirmação"
+                                               id="cfEncaminhar"
+                                               message="Deseja realmente encaminhar a solicitação ao Núcleo de Escolta e Custódia?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlg">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <p:dialog header="Anexar Documentacao" id="dialogDocumentoTransferencia"
+                      widgetVar="addDocumentoTransferencia" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             id="pgDescricaoDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                          background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoDocumento" value="Descrição do Documento"/>
+                        <p:inputText id="itDescricaoDocumento"
+                                     value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.arquivo.descricao}"
+                                     style="width: 100%">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="soTipoDocumento" value="Tipo do Documento"/>
+                        <p:selectOneMenu id="soTipoDocumento"
+                                         style="width: 100%"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.arquivo.tipoArquivo}">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems
+                                    value="#{visualizaSolicitacaoTransferenciaSupervisaoBean.tiposAquivoEnum}"
+                                    var="tipoArquivo"
+                                    itemValue="#{tipoArquivo.objeto}"
+                                    itemLabel="#{tipoArquivo.descricao}"/>
+                            <p:ajax process="@this" event="blur"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                              background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                oncomplete="PF('addDocumentoTransferencia').hide();"
+                                process="pgDescricaoDocumento"
+                                update="pgDtListaArquivos messages"
+                                label="Carregar Documento"
+                                cancelLabel="Cancelar"
+                                uploadLabel="Anexar"
+                                fileUploadListener="#{visualizaSolicitacaoTransferenciaSupervisaoBean.uploadDocumentoDetento}"
+                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                sizeLimit="#{utilBean.sizeFile}"
+                                allowTypes="/(\.|\/)(pdf)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

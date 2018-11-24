@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-profissao-atendimento-terapiaOcupacional">
+        <p:dialog header="Adicionar Profissao" id="dialogProfissaoAtendimentoTerapiaOcupacional"
+                  widgetVar="addProfissao"
+                  modal="true"
+                  width="1000" height="120" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgProfissao"
+                         columnClasses="ui-grid-col-8"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgProfissaoList">
+                    <p:selectCheckboxMenu id="soProfissoes"
+                                          value="#{efetivaAtendimentoTerapiaOcupacionalBean.selectedProfissoes}"
+                                          converter="omnifaces.SelectItemsConverter"
+                                          filter="true"
+                                          filterMatchMode="startsWith"
+                                          label="Profissões"
+                                          style="width: 100%;color: darkgray">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{efetivaAtendimentoTerapiaOcupacionalBean.profissoes}"
+                                var="profissao"
+                                itemLabel="#{profissao.descricao}"/>
+                    </p:selectCheckboxMenu>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            id="btnInserir"
+                            update="form:tab:dtUltimasProfissoes form:tab:dtAtividadeProfissionalCarteira form:tab:dtPresoTrabalhando form:tab:dtAtividadeProfissional"
+                            oncomplete="PF('addProfissao').hide();"
+                            actionListener="#{efetivaAtendimentoTerapiaOcupacionalBean.adicionarProfissoes()}"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,164 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">Estabelecimento</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{visualizaComarcaBean.onClickVoltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <h1>Cadastro de Comarca</h1>
+                        <p:panelGrid columns="3"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itComarca"
+                                             readonly="true"
+                                             value="#{visualizaComarcaBean.comarca.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itComarca" value="Comarca"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somEstado"
+                                                 readonly="true"
+                                                 value="#{visualizaComarcaBean.endereco.municipio.estado}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                                  itemValue=""/>
+                                    <f:selectItems var="estado"
+                                                   itemLabel="#{estado.descricao.toUpperCase()}"
+                                                   value="#{visualizaComarcaBean.estados}"/>
+                                    <p:ajax process="@this" update="soMunicicio"
+                                            listener="#{visualizaComarcaBean.onSelectEstados()}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estado"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soMunicicio"
+                                                 readonly="true"
+                                                 value="#{visualizaComarcaBean.endereco.municipio}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems var="municipio" itemLabel="#{municipio.descricao.toUpperCase()}"
+                                                   value="#{visualizaComarcaBean.municipios}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Município"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2"
+                                     id="pgLogradouroNumero"
+                                     columnClasses="ui-grid-col-10, ui-grid-col-2"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itLogradouro"
+                                             readonly="true"
+                                             value="#{visualizaComarcaBean.endereco.logradouro}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itLogradouro" value="Logradouro"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNumero"
+                                             readonly="true"
+                                             value="#{visualizaComarcaBean.endereco.numero}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNumero" value="Número"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="3"
+                                     id="pgBairroReferenciaCep"
+                                     columnClasses="ui-grid-col-5, ui-grid-col-5, ui-grid-col-2" layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itBairro"
+                                             readonly="true"
+                                             value="#{visualizaComarcaBean.endereco.bairro}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itBairro" value="Bairro"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itReferencia"
+                                             readonly="true"
+                                             value="#{visualizaComarcaBean.endereco.referencia}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itReferencia" value="Referência"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputMask id="imCep"
+                                             readonly="true"
+                                             value="#{visualizaComarcaBean.endereco.cep}"
+                                             mask="99999-999"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="imCep" value="CEP"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Varas</h1>
+                        <p:dataTable
+                                id="dtVarasCadastradas" var="vara"
+                                value="#{visualizaComarcaBean.varas}" reflow="true"
+                                paginator="true"
+                                rows="10"
+                                emptyMessage="Nenhum registro encontrado"
+                                style="text-align: center">
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{vara.descricao}"/>
+                            </p:column>
+                            <!--<p:column headerText="Opções"-->
+                                      <!--style="width:110px;text-align: center">-->
+                                <!--<p:commandButton title="Inativar" process="@this"-->
+                                                 <!--update="dtVaras"-->
+                                                 <!--actionListener="#{visualizaComarcaBean.onClickExcluir(vara)}"-->
+                                                 <!--icon="ui-icon-trash" styleClass="red-btn">-->
+                                    <!--<p:confirm header="Confirmação"-->
+                                               <!--message="Deseja realmente inativar este registro?"-->
+                                               <!--icon="ui-icon-alert"/>-->
+                                <!--</p:commandButton>-->
+                                <!--<p:confirmDialog global="true" showEffect="fade"-->
+                                                 <!--hideEffect="fade">-->
+                                    <!--<p:commandButton value="Sim" type="button"-->
+                                                     <!--styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>-->
+                                    <!--<p:commandButton value="Não" type="button"-->
+                                                     <!--styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>-->
+                                <!--</p:confirmDialog>-->
+                            <!--</p:column>-->
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

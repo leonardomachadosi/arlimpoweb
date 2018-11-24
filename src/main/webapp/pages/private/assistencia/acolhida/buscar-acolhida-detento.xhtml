@@ -1,0 +1,187 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Busca de Solicitações</h1>
+                        <!--<p:panelGrid id="pgUnidadePavilhaoCela" columns="3"-->
+                                     <!--columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"-->
+                                     <!--layout="grid" styleClass="ui-panelgrid-blank form-group"-->
+                                     <!--style="border:0px none; background-color:transparent;">-->
+                            <!--<h:panelGroup styleClass="md-selectonemenu">-->
+                                <!--<p:selectOneMenu id="somUnidadePrisional"-->
+                                                 <!--value="#{buscaMovimentacaoDetentoBean.pavilhao.unidadePrisional}"-->
+                                                 <!--converter="omnifaces.SelectItemsConverter" style="width: 100%;">-->
+                                    <!--<f:selectItem noSelectionOption="true"/>-->
+                                    <!--<f:selectItem itemLabel="Selecione o Estabelecimento"-->
+                                                  <!--itemValue=""/>-->
+                                    <!--<f:selectItems var="unidadePrisional"-->
+                                                   <!--itemLabel="#{unidadePrisional.descricao}"-->
+                                                   <!--value="#{buscaMovimentacaoDetentoBean.unidadesPrisionais}"/>-->
+                                    <!--<p:ajax process="@this" update="pgPavilhao"-->
+                                            <!--listener="#{buscaMovimentacaoDetentoBean.onSelectUnidadesPrisionais}"/>-->
+                                <!--</p:selectOneMenu>-->
+                                <!--<p:outputLabel value="Estabelecimento"/>-->
+                            <!--</h:panelGroup>-->
+                            <!--<h:panelGroup id="pgPavilhao" styleClass="md-selectonemenu">-->
+                                <!--<p:selectOneMenu id="somPavilhao"-->
+                                                 <!--value="#{buscaMovimentacaoDetentoBean.cela.pavilhao}"-->
+                                                 <!--converter="omnifaces.SelectItemsConverter" style="width: 100%;">-->
+                                    <!--<f:selectItem noSelectionOption="true"/>-->
+                                    <!--<f:selectItem itemLabel="Selecione o Pavilhão" itemValue=""/>-->
+                                    <!--<f:selectItems var="pavilhao" itemLabel="#{pavilhao.descricao}"-->
+                                                   <!--value="#{buscaMovimentacaoDetentoBean.selectPavilhoes}"/>-->
+                                    <!--<p:ajax process="@this" update="pgCela"-->
+                                            <!--listener="#{buscaMovimentacaoDetentoBean.onSelectPavilhoes}"/>-->
+                                <!--</p:selectOneMenu>-->
+                                <!--<p:outputLabel value="Pavilhão"/>-->
+                            <!--</h:panelGroup>-->
+                            <!--<h:panelGroup id="pgCela" styleClass="md-selectonemenu">-->
+                                <!--<p:selectOneMenu id="somCela"-->
+                                                 <!--value="#{buscaMovimentacaoDetentoBean.cela}"-->
+                                                 <!--converter="omnifaces.SelectItemsConverter" style="width: 100%;">-->
+                                    <!--<f:selectItem noSelectionOption="true"/>-->
+                                    <!--<f:selectItem itemLabel="Selecione a Cela" itemValue=""/>-->
+                                    <!--<f:selectItems var="cela" itemLabel="#{cela.descricao}"-->
+                                                   <!--value="#{buscaMovimentacaoDetentoBean.selectCelas}"/>-->
+                                <!--</p:selectOneMenu>-->
+                                <!--<p:outputLabel value="Cela"/>-->
+                            <!--</h:panelGroup>-->
+                        <!--</p:panelGrid>-->
+                        <!--<p:panelGrid id="ipDescricaoCodigoPreso" columns="3"-->
+                                     <!--columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"-->
+                                     <!--layout="grid" styleClass="ui-panelgrid-blank form-group"-->
+                                     <!--style="border:0px none; background-color:transparent;">-->
+                            <!--<h:panelGroup styleClass="md-inputfield">-->
+                                <!--<p:inputText id="itDescricao" value="#{buscaMovimentacaoDetentoBean.detentoCela.detento.pessoa.nome}"-->
+                                             <!--style="width: 100%;"/>-->
+                                <!--<p:outputLabel for="itDescricao" value="Nome do preso"/>-->
+                            <!--</h:panelGroup>-->
+                            <!--<h:panelGroup styleClass="md-inputfield">-->
+                                <!--<p:inputText id="itCodigoPreso"-->
+                                             <!--value="#{movimentacaoDetentoBean.detentoCela.detento.pessoa.id}" style="width: 100%;"-->
+                                             <!--onkeydown="return event.keyCode &gt;= 48 &amp;&amp; event.keyCode &lt;= 57 || event.keyCode == 8|| event.keyCode == 9"/>-->
+                                <!--<p:outputLabel for="itCodigoPreso" value="Código Preso"/>-->
+                            <!--</h:panelGroup>-->
+                        <!--</p:panelGrid>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="Buscar"
+                                             action="#{buscaMovimentacaoDetentoBean.findDetentosCela}"
+                                             icon="ui-icon-search" update="dtDetentoCelas" process="@this"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Solicitações</h1>
+                        <p:dataTable id="dtDetentoCelas" var="detentoCela"
+                                     value="#{buscaMovimentacaoDetentoBean.detentoCelas}" reflow="true" rowKey="#{detentoCela.id}"
+                                     paginator="true" rows="10">
+                           <p:column headerText=""
+                                      style="width:250px;text-align: center">
+                                <i class="ui-icon ui-icon-person"
+                                   style="font-size:36px;color:#757575;padding: 5px;float:left;"></i>
+                                <h:outputText value="#{detentoCela.detento.pessoa.nome}" style="float: left; margin-top: 18px !important;"/>
+                            </p:column>
+                            <p:column headerText=""
+                                      style="width:200px;text-align: center">
+                                <h:outputText
+                                        value="#{detentoCela.cela.pavilhao.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText=""
+                                      style="width:150px;text-align: center">
+                                <h:outputText value="#{detentoCela.cela.pavilhao.descricao}"/>
+                            </p:column>
+                            <p:column headerText=""
+                                      style="width:80px;text-align: center">
+                                <h:outputText value="#{detentoCela.cela.descricao}"/>
+                            </p:column>
+                            <p:column headerText=""
+                                      style="width:60px;text-align: center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaCelaBean.onClickVisualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{cela}"
+                                                                 target="#{buscaCelaBean.cela}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="right">
+                            <p:commandButton  value="Movimentar" id="btnProximo"
+                                              action="#{buscaMovimentacaoDetentoBean.onClickMovimentarDetento}"
+                                              icon="ui-icon-arrow-forward" process="@this"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>-->
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

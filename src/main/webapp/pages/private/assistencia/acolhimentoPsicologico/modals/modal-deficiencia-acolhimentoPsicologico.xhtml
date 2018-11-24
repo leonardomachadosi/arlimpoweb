@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-deficiencia-acolhimento-psicologico">
+        <p:dialog header="Adicionar Deficiência" id="dialogDeficienciaAcolhimentoPsicologico"
+                  widgetVar="addDeficiencia"
+                  modal="true"
+                  width="1000" height="120" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="2"
+                         id="pgTipoDeficienciaGrauDeficiencia"
+                         columnClasses="ui-grid-col-6"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soTipoDeficiencia"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{efetivaAcolhimentoPsicologicoBean.pessoaTipoDeficiencia.deficiencia}"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{efetivaAcolhimentoPsicologicoBean.deficiencias}"
+                                       var="tipoDeficiencia"
+                                       itemLabel="#{tipoDeficiencia.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soTipoDeficiencia" value="Tipo de Deficiência"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soGrauDeficiencia"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{efetivaAcolhimentoPsicologicoBean.pessoaTipoDeficiencia.grauDeficiencia}"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{efetivaAcolhimentoPsicologicoBean.grauDeficiencias}"
+                                       var="grauDeficiencia"
+                                       itemLabel="#{grauDeficiencia.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soGrauDeficiencia" value="Grau de Deficiência"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="right">
+                    <p:commandButton
+                            value="Inserir"
+                            id="btnInserir"
+                            update="form:dtPessoaTipoDeficiencias "
+                            oncomplete="PF('addDeficiencia').hide();"
+                            actionListener="#{efetivaAcolhimentoPsicologicoBean.inserirDeficiencias()}"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

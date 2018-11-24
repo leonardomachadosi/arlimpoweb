@@ -1,0 +1,211 @@
+/*.topbar {*/
+/*z-index: 10000 !important;*/
+/*}*/
+
+.text-success {
+    color: #4CAF50;
+}
+
+.text-info {
+    color: #00BCD4;
+}
+
+.text-warning {
+    color: #FFC107;
+}
+
+.text-danger {
+    color: #F44336;
+}
+
+.text-muted {
+    color: #607D8B;
+}
+
+.datalist-nobullet .ui-datalist-data {
+    list-style-type: none;
+}
+
+.cars-datalist .text-column p:last-child {
+    color: #757575;
+}
+
+.cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.cars-datalist .car-item button {
+    float: right;
+}
+
+.cars-datalist ul {
+    margin: 0;
+    padding: 0;
+}
+
+.ui-car-display td:last-child {
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .cars-datalist .text-column {
+        text-align: center;
+    }
+}
+
+.customLabel {
+    font-weight: bold;
+    font-size: medium;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    display: block;
+}
+
+.solicitacaoLabel {
+    font-weight: bold;
+    font-size: medium;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    display: block;
+}
+
+.titulo-pagina {
+    padding-bottom: 15px;
+}
+
+.subtitulo-pagina {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.assistencia-subtitulo {
+    text-align: left;
+    font-size: 22px;
+    font-weight: 500;
+    border-bottom: 1px solid #A8A8A8;
+    padding-bottom: 8px;
+}
+
+.questao {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4A5BB9;
+}
+
+.select-disabled {
+    pointer-events: none;
+    touch-action: none;"
+}
+
+.hide-class {
+    display: none;
+}
+
+.outputMask {
+    border: 0 !important;
+    opacity: 1 !important;
+}
+
+.label-dados {
+    font-size: 16px;
+    font-weight: bold;
+    padding-right: 10px;
+}
+
+.p-autocomplete {
+    width: 100%;
+}
+
+.stepTimeline ul[role=tablist] {
+    display: flex;
+    justify-content: space-between;
+}
+
+.stepTimeline .ui-steps-title {
+    font-size: 13px;
+}
+
+.notification-readed {
+    color: grey;
+}
+
+.notification-new {
+    color: green;
+}
+
+.input-auto {
+    width: 100%;
+}
+
+.input-auto > input {
+    width: 100%;
+}
+
+.input-auto > span > label {
+    color: darkgray;
+}
+
+.table-no-padding > td {
+    padding: 0 !important;
+}
+
+.panelBtnRight {
+    border: 0 !important;
+    float: right;
+}
+
+.panelBtnRight .ui-panel-content {
+    padding-right: 0 !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.detento-column-prazo-bom {
+    color: #28a745;
+}
+
+.detento-column-prazo-ruim {
+    color: #dc3545;;
+}
+
+.customAlert-info {
+    padding: 1em;
+    background-color: #2196F3;
+    border-color: #2196F3;
+    display: block;
+    color: #fff;
+    font-weight: bold;
+}
+
+.customButtonAlign {
+    display: contents;
+}
+
+.customImgFrontalHeader .ui-widget-header {
+    background-color: transparent !important;
+    border: 0 !important;
+}
+
+/*.customModal{*/
+/*z-index: 10000!important;*/
+/*}*/
+
+.customDadosPanelgrid {
+
+}
+
+.customDadosPanelgrid label {
+    font-weight: bold;
+}
+
+.custom-profile-image{
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 5px auto;
+    border-radius: 50%;
+    border: 1px solid #bcbcbc;
+    padding: 0.2em;
+}

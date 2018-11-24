@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false" life="3000"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Admissão por Transferência</h1>
+                        <p:panelGrid id="pgDetento" columns="2"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:inputText id="itUnidadePrisional"
+                                             style="width: 100%"
+                                             readonly="true"
+                                             value="#{transferenciaEntradaBean.unidadePrisional.descricao}"/>
+                                <p:outputLabel for="itUnidadePrisional" value="Estabelecimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataHora" maxdate="#{transferenciaEntradaBean.dataAtual}"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            value="#{transferenciaEntradaBean.movimentacaoDetento.dataEntrada}"/>
+                                <p:outputLabel value="Data e Hora de Entrada" for="cdDataHora"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarTransferenciaAdmissao" value="Salvar"
+                                             action="#{transferenciaEntradaBean.salvar()}"
+                                             process="@form"
+                                             update="messages"
+                                             icon="ui-icon-check">
+                                <p:confirm header="Confirmação" message="Deseja salvar admissão?"
+                                           icon="ui-icon-alert"/>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                 widgetVar="confirmDlg">
+                                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                     icon="ui-icon-check"/>
+                                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:dataTable
+                                id="dtDetentos"
+                                reflow="true"
+                                rowKey="#{detentoSolicitacaoTransferencia.id}"
+                                value="#{transferenciaEntradaBean.detentosSolicitacaoTransferencia}"
+                                selection="#{transferenciaEntradaBean.selectedDetentosSolicitacaoTransferencia}"
+                                var="detentoSolicitacaoTransferencia"
+                                emptyMessage=""
+                                paginator="true"
+                                paginatorPosition="bottom"
+                                rows="10">
+                            <f:facet name="header">
+                                Presos
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column width="5%">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:column headerText="Foto" width="10%" style="text-align: center">
+                                <p:graphicImage
+                                        value="#{fotoBean.getFotoFrontalPath(detentoSolicitacaoTransferencia.detento.pessoa.id, 1)}"
+                                        style="width: 90%;"/>
+                            </p:column>
+                            <p:column headerText="Preso" style="text-align: center">
+                                <h:outputText value="#{detentoSolicitacaoTransferencia.detento.pessoa.nome}"/>
+                            </p:column>
+                            <p:column headerText="Data da Saída" style="text-align: center">
+                                <h:outputText value="#{detentoSolicitacaoTransferencia.dataSaida}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estabelecimento de Origem" style="text-align: center">
+                                <h:outputText
+                                        value="#{detentoSolicitacaoTransferencia.solicitacaoTransferencia.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Estabelecimento de Destino" style="text-align: center">
+                                <h:outputText
+                                        value="#{detentoSolicitacaoTransferencia.unidadePrisionalDestino.descricao}"/>
+                            </p:column>
+                            <p:column width="7%" style="text-align: center">
+                                <p:commandButton
+                                        rendered="#{transferenciaEntradaBean.hasTemplate(detentoSolicitacaoTransferencia.detento.pessoa.id)}"
+                                        title="Entrada por digital" icon="ui-icon-fingerprint"
+                                        process="@this" update="@form"
+                                        actionListener="#{transferenciaEntradaBean.onClickListarDatiloscopias(detentoSolicitacaoTransferencia.detento.pessoa)}"
+                                        oncomplete="PF('dlgFingerPrintVerify').show();">
+                                </p:commandButton>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panelGrid id="pgJustificativa" columns="1"
+                                             columnClasses="label, value"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             rendered="#{detentoSolicitacaoTransferencia.justificativa != null}"
+                                             style="border:0px none; background-color:transparent; width: 100%">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="font-weight: bold;"
+                                                       value="Justificativa: "/>
+                                        <p:outputLabel
+                                                value="#{detentoSolicitacaoTransferencia.justificativa}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <p:dialog header="Busca por biometria" id="dlgFingerPrintVerify" widgetVar="dlgFingerPrintVerify"
+                      modal="true" width="50%">
+                <div class="ui-g-12">
+                    <p:panelGrid id="pngDlgFingerPrintVerify" columns="1" columnClasses="ui-grid-col-12"
+                                 layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <!--style="border:0px none; background-color:transparent;"-->
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="somDatiloscopia" value="#{transferenciaEntradaBean.datiloscopia}"
+                                             converter="omnifaces.SelectItemsConverter"
+                                             style="width: 100%;">
+                                <f:selectItem noSelectionOption="true"/>
+                                <f:selectItems value="#{transferenciaEntradaBean.datiloscopiaList}" var="datiloscopia"
+                                               itemLabel="#{datiloscopia.posicao.descricao}"
+                                               itemValue="#{datiloscopia}"/>
+                                <p:ajax process="@this" event="itemSelect" update="pngDlgFingerPrintVerify"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Datiloscopia"/>
+                        </h:panelGroup>
+                        <h:inputText id="itxJsonVerify"
+                                     value="#{transferenciaEntradaBean.jsonRequest}"
+                                     style="display: none"/>
+                        <p:commandButton rendered="#{transferenciaEntradaBean.canRenderButtonVerifyBiometric}"
+                                         title="Verificar" icon="ui-icon-fingerprint" type="button"
+                                         onclick="verifyFingerPrint($('#itxJsonVerify').val())"/>
+                    </p:panelGrid>
+                </div>
+            </p:dialog>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid style="margin-bottom:20px;width: 100%;">
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Altura: "/>
+                <h:outputText value="#{dadosFisicos.altura}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Cor dos Olhos: "/>
+                <h:outputText value="#{dadosFisicos.olho.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Orelhas: "/>
+                <h:outputText value="#{dadosFisicos.orelha.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Etnia: "/>
+                <h:outputText value="#{dadosFisicos.etnia.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Boca: "/>
+                <h:outputText value="#{dadosFisicos.boca.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Tipo de Rosto: "/>
+                <h:outputText value="#{dadosFisicos.rosto.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Cor do Cabelo: "/>
+                <h:outputText value="#{dadosFisicos.cabelo.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Nariz: "/>
+                <h:outputText value="#{dadosFisicos.nariz.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Testa: "/>
+                <h:outputText value="#{dadosFisicos.testa.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Pescoço: "/>
+                <h:outputText value="#{dadosFisicos.pescoco.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Sobrancelhas: "/>
+                <h:outputText value="#{dadosFisicos.sobrancelha.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Compleição: "/>
+                <h:outputText value="#{dadosFisicos.compleicao.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Peso: "/>
+                <h:outputText value="#{dadosFisicos.peso}"/>
+            </p:column>
+            <!--<p:column>-->
+                <!--<h:outputLabel value="Barba: "/>-->
+                <!--<h:outputText value="#{dadosFisicos.barba.descricao}"/>-->
+            <!--</p:column>-->
+        </p:row>
+        <p:row>
+            <!--<p:column>-->
+                <!--<h:outputLabel value="Bigode: "/>-->
+                <!--<h:outputText value="#{dadosFisicos.bigode.descricao}"/>-->
+            <!--</p:column>-->
+            <p:column>
+                <h:outputLabel value="Lábio: "/>
+                <h:outputText value="#{dadosFisicos.labio.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Peculiaridade: "/>
+                <h:outputText value="#{dadosFisicos.peculariedade}"/>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+
+</ui:composition>

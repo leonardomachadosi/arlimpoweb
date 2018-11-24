@@ -1,0 +1,815 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:tabView id="tabDadosPessoais">
+        <p:tab title="Dados">
+            <p:spacer/>
+            <p:panelGrid columns="1"
+                         id="pgNome"
+                         columnClasses="ui-grid-col-8" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itNome"
+                                 value="#{cadastroDetentoBean.pessoa.nome}"
+                                 readonly="#{cadastroDetentoBean.pessoa.identificado != null and cadastroDetentoBean.pessoa.identificado}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itNome" value="Nome"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgOutrosNomes"
+                         columnClasses="ui-grid-col-8,ui-grid-col-2" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itOutroNome"
+                                 value="#{cadastroDetentoBean.nomeFalso.nome}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itOutroNome" value="Outro Nome"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:commandButton
+                            process="@form"
+                            update="pgOutrosNomes pgDtOutrosNomes"
+                            title="Adicionar Nome Falso"
+                            actionListener="#{cadastroDetentoBean.adicionarNomeFalso()}"
+                            icon="ui-icon-plus"
+                    />
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgDtOutrosNomes"
+                         columnClasses="ui-grid-col-8" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+
+                <p:dataTable id="dtNomeFalso"
+                             value="#{cadastroDetentoBean.nomeFalsos}"
+                             var="nomeFalso"
+                             type="unordered"
+                             rendered="#{!cadastroDetentoBean.nomeFalsos.isEmpty()}"
+                             itemType="none"
+                             styleClass="data-datalist">
+                    <f:facet name="header">Outros Nomes</f:facet>
+                    <p:column headerText="Outro Nome">
+                        <h:outputText value="#{nomeFalso.nome}"/>
+                    </p:column>
+                    <p:column style="width: 30px">
+                        <p:commandButton icon="ui-icon-trash"
+                                         title="Remover"
+                                         style="border-bottom: 10px"
+                                         styleClass="red-btn"
+                                         update="form:tabDadosPessoais:pgOutrosNomes form:tabDadosPessoais:pgDtOutrosNomes"
+                                         action="#{cadastroDetentoBean.removerNomeFalso()}">
+                            <f:setPropertyActionListener value="#{nomeFalso}"
+                                                         target="#{cadastroDetentoBean.nomeFalso}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgAlcunha"
+                         columnClasses="ui-grid-col-8, ui-grid-col-2" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itAlcunha"
+                                 value="#{cadastroDetentoBean.alcunha.nome}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itAlcunha" value="Alcunha"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:commandButton
+                            id="btnNovaAlcunha"
+                            title="Adicionar Alcunha"
+                            process="@form"
+                            update="pgAlcunha pgDtAlcunha"
+                            actionListener="#{cadastroDetentoBean.adicionarAlcunha()}"
+                            icon="ui-icon-plus"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgDtAlcunha"
+                         columnClasses="ui-grid-col-8" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <p:dataTable id="dtAlcunha"
+                             value="#{cadastroDetentoBean.alcunhas}"
+                             var="alcunha"
+                             type="unordered"
+                             itemType="none"
+                             rendered="#{!cadastroDetentoBean.alcunhas.isEmpty()}">
+                    <f:facet name="header">Alcunhas</f:facet>
+                    <p:column headerText="Alcunha">
+                        <h:outputText value="#{alcunha.nome}"/>
+                    </p:column>
+                    <p:column style="width: 30px">
+                        <p:commandButton
+                                icon="ui-icon-trash"
+                                style="border-bottom: 10px"
+                                styleClass="red-btn"
+                                title="Remover"
+                                update="form:tabDadosPessoais:pgAlcunha form:tabDadosPessoais:pgDtAlcunha"
+                                action="#{cadastroDetentoBean.removerAlcunha()}">
+                            <f:setPropertyActionListener value="#{alcunha}" target="#{cadastroDetentoBean.alcunha}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+            <p:panelGrid columns="3"
+                         id="pgNacimentoNacionalidadeNaturalidade"
+                         columnClasses="ui-grid-col-3, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:calendar id="cdNascimento"
+                                value="#{cadastroDetentoBean.pessoa.dataNascimento}"
+                                pattern="dd/MM/yyyy"
+                                mask="99/99/9999"
+                                readonly="#{cadastroDetentoBean.pessoa.identificado != null and cadastroDetentoBean.pessoa.identificado}"
+                                navigator="true"
+                                showOn="#{cadastroDetentoBean.pessoa.identificado == null or !cadastroDetentoBean.pessoa.identificado}"
+                                locale='pt'
+                                maxdate="#{cadastroDetentoBean.maxDate()}"
+                                mindate="#{cadastroDetentoBean.minDate()}"
+                                style="width: 100%"/>
+                    <p:outputLabel for="cdNascimento" value="Nascimento"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soNacionalidade"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.pessoa.nacionalidade}"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems var="nacionalidade"
+                                       value="#{cadastroDetentoBean.nacionalidades}"
+                                       itemLabel="#{nacionalidade.descricao}"/>
+                        <f:ajax event="change" listener="#{cadastroDetentoBean.carregaPaisNacionalidade()}"
+                                execute="@this" render="hpPaisEstadoNaturalidade hpPaisOrigem"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Nacionalidade"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu"
+                              id="hpPaisOrigem"
+                >
+                    <p:selectOneMenu id="soPaisOrigem"
+                                     rendered="#{cadastroDetentoBean.pessoa.nacionalidade.id != null and (cadastroDetentoBean.pessoa.nacionalidade.id == 33 ||cadastroDetentoBean.pessoa.nacionalidade.id == 34)}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     filter="true"
+                                     value="#{cadastroDetentoBean.pessoa.paisOrigem}"
+                                     style="width: 100%;"
+                    >
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems var="pais"
+                                       value="#{cadastroDetentoBean.paises}"
+                                       itemLabel="#{pais.descricao}"/>
+                        <p:ajax process="@this" update="pgEstadoNaturalidade"
+                                listener="#{cadastroDetentoBean.carregarEstadosOrigem()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="País de Origem"
+                                   rendered="#{cadastroDetentoBean.pessoa.nacionalidade.id == 33 ||cadastroDetentoBean.pessoa.nacionalidade.id == 34}"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <h:panelGroup id="hpPaisEstadoNaturalidade">
+                <p:panelGrid columns="2"
+                             id="pgEstadoNaturalidade"
+                             columnClasses="ui-grid-col-4, ui-grid-col-4"
+                             rendered="#{cadastroDetentoBean.pessoa.nacionalidade.id == 32}"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+
+                    <h:panelGroup styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soEstadoOrigem"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         filter="true"
+                                         value="#{cadastroDetentoBean.estadoNaturalidade}"
+                                         style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="" itemValue=""/>
+                            <f:selectItems var="estadoOrigem"
+                                           value="#{cadastroDetentoBean.estadosOrigem}"
+                                           itemLabel="#{estadoOrigem.descricao}"/>
+                            <p:ajax process="@this" update="pgEstadoNaturalidade"
+                                    listener="#{cadastroDetentoBean.carregarNaturalidades()}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="soEstadoOrigem" value="Estado de Origem"/>
+                    </h:panelGroup>
+                    <h:panelGroup styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soNaturalidade"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         value="#{cadastroDetentoBean.pessoa.municipioNascimento}"
+                                         filter="true"
+                                         style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems var="naturalidade"
+                                           value="#{cadastroDetentoBean.naturalidades}"
+                                           itemLabel="#{naturalidade.descricao}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="soNaturalidade" value="Naturalidade"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+            <p:panelGrid columns="2"
+                         id="pgMae"
+                         columnClasses="ui-grid-col-8,ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itMae"
+                                 value="#{cadastroDetentoBean.pessoaParentescoMae.pessoaParente.nome}"
+                                 readonly="true"
+                                 style="width: 100%;"
+                                 inputStyle="width: 100%;"/>
+                    <p:outputLabel for="itMae" value="Mãe"/>
+                </h:panelGroup>
+                <h:panelGroup>
+
+                    <p:commandButton title="Adicionar Mãe"
+                                     icon="ui-icon-plus"
+                                     rendered="#{cadastroDetentoBean.pessoaParentescoMae.pessoaParente.nome == null}"
+                                     actionListener="#{cadastroDetentoBean.setarTipoParente('mae')}"
+                                     oncomplete="PF('addPessoa').show();"
+                                     update="form-dialog-pessoa:dialogPessoa" process="@this"
+                    />
+                    <p:commandButton title="Remover"
+                                     icon="ui-icon-trash"
+                                     styleClass="red-btn"
+                                     rendered="#{cadastroDetentoBean.pessoaParentescoMae.pessoaParente.nome != null
+                                     and (cadastroDetentoBean.pessoaParentescoMae.pessoaParente.identificado == null
+                                     or !cadastroDetentoBean.pessoaParentescoMae.pessoaParente.identificado)}"
+                                     actionListener="#{cadastroDetentoBean.refreshParente('mae')}"
+                                     update="pgMae" process="@this"
+                    />
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgPai"
+                         columnClasses="ui-grid-col-8, ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itPai"
+                                 value="#{cadastroDetentoBean.pessoaParentescoPai.pessoaParente.nome}"
+                                 readonly="true"
+                                 var="pessoa"
+                                 style="width: 100%"
+                                 inputStyle="width: 100%;"/>
+                    <p:outputLabel for="itPai" value="Pai"/>
+                </h:panelGroup>
+                <h:panelGroup>
+
+                    <p:commandButton title="Adicionar Pai"
+                                     icon="ui-icon-plus"
+                                     rendered="#{cadastroDetentoBean.pessoaParentescoPai.pessoaParente.nome == null}"
+                                     actionListener="#{cadastroDetentoBean.setarTipoParente('pai')}"
+                                     oncomplete="PF('addPessoa').show();"
+                                     update="form-dialog-pessoa:dialogPessoa" process="@this"
+                    />
+                    <p:commandButton title="Remover"
+                                     icon="ui-icon-trash"
+                                     styleClass="red-btn"
+                                     rendered="#{cadastroDetentoBean.pessoaParentescoPai.pessoaParente.nome != null
+                                     and (cadastroDetentoBean.pessoaParentescoPai.pessoaParente.identificado == null
+                                     or !cadastroDetentoBean.pessoaParentescoPai.pessoaParente.identificado)}"
+                                     update="pgPai"
+                                     actionListener="#{cadastroDetentoBean.refreshParente('pai')}"/>
+
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="3"
+                         id="pgSexoOrientacaoSexual"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soSexo"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.pessoa.sexo}"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems var="sexo"
+                                       value="#{cadastroDetentoBean.sexos}"
+                                       itemLabel="#{sexo.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soSexo" value="Sexo"/>
+                </h:panelGroup>
+                <!-- <h:panelGroup styleClass="md-selectonemenu">
+                     <p:selectOneMenu id="soOrientacaoSexual"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.pessoa.orientacaoSexual}"
+                                      style="width: 100%;">
+                         <f:selectItem noSelectionOption="true"/>
+                         <f:selectItem itemLabel="" itemValue=""/>
+                         <f:selectItems var="orientacaoSexual"
+                                        value="#{cadastroDetentoBean.orientacaoSexuals}"
+                                        itemLabel="#{orientacaoSexual.descricao}"/>
+                     </p:selectOneMenu>
+                     <p:outputLabel for="soOrientacaoSexual" value="Orientação Sexual"/>
+                 </h:panelGroup>
+                 <h:panelGroup styleClass="md-selectonemenu">
+                     <p:selectOneMenu id="soIdentidadeGenero"
+                                      converter="omnifaces.SelectItemsConverter"
+                                      value="#{cadastroDetentoBean.pessoa.identidadeGenero}"
+                                      style="width: 100%">
+                         <f:selectItem noSelectionOption="true"/>
+                         <f:selectItem itemLabel="" itemValue=""/>
+                         <f:selectItems var="identidadeGenero"
+                                        value="#{cadastroDetentoBean.identidadeGeneros}"
+                                        itemLabel="#{identidadeGenero.descricao}"/>
+                         <f:ajax event="change" execute="@this" render="hpNomeSocial"/>
+                     </p:selectOneMenu>
+                     <p:outputLabel for="soIdentidadeGenero" value="Identidade de Gênero"/>
+                 </h:panelGroup>-->
+            </p:panelGrid>
+            <h:panelGroup id="hpNomeSocial">
+                <p:panelGrid columns="1"
+                             id="pgNomeSocial"
+                             columnClasses="ui-grid-col-8"
+                             layout="grid"
+                             rendered="#{cadastroDetentoBean.pessoa.identidadeGenero.id == 1}"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputText id="itNomeSocial"
+                                     value="#{cadastroDetentoBean.nomeSocial.nome}"
+                                     style="width: 100%;"/>
+                        <p:outputLabel for="itNomeSocial" value="Nome Social"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+            </h:panelGroup>
+            <p:panelGrid columns="3"
+                         id="pgEstadoCivilConjuge"
+                         columnClasses="ui-grid-col-4, ui-grid-col-6,ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soEstadoCivil"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.pessoa.estadoCivil}"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.estadoCivils}"
+                                       var="estadoCivil"
+                                       itemLabel="#{estadoCivil.descricao}"/>
+                        <f:ajax event="change" execute="pgEstadoCivilConjuge" render="pgEstadoCivilConjuge"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soEstadoCivil" value="Estado Civil"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield"
+                              rendered="#{cadastroDetentoBean.pessoa.estadoCivil.id == 66 ||
+                              cadastroDetentoBean.pessoa.estadoCivil.id == 70 ||
+                              cadastroDetentoBean.pessoa.estadoCivil.id == 323}">
+                    <p:inputText id="itConjuge"
+                                 value="#{cadastroDetentoBean.pessoaParentescoConjuge.pessoaParente.nome}"
+                                 var="pessoa"
+                                 readonly="true"
+                                 style="width: 100%"
+                                 inputStyle="width: 100%;"/>
+                    <p:outputLabel for="itConjuge" value="Cônjuge"/>
+                </h:panelGroup>
+                <h:panelGroup rendered="#{cadastroDetentoBean.pessoa.estadoCivil.id == 66 ||
+                              cadastroDetentoBean.pessoa.estadoCivil.id == 70 ||
+                              cadastroDetentoBean.pessoa.estadoCivil.id == 323}">
+                    <p:commandButton title="Adicionar Cônjuge"
+                                     icon="ui-icon-plus"
+                                     rendered="#{cadastroDetentoBean.pessoaParentescoConjuge.pessoaParente.nome == null}"
+                                     actionListener="#{cadastroDetentoBean.setarTipoParente('conjuge')}"
+                                     oncomplete="PF('addPessoa').show();"
+                                     update="form-dialog-pessoa:dialogPessoa" process="@this"
+                    />
+                    <p:commandButton title="Remover"
+                                     icon="ui-icon-trash"
+                                     styleClass="red-btn"
+                                     rendered="#{cadastroDetentoBean.pessoaParentescoConjuge.pessoaParente.nome != null}"
+                                     update="pgEstadoCivilConjuge"
+                                     actionListener="#{cadastroDetentoBean.refreshParente('conjuge')}"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <!--<p:panelGrid columns="1"
+                         id="pgReligião"
+                         columnClasses="ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soReligiao"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.pessoa.religiao}"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true" />
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.religiaos}"
+                                       var="religiao"
+                                       itemLabel="#{religiao.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soReligiao" value="Religião"/>
+                </h:panelGroup>
+            </p:panelGrid>-->
+            <!--<p:panelGrid columns="1"
+                         id="pgEscolaridade"
+                         columnClasses="ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soEscolaridade"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.pessoaEscolaridade.escolaridade}"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems value="#{cadastroDetentoBean.escolaridades}"
+                                       var="escolaridade"
+                                       itemLabel="#{escolaridade.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soEscolaridade" value="Escolaridade"/>
+                </h:panelGroup>
+            </p:panelGrid>-->
+            <p:panelGrid columns="2"
+                         id="pgTelefone"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itTelefone"
+                                 value="#{cadastroDetentoBean.telefone.descricao}"
+                                 mask="(99)?999999999"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itTelefone" value="Telefone"/>
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:commandButton title="Adicionar Telefone"
+                                     actionListener="#{cadastroDetentoBean.adicionarTelefone()}"
+                                     update="pgDtTelefone pgTelefone"
+                                     icon="ui-icon-plus"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgDtTelefone"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <p:dataTable value="#{cadastroDetentoBean.telefones}" var="telefone" type="ordered"
+                             rendered="#{!cadastroDetentoBean.telefones.isEmpty()}">
+                    <f:facet name="header">Telefones</f:facet>
+                    <p:column headerText="Telefone">
+                        <h:outputText value="#{telefone.descricao}"/>
+                    </p:column>
+                    <p:column style="width: 30px">
+                        <p:commandButton
+                                icon="ui-icon-trash"
+                                style="border-bottom: 10px"
+                                styleClass="red-btn"
+                                title="Remover"
+                                update="form:tabDadosPessoais:pgTelefone form:tabDadosPessoais:pgDtTelefone"
+                                action="#{cadastroDetentoBean.removerTelefone()}">
+                            <f:setPropertyActionListener value="#{telefone}" target="#{cadastroDetentoBean.telefone}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panelGrid>
+        </p:tab>
+        <p:tab title="Endereços">
+            <p:spacer/>
+            <p:panelGrid columns="3"
+                         id="pgEstadoMunicipio"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <h:panelGroup styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soEstado"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         filter="true"
+                                         value="#{cadastroDetentoBean.estado}"
+                                         style="width: 100%;">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="" itemValue=""/>
+                            <f:selectItems value="#{cadastroDetentoBean.estados}"
+                                           var="estado"
+                                           itemLabel="#{estado.descricao}"/>
+                            <p:ajax process="@this" update="soMunicipio"
+                                    listener="#{cadastroDetentoBean.carregarMunicipios()}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="soEstado" value="Estado"/>
+                    </h:panelGroup>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soMunicipio"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoBean.endereco.municipio}"
+                                     filter="true"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{cadastroDetentoBean.municipios}"
+                                       var="municipio"
+                                       itemLabel="#{municipio.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="soMunicipio" value="Município"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText
+                            id="itBairro"
+                            value="#{cadastroDetentoBean.endereco.bairro}"
+                            style="width: 100%"
+                    />
+                    <p:outputLabel for="itBairro" value="Bairro"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="3"
+                         id="pgCepLogradouroNumero"
+                         columnClasses="ui-grid-col-4, ui-grid-col-6, ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itCep"
+                                 value="#{cadastroDetentoBean.endereco.cep}"
+                                 mask="99999-999"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itCep" value="CEP"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itLogradouro"
+                                 value="#{cadastroDetentoBean.endereco.logradouro}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itLogradouro" value="Logradouro"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itNumero"
+                                 value="#{cadastroDetentoBean.endereco.numero}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itNumero" value="Número"/>
+                </h:panelGroup>
+
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgReferencia"
+                         columnClasses="ui-grid-col-8"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itReferencia"
+                                 value="#{cadastroDetentoBean.endereco.referencia}"
+                                 style="width: 100%;"/>
+                    <p:outputLabel for="itReferencia" value="Referência"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup style="float: right">
+                    <p:commandButton value="Adicionar"
+                                     action="#{cadastroDetentoBean.adicionarEndereco()}"
+                                     update="@form"
+                                     icon="ui-icon-plus"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup>
+                    <p:dataTable id="dtEndereco"
+                                 var="endereco"
+                                 reflow="true"
+                                 value="#{cadastroDetentoBean.enderecos}"
+                                 rows="5"
+                                 rendered="#{!cadastroDetentoBean.enderecos.isEmpty()}"
+                                 emptyMessage=""
+                                 style="width: 100%">
+                        <f:facet name="header">
+                            Endereços
+                        </f:facet>
+                        <p:column headerText="Município" style=" width:150px; text-align: center">
+                            <h:outputText value="#{endereco.municipio.descricao.toUpperCase()}"/>
+                        </p:column>
+                        <p:column headerText="Bairro" style="width:170px; text-align: center">
+                            <h:outputText value="#{endereco.bairro}"/>
+                        </p:column>
+                        <p:column headerText="CEP" style="width:70px;text-align: center">
+                            <h:outputText value="#{endereco.cep}"/>
+                        </p:column>
+                        <p:column headerText="Logradouro" style="text-align: center">
+                            <h:outputText value="#{endereco.logradouro}"/>
+                        </p:column>
+                        <p:column headerText="Referência" style="text-align: center">
+                            <h:outputText value="#{endereco.referencia}"/>
+                        </p:column>
+                        <p:column headerText="Número" style="width:50px;text-align: center">
+                            <h:outputText value="#{endereco.numero}"/>
+                        </p:column>
+                        <p:column style="width: 30px">
+                            <p:commandButton
+                                    icon="ui-icon-trash"
+                                    style="border-bottom: 10px;text-align: center"
+                                    styleClass="red-btn"
+                                    title="Remover"
+                                    update="@form"
+                                    action="#{cadastroDetentoBean.removerEndereco()}">
+                                <f:setPropertyActionListener value="#{endereco}"
+                                                             target="#{cadastroDetentoBean.endereco}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </p:panelGrid>
+        </p:tab>
+        <p:tab title="Documentação Civil Básica">
+            <p:spacer/>
+            <p:panelGrid id="pgCpfTituloSecao"
+                         columns="4"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-2, ui-grid-col-2"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itCpf"
+                                 value="#{cadastroDetentoBean.documento.cpf}"
+                                 mask="999.999.999-99"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itCpf" value="CPF"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itTituloEleitor"
+                                 mask="9999 9999 9999"
+                                 value="#{cadastroDetentoBean.documento.tituloEleitor}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itTituloEleitor" value="Título de Eleitor"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itZona"
+                                 mask="999"
+                                 value="#{cadastroDetentoBean.documento.zona}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itZona" value="Zona"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itSecao"
+                                 mask="9999"
+                                 value="#{cadastroDetentoBean.documento.secao}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itSecao" value="Seção"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid id="pgCtpsSerieReservista"
+                         columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itNumeroCtps"
+                                 mask="999999?999"
+                                 value="#{cadastroDetentoBean.documento.numeroCtps}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itNumeroCtps" value="Número da Carteira de Trabalho"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask
+                            id="itSerieCtps"
+                            mask="9999"
+                            value="#{cadastroDetentoBean.documento.serieCtps}"
+                            style="width: 100%"/>
+                    <p:outputLabel for="itSerieCtps" value="Série da Carteira de Trabalho"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask
+                            id="itCertificadoReservista"
+                            mask="999999"
+                            value="#{cadastroDetentoBean.documento.reservista}"
+                            style="width: 100%"/>
+                    <p:outputLabel for="itCertificadoReservista" value="Certificado de Reservista"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid id="pgCertidaoNacimentoCasamentoSus"
+                         columns="3"
+                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itCertidaoNascimento"
+                                 mask="999999 99 99 9999 9 99999 999 9999999 99"
+                                 value="#{cadastroDetentoBean.documento.certidaoNascimento}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itCertidaoNascimento" value="Certidão de Nascimento"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itCertidaoCasamento"
+                                 mask="999999 99 99 9999 9 99999 999 9999999 99"
+                                 value="#{cadastroDetentoBean.documento.certidaoCasamento}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itCertidaoCasamento" value="Certidão de Casamento"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask id="itSus"
+                                 mask="999 9999 9999 9999"
+                                 value="#{cadastroDetentoBean.documento.sus}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itSus" value="SUS"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid
+                    columns="3"
+                    columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                    layout="grid"
+                    styleClass="ui-panelgrid-blank form-group"
+                    style="border:0 none; background-color:transparent;">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itLivro"
+                                 value="#{cadastroDetentoBean.documento.livro}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itLivro" value="Livro"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="itPagina"
+                                 value="#{cadastroDetentoBean.documento.pagina}"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="itPagina" value="Página"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup style="float: right">
+                    <p:commandButton value="Adicionar RG"
+                                     icon="ui-icon-plus"
+                                     actionListener="#{cadastroDetentoBean.refreshRg()}"
+                                     oncomplete="PF('addRG').show();"
+                                     update="form-dialog-rg:dialogRG"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         columnClasses="ui-grid-col-12"
+                         layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup>
+                    <p:dataTable id="dtRg"
+                                 var="rg"
+                                 reflow="true"
+                                 value="#{cadastroDetentoBean.rgs}"
+                                 rendered="#{!cadastroDetentoBean.rgs.isEmpty()}"
+                                 rows="5"
+                                 paginator="false"
+                                 emptyMessage=""
+                                 style="width: 100%">
+                        <f:facet name="header">
+                            RG
+                        </f:facet>
+                        <p:column headerText="Número RG" style="text-align: center;">
+                            <h:outputText value="#{rg.numero}"/>
+                        </p:column>
+                        <p:column headerText="Data de Emissão" style="text-align: center;">
+                            <h:outputText value="#{rg.dataExpedicao}">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Órgão Expedidor" style="text-align: center;">
+                            <h:outputText value="#{rg.orgaoExpedidor.descricao}"/>
+                        </p:column>
+                        <p:column headerText="Estado de Emissão" style="text-align: center;">
+                            <h:outputText value="#{rg.estado.descricao}"/>
+                        </p:column>
+                        <p:column style="width: 30px; text-align: center">
+                            <p:commandButton
+                                    icon="ui-icon-trash"
+                                    style="border-bottom: 10px"
+                                    title="Remover"
+                                    styleClass="red-btn"
+                                    update="@form"
+                                    action="#{cadastroDetentoBean.removerRg()}">
+                                <f:setPropertyActionListener value="#{rg}" target="#{cadastroDetentoBean.rg}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+            </p:panelGrid>
+        </p:tab>
+    </p:tabView>
+</ui:composition>

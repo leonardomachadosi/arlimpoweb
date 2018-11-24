@@ -1,0 +1,183 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+
+        </style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Vincular Visitante</b></h1>
+                        <p:panelGrid id="pgPresoVisitante" columns="2"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%"
+                                                inputStyle="width: 80%"
+                                                completeMethod="#{vinculoVisitanteBean.completeDetento}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{vinculoVisitanteBean.detentoView}"
+                                                var="detentoView"
+                                                itemValue="#{detentoView}"
+                                                itemLabel="#{detentoView.nomeDetento}"
+                                                converter="detentoViewConverter">
+                                    <p:column style="width: 30%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"
+                                                style="width: 50%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento} - #{detentoView.nomeUnidadePrisional}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect" listener="#{vinculoVisitanteBean.carregarVisitantesDetentoView()}" update="hpDetentoView, hpVisitantesDetento"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Preso"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acVisitante"
+                                                style="width: 100%"
+                                                inputStyle="width: 80%"
+                                                completeMethod="#{vinculoVisitanteBean.completeVisitanteView}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{vinculoVisitanteBean.visitanteView}"
+                                                var="visitanteView"
+                                                itemValue="#{visitanteView}"
+                                                itemLabel="#{visitanteView.nome}"
+                                                converter="visitanteViewConverter">
+                                    <p:column style="width: 30%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(visitanteView.codPessoa, 2)}"
+                                                style="width: 50%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{visitanteView.nome}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"   listener="#{vinculoVisitanteBean.carregarVisitanteDetentosView()}" update="hpVisitanteView, hpVisitanteDetentos"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acVisitante" value="Visitante"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpDetentoView">
+                                <ui:include src="fragments/detentoView-panelgrid.xhtml">
+                                    <ui:param name="detentoView"
+                                              value="#{vinculoVisitanteBean.detentoView}"/>
+                                </ui:include>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitanteView">
+                                <ui:include src="fragments/visitanteView-panelgrid.xhtml">
+                                    <ui:param name="visitanteView"
+                                              value="#{vinculoVisitanteBean.visitanteView}"/>
+                                </ui:include>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitantesDetento">
+                                <p:dataList value="#{vinculoVisitanteBean.visitantesDetentoView}"
+                                            id="dtVisitantesDetento"
+                                            rendered="#{!vinculoVisitanteBean.visitantesDetentoView.isEmpty()}"
+                                            var="visitante"
+                                            type="unordered" itemType="none" paginator="true" paginatorPosition="bottom" rows="10"
+                                            style="width: 80%"
+                                            styleClass="cars-datalist">
+                                    <f:facet name="header">
+                                        Visitantes
+                                    </f:facet>
+                                    <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                        <div class="car-details">
+                                            <p:graphicImage
+                                                    value="#{fotoBean.getFotoFrontalPath(visitante.codPessoaVisitante, 2)}"
+                                                    style="width: 78px; margin:24px;"/>
+                                        </div>
+                                        <div class="car-details" style="max-width: 250px;">
+                                            <p><strong>#{visitante.nomeVisitante}</strong></p>
+                                            <p style="color:#757575">Vínculo: #{visitante.parentesco}</p>
+                                            <p style="color:#757575">Situação Vínculo:  <h:outputText value="#{visitante.vinculo}" styleClass="#{vinculoVisitanteBean.addClassVinculo(visitante.vinculo)}"/> </p>
+                                        </div>
+                                    </div>
+                                </p:dataList>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpVisitanteDetentos">
+                                <p:dataList value="#{vinculoVisitanteBean.visitanteDetentosView}"
+                                            rendered="#{!vinculoVisitanteBean.visitanteDetentosView.isEmpty()}"
+                                            id="dtVisitanteDetentos"
+                                            var="detento"
+                                            type="unordered" itemType="none" paginator="true" paginatorPosition="bottom" rows="5"
+                                            style="width: 80%"
+                                            styleClass="cars-datalist">
+                                    <f:facet name="header">
+                                        Presos
+                                    </f:facet>
+                                    <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                        <div class="car-details">
+                                            <h:graphicImage style="max-width: 20em;"
+                                                            value="#{fotoBean.getFotoFrontalPath(detento.codPessoaDetento, 1)}"/>
+                                        </div>
+                                        <div class="car-details" style="max-width: 250px;">
+                                            <p><strong>#{detento.nomeDetento}</strong></p>
+                                            <p style="color:#757575">Vínculo: #{detento.parentesco}</p>
+                                            <p style="color:#757575">Situação Vínculo: <h:outputText value="#{detento.vinculo}" styleClass="#{vinculoVisitanteBean.addClassVinculo(detento.vinculo)}"/> </p>
+                                        </div>
+                                    </div>
+                                </p:dataList>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgParente" columns="1"
+                                     columnClasses="ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h3><b>Grau de Parentesco</b></h3>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgGrauParentesco" columns="1"
+                                     columnClasses="ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soGrauParentesco"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%"
+                                                 value="#{vinculoVisitanteBean.pessoaParentesco.parentesco}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="" itemValue=""/>
+                                    <f:selectItems value="#{vinculoVisitanteBean.parentescos}"
+                                                   var="parentesco"
+                                                   itemLabel="#{parentesco.descricao}"/>
+
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Parentesco" for="soGrauParentesco"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVincularVisitante" value="Salvar"
+                                             action="#{vinculoVisitanteBean.salvar()}"
+                                             process="@form" update="@form"
+                                             icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

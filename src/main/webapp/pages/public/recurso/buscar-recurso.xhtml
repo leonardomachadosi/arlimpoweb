@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"/>
+            <div class="ui-g">
+
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Recurso</b></h1>
+                        <p:panelGrid id="pgUuid" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itUuid"
+                                             value="#{buscarRecursoBean.resource.uuid}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itUuid" value="Uuid"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton value="Buscar"
+                                             icon="ui-icon-search"
+                                             id="btnBuscarRecurso"
+                                             action="#{buscarRecursoBean.buscarRecursoByUuid()}"
+                                             update="@form"
+                                             process="@this itUuid"/>
+                            <p:defaultCommand target="btnBuscarRecurso"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Recursos</b></h1>
+                        <p:dataTable id="dtRecursos"
+                                     var="recurso"
+                                     value="#{buscarRecursoBean.resources}"
+                                     reflow="true"
+                                     rowKey="#{recurso.id}"
+                                     paginator="true"
+                                     rows="50"
+                                     emptyMessage="Nenhum registro cadastrado encontrado.">
+                            <p:column headerText="Descrição" style="width:210px;text-align: center">
+                                <h:outputText value="#{recurso.description}"/>
+                            </p:column>
+                            <p:column headerText="Uuid" style="text-align: center">
+                                <h:outputText value="#{recurso.uuid}"/>
+                            </p:column>
+                            <p:column headerText="Município" style="width:250px;text-align: center">
+                                <h:outputText value="#{recurso.status}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:140px;text-align: center">
+                                <p:commandButton
+                                        title="Adicionar"
+                                        icon="ui-icon-add"
+                                        process="@this"
+                                        action="#{buscarRecursoBean.criarLaudo(recurso)}"
+                                        update="@this"
+                                        style="margin:24px 12px 0 0"/>
+                                <p:commandButton
+                                                 title="Adicionar"
+                                                 icon="ui-icon-remove-red-eye"
+                                                 process="@this"
+                                                 action="#{buscarRecursoBean.visualizarRecurso(recurso)}"
+                                                 update="@this"
+                                                 style="margin:24px 12px 0 0"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

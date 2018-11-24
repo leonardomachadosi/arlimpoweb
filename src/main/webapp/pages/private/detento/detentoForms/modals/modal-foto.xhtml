@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form enctype="multipart/form-data" id="form-dialog-foto">
+        <p:dialog header="Adicionar Foto" id="dialogFoto" widgetVar="addFoto" modal="true"
+                  width="600" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgTipoFoto"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="soTipoFoto" value="Tipo da Foto"/>
+                    <p:inputText id="soTipoFoto"
+                                 style="width: 100%"
+                                 value="#{cadastroDetentoFotoBiometriaBean.detentoFoto.tipoFoto.descricao}"
+                                 readonly="true"/>
+                  <!--  <p:selectOneMenu id="soTipoFoto"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{cadastroDetentoFotoBiometriaBean.detentoFoto.tipoFoto}"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{cadastroDetentoFotoBiometriaBean.tipoFotos}"
+                                       var="tipoFoto"
+                                       itemLabel="#{tipoFoto.descricao}"/>
+                        <p:ajax process="@this" event="blur"/>
+                    </p:selectOneMenu>-->
+                </p:column>
+            </p:panelGrid>
+            <p:panelGrid columns="1"
+                         id="pgButtonsFoto"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                         background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:fileUpload
+                            mode="advanced"
+                            label="Carregar Foto"
+                            fileUploadListener="#{cadastroDetentoFotoBiometriaBean.uploadFoto}"
+                            cancelLabel="Cancelar"
+                            uploadLabel="Anexar"
+                            update="form:tabDetentoFotoBiometria"
+                            oncomplete="PF('addFoto').hide();"
+                            process="pgTipoFoto pgButtonsFoto"
+                            sizeLimit="#{utilBean.sizeFile}"
+                            invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                            allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                            skinSimple="true"
+                            />
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+            <!--<p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            ajax="false"
+                            update="form:form:tabDetentoFotoBiometria:crDetentoFoto"
+                            oncomplete="PF('addFoto').hide();"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>-->
+        </p:dialog>
+    </h:form>
+</ui:composition>

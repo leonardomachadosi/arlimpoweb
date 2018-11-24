@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:panelGroup id="pgGuia">
+        <p:panelGrid id="gridGuia" columns="2"
+                     columnClasses="ui-grid-col-6, ui-grid-col-6"
+                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                     style="border:0 none; background-color:transparent;">
+
+            <h:panelGroup styleClass="md-inputfield" style="margin-bottom: 1em;">
+                <p:inputNumber id="inNumeroGuia" styleClass="ui-custom-inputnumber"
+                               decimalPlaces="0" thousandSeparator=""
+                               value="#{guia.numero}"
+                               style="width: 100%;"/>
+                <p:outputLabel for="inNumeroGuia" value="Número da Guia"/>
+            </h:panelGroup>
+            <p:spacer/>
+
+            <h:panelGroup id="pgTipoGuia" styleClass="md-selectonemenu">
+                <p:selectOneMenu id="somTipoGuia"
+                                 value="#{guia.tipoGuia}"
+                                 filter="true"
+                                 filterMatchMode="contains"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 style="width: 100%;">
+                    <f:selectItem noSelectionOption="true"/>
+                    <f:selectItem itemLabel="Selecione o Tipo de Guia"
+                                  itemValue=""/>
+                    <f:selectItems var="tipoGuiaEnum"
+                                   itemLabel="#{tipoGuiaEnum.descricao}"
+                                   itemValue="#{tipoGuiaEnum.objeto}"
+                                   value="#{enumBean.tipoGuiaEnums}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Tipo de Guia"/>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="md-inputfield">
+                <p:calendar id="cdDataFato"
+                            value="#{guia.dataFato}"
+                            maxdate="today"
+                            pattern="dd/MM/yyyy"
+                            mask="99/99/9999"
+                            locale='pt'
+                            style="width: 100%"
+                            inputStyle="width: 100%"
+                            navigator="true"/>
+                <p:outputLabel for="cdDataFato" value="Data do Fato"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:outputLabel value="Pena" styleClass="customLabel"/>
+        <p:panelGrid id="pgPena" columns="3"
+                     columnClasses="ui-grid-col-4"
+                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                     style="border:0 none; background-color:transparent;">
+
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="inAno" styleClass="ui-custom-inputnumber"
+                               decimalPlaces="0" thousandSeparator=""
+                               value="#{guia.anoPena}"
+                               style="width: 100%;" maxlength="4"/>
+                <p:outputLabel for="inAno" value="Ano"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="inMes" styleClass="ui-custom-inputnumber"
+                               decimalPlaces="0" thousandSeparator=""
+                               value="#{guia.mesPena}"
+                               style="width: 100%;" maxlength="2"/>
+                <p:outputLabel for="inMes" value="Mês"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputNumber id="inDia" styleClass="ui-custom-inputnumber"
+                               decimalPlaces="0" thousandSeparator=""
+                               value="#{guia.diaPena}"
+                               style="width: 100%;" maxlength="2"/>
+                <p:outputLabel for="inDia" value="Dia"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:spacer/>
+        <p:panelGrid id="pgRegimeCumprimento" columns="2"
+                     columnClasses="ui-grid-col-6"
+                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                     style="border:0 none; background-color:transparent;">
+            <h:panelGroup styleClass="md-selectonemenu">
+                <p:selectOneMenu id="regimeInicial"
+                                 value="#{guia.regimeInicialAplicado}"
+                                 filter="true"
+                                 filterMatchMode="contains"
+                                 converter="omnifaces.SelectItemsConverter"
+                                 style="width: 100%;">
+                    <f:selectItem noSelectionOption="true"/>
+                    <f:selectItem itemLabel="Selecione o regime"
+                                  itemValue=""/>
+                    <f:selectItems var="naturezaCustodiaEnum"
+                                   itemLabel="#{naturezaCustodiaEnum.descricao}"
+                                   itemValue="#{naturezaCustodiaEnum.objeto}"
+                                   value="#{enumBean.naturezaCustodiaEnums}"/>
+                </p:selectOneMenu>
+                <p:outputLabel value="Regime inicial aplicado"/>
+            </h:panelGroup>
+
+            <h:panelGroup styleClass="md-inputfield">
+                <p:calendar id="cdDataInicioCondenacao"
+                            value="#{guia.dataInicioCondenacao}"
+                            maxdate="today"
+                            pattern="dd/MM/yyyy"
+                            mask="99/99/9999"
+                            locale='pt'
+                            style="width: 100%"
+                            inputStyle="width: 100%"
+                            navigator="true"/>
+                <p:outputLabel for="cdDataInicioCondenacao"
+                               value="Data Início do Cumprimento"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:spacer/>
+        <div class="ui-grid-col-12">
+            <p:toolbar rendered="#{exibeBtnSalvar}">
+                <f:facet name="right">
+                    <p:commandButton id="btnInserirGuia" value="Salvar"
+                                     update="@(.processoGuiaList)"
+                                     action="#{bean['salvarGuia'](guia)}"
+                                     icon="ui-icon-check"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                </f:facet>
+            </p:toolbar>
+        </div>
+
+    </h:panelGroup>
+</ui:composition>

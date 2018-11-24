@@ -1,0 +1,243 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"/>
+            <p:remoteCommand name="setResponse" process="@all" update="@form"
+                             actionListener="#{buscaDetentoBean.fingerPrint}"/>
+            <p:blockUI block="form" trigger="btnBuscarDetento"/>
+            <div class="ui-g">
+
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Preso</b></h1>
+                        <p:panelGrid id="pgNome" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomePreso"
+                                             value="#{buscaDetentoBean.detento.pessoa.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomePreso" value="Matrícula/Nome"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeFalso"
+                                             value="#{buscaDetentoBean.detento.pessoa.nomeFalso}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomePreso" value="Alcunha/Nome Social/Outro Nome"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgPais" columns="2" columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeMae"
+                                             value="#{buscaDetentoBean.pessoaMae.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomeMae" value="Nome da Mãe"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomePai"
+                                             value="#{buscaDetentoBean.pessoaPai.nome}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomePai" value="Nome do Pai"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton value="Buscar"
+                                             icon="ui-icon-search"
+                                             id="btnBuscarDetento"
+                                             actionListener="#{buscaDetentoBean.buscarDetentos}"
+                                             update="@form"
+                                             process="@this itNomePreso itNomeFalso itNomeMae itNomePai"/>
+                            <p:defaultCommand target="btnBuscarDetento"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton title="Buscar detento"
+                                             icon="ui-icon-fingerprint"
+                                             type="button"
+                                             id="btnBuscar"
+                                             onclick="PF('dialogBusca').show();">
+                            </p:commandButton>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <h:panelGroup id="teste" rendered="#{!buscaDetentoBean.detentos.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h:panelGroup id="hpDetentos">
+
+                                <h1>Presos</h1>
+
+                                <p:dataList value="#{buscaDetentoBean.detentos}"
+                                            id="dtDetentos"
+                                            var="detento"
+                                            type="unordered" itemType="none" paginator="true" rows="10"
+                                            styleClass="cars-datalist">
+                                    <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+                                        <h:panelGroup
+                                                rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:78px;color:#757575;margin:24px;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <div class="car-details">
+                                            <p:graphicImage
+                                                    rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                                    value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                                    style="width: 78px; margin:24px;"/>
+                                        </div>
+                                        <div class="car-details">
+                                            <p><strong>#{detento.nomeDetento}</strong> (Ciclo:  #{detento.numeroCiclo})
+                                            </p>
+                                            <p style="color:#757575">Matrícula: #{buscaDetentoBean.getMatricula(detento.matriculaDetento)}</p>
+                                            <ui:repeat value="#{buscaDetentoBean.getNomesFalsos(detento)}"
+                                                       var="nomeFalso">
+                                                <p style="color:#757575">#{(nomeFalso.codTipoNome == 2)? "OUTRO NOME": nomeFalso.tipoNomeDescricao} :
+                                                    <strong>#{nomeFalso.nome}</strong></p>
+                                            </ui:repeat>
+                                            <p style="color:#757575">#{detento.nomeUnidadePrisional} -
+                                                <span style="#{buscaDetentoBean.carregarCSSTexto(detento.codSituacao)}"> #{detento.situacao}</span>
+                                            </p>
+                                        </div>
+                                        <p:commandButton
+                                                title="Cadastrar Foto e Biometria"
+                                                icon="ui-icon-camera-alt"
+                                                process="@this"
+                                                action="#{buscaDetentoBean.cadastrarFotoBiometria()}"
+                                                rendered="#{buscaDetentoBean.renderizarBotaoFotoBiometria(detento)}"
+                                                onclick="this.form.target='_blank'" ajax="false"
+                                                style="margin:24px 12px 0 0">
+                                            <f:setPropertyActionListener value="#{detento}"
+                                                                         target="#{buscaDetentoBean.detentoView}"/>
+                                        </p:commandButton>
+                                        <p:commandButton
+                                                title="Adicionar Novo Ciclo" icon="ui-icon-plus"
+                                                rendered="#{detento.codSituacao == 3}"
+                                                action="#{buscaDetentoBean.cadastrarNovoCiclo()}"
+                                                style="margin:24px 12px 0 0">
+                                            <f:setPropertyActionListener value="#{detento}"
+                                                                         target="#{buscaDetentoBean.detentoView}"/>
+                                        </p:commandButton>
+                                        <p:commandButton title="Visualizar" icon="ui-icon-remove-red-eye"
+                                                         action="#{buscaDetentoBean.visualizarDetento(detento)}"
+                                                         process="@this" onclick="this.form.target='_blank'"
+                                                         update="@this" ajax="false"
+                                                         style="margin:24px 12px 0 0">
+                                            <!-- <f:setPropertyActionListener value="#{detento}"
+                                                                          target="#{buscaDetentoBean.detentoView}"/>-->
+                                        </p:commandButton>
+                                    </div>
+                                </p:dataList>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <p:dialog header="Busca por biometria" id="dialogBusca" widgetVar="dialogBusca" modal="true" width="50%">
+                <h:inputText id="sexoid" value="#{buscaDetentoBean.sexoId}" style="display: none"/>
+                <h:inputText id="posicaoid" value="#{buscaDetentoBean.posicaoId}" style="display: none"/>
+                <h:inputText id="jsonrequest" value="#{buscaDetentoBean.jsonRequest}" style="display: none"/>
+
+                <div class="ui-g-12">
+                    <p:panelGrid columns="3" columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                 layout="grid" styleClass="ui-panelgrid-blank form-group">
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="selectSexo" value="#{buscaDetentoBean.sexo}"
+                                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                <f:selectItem itemLabel="Selecione o sexo" noSelectionOption="true"/>
+                                <f:selectItems value="#{buscaDetentoBean.sexos}" var="sexo"
+                                               itemValue="#{sexo}" itemLabel="#{sexo.descricao}"/>
+                                <p:ajax event="change" listener="#{buscaDetentoBean.refreshSexo()}" process="@this"
+                                        update="sexoid"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Sexo"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="selectMao" value="#{buscaDetentoBean.mao}"
+                                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                <f:selectItem itemLabel="Selecione a mão" noSelectionOption="true"/>
+                                <f:selectItems value="#{buscaDetentoBean.maos}" var="mao"
+                                               itemValue="#{mao}" itemLabel="#{mao.descricao}"/>
+                                <p:ajax event="change" listener="#{buscaDetentoBean.onSelectMao()}" process="@this"
+                                        update="selectPosicao"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Mão"/>
+                        </h:panelGroup>
+                        <h:panelGroup styleClass="md-selectonemenu">
+                            <p:selectOneMenu id="selectPosicao" value="#{buscaDetentoBean.posicao}"
+                                             converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                <f:selectItem itemLabel="Selecione a posição" noSelectionOption="true"/>
+                                <f:selectItems value="#{buscaDetentoBean.posicoes}" var="posicao"
+                                               itemValue="#{posicao}" itemLabel="#{posicao.descricao}"/>
+                                <p:ajax event="change" listener="#{buscaDetentoBean.refreshPosicao()}"
+                                        process="@this" update="posicaoid jsonrequest btnBuscarBio"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Posição"/>
+                        </h:panelGroup>
+                    </p:panelGrid>
+
+                    <div class="ui-g" style="margin-top: -13px;">
+                        <div class="ui-g-12">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <span class="ui-separator" style="padding-right: 5px;"/>
+                                    <p:commandButton id="btnBuscarBio" value="Buscar" icon="ui-icon-search"
+                                                     type="button" onclick="compareFinger($('#jsonrequest').val())"
+                                                     oncomplete="PF('dialogBusca').hide();"
+                                                     disabled="#{!buscaDetentoBean.renderBotaoBuscarBiometria}"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </div>
+                    </div>
+                </div>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

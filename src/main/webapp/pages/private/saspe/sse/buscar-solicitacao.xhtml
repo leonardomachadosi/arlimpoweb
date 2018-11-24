@@ -1,0 +1,176 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+
+        <h:form id="form" prependId="false">
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12"
+                                     styleClass="ui-panelgrid-blank form-group">
+                            <p:column>
+                                <h1>Buscar Solicitações</h1>
+                            </p:column>
+                        </p:panelGrid>
+
+                        <p:panelGrid layout="grid" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu label="Estabelecimentos" styleClass="input-auto"
+                                                      filterMatchMode="startsWith"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      value="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.estabelecimentos}">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{buscaSolicitacaoNecBean.unidadePrisionalList}"
+                                                   var="unidadePrisional"
+                                                   itemValue="#{unidadePrisional}"
+                                                   itemLabel="#{unidadePrisional.descricao}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.solicitacaoTransferencia.id}"
+                                        id="itNumeroSolicitacao" styleClass="input-auto"/>
+                                <p:outputLabel value="Número da Solicitação" for="itNumeroSolicitacao"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu
+                                        value="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.prioridade}"
+                                        id="somPrioridade" styleClass="input-auto"
+                                        converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems value="#{buscaSolicitacaoNecBean.prioridadeTransferenciaList}"
+                                                   var="prioridade"
+                                                   itemValue="#{prioridade}" itemLabel="#{prioridade.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Prioridade" for="somPrioridade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu
+                                        value="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.situacaoSolicitacaoTransferencia}"
+                                        id="somSituacao" style="width: 100%;"
+                                        converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems
+                                            value="#{buscaSolicitacaoNecBean.situacaoSolicitacaoTransferenciaList}"
+                                            var="situacao" itemValue="#{situacao}" itemLabel="#{situacao.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Situação" for="somSituacao"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="clDataInicio"
+                                            value="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.dataInicio}"
+                                            locale="pt"
+                                            pattern="dd/MM/yyyy" styleClass="input-auto">
+                                    <f:convertDateTime pattern="dd/MM/yyy"/>
+                                    <p:ajax event="dateSelect" process="@this" update="clDataFim"/>
+                                </p:calendar>
+                                <p:outputLabel value="Data Início" for="clDataInicio"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="clDataFim"
+                                            value="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.dataFim}"
+                                            locale="pt" pattern="dd/MM/yyyy" styleClass="input-auto"
+                                            mindate="#{buscaSolicitacaoNecBean.solicitacaoTransferenciaFilter.dataInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyy"/>
+                                </p:calendar>
+                                <p:outputLabel value="Data Fim" for="clDataFim"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%"
+                                                inputStyle="width: 100%"
+                                                completeMethod="#{buscaSolicitacaoNecBean.completeDetento}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                value="#{buscaSolicitacaoNecBean.detentoView}"
+                                                var="detentoView"
+                                                itemValue="#{detentoView}"
+                                                itemLabel="#{detentoView.nomeDetento}"
+                                                converter="detentoViewConverter">
+                                    <p:column style="width: 30%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"
+                                                style="width: 50%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento} - #{detentoView.nomeUnidadePrisional}"/>
+                                    </p:column>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Preso"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                        <p:panelGrid layout="grid" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     styleClass="ui-panelgrid-blank form-group">
+                            <p:column>
+                                <p:toolbar>
+                                    <f:facet name="left">
+                                        <p:commandButton value="Buscar" title="Buscar solicitações"
+                                                         icon="ui-icon-search"
+                                                         actionListener="#{buscaSolicitacaoNecBean.onClickBuscarSolicitacao}"
+                                                         process="@form" update="@form"/>
+                                    </f:facet>
+                                </p:toolbar>
+                            </p:column>
+                            <p:column>
+                                <p:dataTable id="tableHistoricoSolicitacao"
+                                             value="#{buscaSolicitacaoNecBean.historicoSolicitacaoTransferenciaList}"
+                                             reflow="true" paginator="true" paginatorPosition="bottom"
+                                             rows="10" emptyMessage="Nenhuma solicitação encontrada."
+                                             var="historicoSolicitacaoTransferencia">
+                                    <f:facet name="header">
+                                        Solicitações
+                                    </f:facet>
+                                    <p:column headerText="Número da solicitação" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.numeroFormatado}"/>
+                                    </p:column>
+                                    <p:column headerText="Unidade de Origem" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.unidadePrisional.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Data da Solicitação" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.dataSolicitacao}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Status" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoTransferencia.situacaoSolicitacaoTransferencia.descricao}"/>
+                                    </p:column>
+                                    <!--<p:column headerText="Unidade">
+                                        <h:outputText
+                                                value="#{buscaSolicitacaoNecBean.onLoadLotacaoReal(historicoSolicitacaoTransferencia.codLotacaoDestino)}"/>
+                                    </p:column>-->
+                                    <p:column headerText="Prioridade" style="text-align: center;">
+                                        <h:outputText
+                                                value="#{historicoSolicitacaoTransferencia.solicitacaoTransferencia.prioridadeTransferencia.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Ações" style="text-align: center;">
+                                        <p:commandButton icon="ui-icon-remove-red-eye" immediate="true"
+                                                         title="Visualizar solicitação" process="@this"
+                                                         action="#{buscaSolicitacaoNecBean.onClickVisualizarSolicitacaoTransferencia(historicoSolicitacaoTransferencia)}"
+                                                         ajax="false" onclick="this.form.target='_blank'"
+                                                         />
+                                    </p:column>
+                                </p:dataTable>
+                            </p:column>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

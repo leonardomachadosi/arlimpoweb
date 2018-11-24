@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-rg">
+        <p:dialog header="Adicionar RG" id="dialogRG" widgetVar="addRG" modal="true"
+                  width="400" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="2"
+                         id="pgRgData"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                              background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="itRg" value="RG"/>
+                    <p:inputMask id="itRg"
+                                 mask="9?9999999999999"
+                                 value="#{cadastroDetentoBean.rg.numero}"
+                                 style="width: 100%;"
+                                 decimalPlaces="0" thousandSeparator=""/>
+                </p:column>
+                <p:column>
+                    <p:outputLabel for="cdDataExpedicao" value="Data de Emissão"/>
+                    <p:calendar id="cdDataExpedicao" maxdate="#{cadastroDetentoBean.today()}" format="dd/MM/yyyy"
+                                value="#{cadastroDetentoBean.rg.dataExpedicao}" pattern="dd/MM/yyyy" mask="99/99/9999"
+                                locale='pt' style="width: 100%"/>
+                </p:column>
+            </p:panelGrid>
+            <p:panelGrid columns="2"
+                         id="pgOrgaoExpedidor"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none;
+                              background-color:transparent;"
+                         layout="grid">
+                <p:column>
+                    <p:outputLabel for="soOrgaoExpedidor" value="Órgão Expedidor"/>
+                    <p:selectOneMenu id="soOrgaoExpedidor"
+                                     value="#{cadastroDetentoBean.rg.orgaoExpedidor}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{cadastroDetentoBean.orgaoExpedidors}" var="orgaoExpedidor"
+                                       itemLabel="#{orgaoExpedidor.sigla}"/>
+                    </p:selectOneMenu>
+                </p:column>
+                <p:column>
+                    <p:outputLabel for="soEstadoEmissor" value="Estado de Emissão"/>
+                    <p:selectOneMenu id="soEstadoEmissor"
+                                     value="#{cadastroDetentoBean.rg.estado}"
+                                     filter="true"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{cadastroDetentoBean.estados}"
+                                       var="estado"
+                                       itemLabel="#{estado.descricao}"/>
+                    </p:selectOneMenu>
+                </p:column>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            actionListener="#{cadastroDetentoBean.adicionarRg()}"
+                            update="form:dadosPessoais"
+                            oncomplete="PF('addRG').hide();"
+                            icon="ui-icon-done"/>
+                    <span class="ui-separator" style="padding-right: 5px;"/>
+                    <p:commandButton value="Fechar"
+                                     icon="ui-icon-clear"
+                                     onclick="PF('addRG').hide();"
+                    />
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

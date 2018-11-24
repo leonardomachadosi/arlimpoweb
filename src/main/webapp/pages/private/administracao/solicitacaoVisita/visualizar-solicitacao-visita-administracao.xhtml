@@ -1,0 +1,386 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+
+
+        </style>
+        <script>
+            $(function () {
+                $(".btnEmiteRequerimento").click(function () {
+                    $(".btnAnexoRequerimento").removeClass("hide-class");
+                    $(".btnEmiteRequerimento").addClass("hide-class")
+                });
+            });
+        </script>
+
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="t.rue" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" process="@this"
+                                             action="#{visualizaSolicitacaoVisitaAdministracaoBean.voltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <h:panelGroup>
+                                <p:commandButton
+                                        styleClass="btnEmiteRequerimento"
+                                        value="Emitir Requerimento"
+                                        ajax="false"
+                                        rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.renderizaBotaoEmitir()}"
+                                        onclick="this.form.target='_blank'"
+                                        action="#{visualizaSolicitacaoVisitaAdministracaoBean.emitirRequerimento()}"
+                                        icon="ui-icon-file-download"/>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.arquivos.isEmpty()}">
+                                <p:commandButton
+                                        styleClass="hide-class btnAnexoRequerimento"
+                                        value="Anexar Requerimento"
+                                        oncomplete="PF('addDocumentoSolicitacaoVisita').show();"
+                                        actionListener="#{visualizaSolicitacaoVisitaAdministracaoBean.refreshArquivo()}"
+                                        update="dialogDocumentoSolicitacaoVisita "
+                                        icon="ui-icon-attach-file"/>
+                            </h:panelGroup>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1 class="idh1"><b>Visualizar Solicitação</b></h1>
+                        <ui:include src="../../visitante/fragments/dados-solicitacao-visita-panelgrid.xhtml">
+                            <ui:param name="solicitacaoVisitante"
+                                      value="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitante.solicitacaoVisitante}"/>
+                            <ui:param name="detentoView"
+                                      value="#{visualizaSolicitacaoVisitaAdministracaoBean.detentoView}"/>
+                        </ui:include>
+                        <br/>
+                        <p:panelGrid id="pgServidor" columns="4"
+                                     columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3,ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itFuncionarioSolicitante"
+                                             value="#{visualizaSolicitacaoVisitaAdministracaoBean.servidorSolicitante.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itFuncionarioSolicitante" value="Funcionário Solicitante"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield"
+                                          rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitante.situacaoSolicitacaoVisitante.id != 1}">
+                                <p:inputText id="itFuncionarioAprovacao"
+                                             value="#{visualizaSolicitacaoVisitaAdministracaoBean.servidorAprovacao.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itFuncionarioAprovacao" value="Funcionário de Aprovação"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield"
+                                          rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitante.situacaoSolicitacaoVisitante.id != 1}">
+                                <p:calendar id="cdDataAprovacao"
+                                            showOn="false"
+                                            pattern="dd/MM/yyyy"
+                                            mask="99/99/9999"
+                                            locale='pt'
+                                            value="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitante.solicitacaoVisitante.dataResposta}"
+                                            inputStyle="width: 100%"/>
+                                <p:outputLabel for="cdDataAprovacao" value="Data da Aprovação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:spacer />
+                        <p:panelGrid id="pgJustificativa" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.renderizarCancelado()}"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent; margin-top: 5px">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputTextarea
+                                        id="itJustificativaCancelamento"
+                                        readonly="true"
+                                        style="width: 100%"
+                                        value="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitante.solicitacaoVisitante.justificativa}" />
+                                <p:outputLabel value="Justificativa do Cancelamento" />
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:outputLabel value="Situação" styleClass="customLabel"
+                                       rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitanteList.size() > 0}"/>
+                        <ui:include src="../../visitante/fragments/historico-situacao-solicitacao-step.xhtml">
+                            <ui:param name="historicoList"
+                                      value="#{visualizaSolicitacaoVisitaAdministracaoBean.historicoSolicitacaoVisitanteList}"/>
+                        </ui:include>
+
+                        <h:panelGroup id="pgDoc1">
+                            <p:panelGrid rendered="#{!visualizaSolicitacaoVisitaAdministracaoBean.arquivos.isEmpty()}">
+                                <h2><b>Documentos</b></h2>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     id="pgDocumentosSolicitacaoVisita"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup
+                                    rendered="#{!visualizaSolicitacaoVisitaAdministracaoBean.arquivos.isEmpty()}">
+                                <p:dataTable id="dtDocumentosDetento"
+                                             var="arquivo"
+                                             reflow="true"
+                                             value="#{visualizaSolicitacaoVisitaAdministracaoBean.arquivos}"
+                                             rows="5"
+                                             emptyMessage=""
+                                             style="width: 100%">
+                                    <f:facet name="header">
+                                        Documentos
+                                    </f:facet>
+                                    <p:column headerText="Descrição" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Opção" style="width: 78px; text-align: center;">
+                                        <p:commandButton title="Visualizar"
+                                                         icon="ui-icon-file-download" process="@this"
+                                                         update="dtDocumentosDetento"
+                                                         action="#{visualizaSolicitacaoVisitaAdministracaoBean.mostrarPdf()}"
+                                                         onclick="this.form.target='_blank'" ajax="false"
+                                                         style="margin-right: 5px;">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{visualizaSolicitacaoVisitaAdministracaoBean.arquivo}"/>
+                                        </p:commandButton>
+                                        <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                         rendered="#{arquivo.id == null}"
+                                                         action="#{visualizaSolicitacaoVisitaAdministracaoBean.removerRequerimento()}"
+                                                         process="@this" style="margin-left: 5px;"
+                                                         update="pgDocumentosSolicitacaoVisita pgDoc1 hpReposta pnlFinalizar">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{visualizaSolicitacaoVisitaAdministracaoBean.arquivo}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h2><b>Envolvidos</b></h2>
+                        <p:panelGrid id="pgGroupVisitanteDetento" columns="2"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:outputLabel value="Detento" styleClass="customLabel"/>
+                                <ui:include src="../../visitante/fragments/detentoView-panelgrid.xhtml">
+                                    <ui:param name="detentoView"
+                                              value="#{visualizaSolicitacaoVisitaAdministracaoBean.detentoView}"/>
+                                </ui:include>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <h:panelGroup>
+                                    <p:outputLabel value="Visitante" styleClass="customLabel"/>
+                                    <ui:include src="../../visitante/fragments/visitanteView-panelgrid.xhtml">
+                                        <ui:param name="visitanteView"
+                                                  value="#{visualizaSolicitacaoVisitaAdministracaoBean.visitanteView}"/>
+                                    </ui:include>
+                                    <h:panelGroup
+                                            rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.arquivosPendencia.size() > 0}"
+                                            style="font-weight: bold;color: #ffc107;padding-left: 1em;">
+                                        <span class="ui-messages-warn-icon"/>
+                                        <p:outputLabel value="Visitante com pendência"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <!-- rendered="#{!visualizaSolicitacaoVisitaAdministracaoBean.arquivos.isEmpty()}"-->
+                        <h:panelGroup id="hpReposta">
+                            <p:panelGrid id="pgResposta" columns="1"
+                                         columnClasses="ui-grid-col-3"
+                                         rendered="#{!visualizaSolicitacaoVisitaAdministracaoBean.arquivos.isEmpty()}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <h:outputText value="Resposta do Preso:" style="font-weight: bold"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:panelGrid id="pgAutorizacao" columns="2"
+                                         rendered="#{!visualizaSolicitacaoVisitaAdministracaoBean.arquivos.isEmpty()}"
+                                         columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <p:selectOneRadio id="radioResposta"
+                                                  converter="omnifaces.SelectItemsConverter"
+                                                  value="#{visualizaSolicitacaoVisitaAdministracaoBean.respostaSolicitacao}"
+                                                  style="width: 100%;">
+                                    <f:selectItems
+                                            value="#{visualizaSolicitacaoVisitaAdministracaoBean.respostasSolicitacao}"
+                                            var="respostaSolicitacao"
+                                            itemLabel="#{respostaSolicitacao.descricao}"/>
+                                    <p:ajax event="change" process="@this" update="pnlFinalizar"/>
+                                </p:selectOneRadio>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <!--<h:panelGroup id="hpJustificativa">
+                            <p:panelGrid id="pgJustificativaTitle" columns="1"
+                                         columnClasses="ui-grid-col-3"
+                                         rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.respostaSolicitacao.id == 2}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup>
+                                    <h:outputText value="Justificativa da Reprovação:" style="font-weight: bold"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:panelGrid id="pgJustificativaReprovação" columns="1"
+                                         rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.respostaSolicitacao.id == 2}"
+                                         columnClasses="ui-grid-col-6"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="itJustificativa"
+                                                 value="#{visualizaSolicitacaoVisitaAdministracaoBean.justificativaReprovacao}"
+                                                 style="width: 100%"/>
+                                    <p:outputLabel for="itJustificativa" value="Justificativa"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>-->
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup id="pnlFinalizar">
+                <h:panelGroup rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.renderizarBotaoFinalizar()}"
+                >
+                    <div class="ui-g" style="margin-top: -13px;">
+                        <div class="ui-g-12">
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton value="Cancelar"
+                                                     icon="ui-icon-cancel"
+                                                     id="btnCancelarSolicitacao"
+                                                     oncomplete="PF('addCancelarSolicitacao').show()"
+                                                     update="dlgCancelarSolicitacao"
+                                                     process="@this"/>
+                                    <span class="ui-separator" style="padding-right: 5px;"/>
+                                    <p:commandButton value="Finalizar"
+                                                     icon="ui-icon-check"
+                                                     action="#{visualizaSolicitacaoVisitaAdministracaoBean.salvar()}"
+                                                     rendered="#{visualizaSolicitacaoVisitaAdministracaoBean.respostaSolicitacao.id != null}"
+                                                     id="btnFinalizarSolicitacao"
+                                                     update="@form"
+                                                     process="@form"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </div>
+                    </div>
+                </h:panelGroup>
+            </h:panelGroup>
+            <p:dialog header="Anexar Documentacao" id="dialogDocumentoSolicitacaoVisita"
+                      widgetVar="addDocumentoSolicitacaoVisita" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDescricaoDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoDocumento" value="Descrição do Documento"/>
+                        <p:inputText id="itDescricaoDocumento"
+                                     value="#{visualizaSolicitacaoVisitaAdministracaoBean.arquivo.descricao}"
+                                     style="width: 100%">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                    </p:column>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                oncomplete="PF('addDocumentoSolicitacaoVisita').hide();"
+                                process="pgDescricaoDocumento"
+                                label="Carregar Documento"
+                                update="pgDocumentosSolicitacaoVisita hpReposta pgDoc1"
+                                cancelLabel="Cancelar"
+                                uploadLabel="Anexar"
+                                sizeLimit="#{utilBean.sizeFile}"
+                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                fileUploadListener="#{visualizaSolicitacaoVisitaAdministracaoBean.uploadDocumentoDetento}"
+                                allowTypes="/(\.|\/)(pdf)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+            <p:dialog id="dlgCancelarSolicitacao" header="Cancelar Solicitacao"
+                      widgetVar="addCancelarSolicitacao" modal="true" width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid id="pgObservacao" columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <h:panelGroup styleClass="md-inputfield">
+                        <p:inputTextarea
+                                value="#{visualizaSolicitacaoVisitaAdministracaoBean.justificativa}"
+                                id="itObservacao"
+                                style="width: 100%"/>
+                        <p:outputLabel for="itObservacao" value="Justificativa"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar>
+                    <f:facet name="right">
+                        <p:commandButton
+                                value="Salvar" icon="ui-icon-done"
+                                update="@form"
+                                oncomplete="PF('addCancelarSolicitacao').hide();"
+                                action="#{visualizaSolicitacaoVisitaAdministracaoBean.cancelar()}"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

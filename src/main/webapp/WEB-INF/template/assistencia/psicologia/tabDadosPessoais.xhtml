@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h2 class="assistencia-subtitulo">Atendimento Psicologia</h2>
+
+    <p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-3" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtNome" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.pessoa.nome}"
+                         styleClass="input-auto" readonly="true"/>
+            <p:outputLabel for="txtNome" value="Nome"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtDataNascimento" styleClass="input-auto" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.pessoa.dataNascimento}" readonly="true">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </p:inputText>
+            <p:outputLabel for="txtDataNascimento" value="Data de Nascimento"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtIdade" styleClass="input-auto" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.pessoa.idade} anos" readonly="true"/>
+            <p:outputLabel for="txtIdade" value="Idade"/>
+        </h:panelGroup>
+        <h:panelGroup styleClass="md-inputfield">
+            <p:inputText id="txtDataAtendimento" styleClass="input-auto" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.dataCadastro}" readonly="true">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </p:inputText>
+            <p:outputLabel for="txtDataAtendimento" value="Data de Ingresso"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-3" styleClass="form-group ui-panelgrid-blank">
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somSexo" value="#{efetivaAtendimentoPsicologicoBean.solicitacaoAtendimentoDetento.detento.pessoa.sexo}" converter="omnifaces.SelectItemsConverter"
+                             style="width: 100%;">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.sexoList}" var="sexo" itemValue="#{sexo}" itemLabel="#{sexo.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somSexo" value="Sexo"/>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somEscolaridade" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.escolaridade}" converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.escolaridadeList}" var="escolaridade" itemValue="#{escolaridade}" itemLabel="#{escolaridade.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somEscolaridade" value="Escolaridade"/>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somProfissao" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.profissao}" converter="omnifaces.SelectItemsConverter" style="width: 100%;"
+                             filter="true" filterMatchMode="startsWith">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.profissaoList}" var="profissao" itemValue="#{profissao}" itemLabel="#{profissao.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somProfissao" value="Profissão"/>
+        </h:panelGroup>
+
+        <h:panelGroup styleClass="md-selectonemenu">
+            <p:selectOneMenu id="somReligiao" value="#{efetivaAtendimentoPsicologicoBean.atendimentoPsicologico.religiao}" converter="omnifaces.SelectItemsConverter"
+                             style="width: 100%;">
+                <f:selectItem noSelectionOption="true"/>
+                <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.religiaoList}" var="religiao" itemValue="#{religiao}" itemLabel="#{religiao.descricao}"/>
+            </p:selectOneMenu>
+            <p:outputLabel for="somReligiao" value="Orientação Espiritual / Religiosa"/>
+        </h:panelGroup>
+    </p:panelGrid>
+
+    <h3 class="assistencia-subtitulo">Telefones</h3>
+    <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-3" styleClass="ui-panelgrid-blank">
+        <p:dataTable value="#{efetivaAtendimentoPsicologicoBean.telefoneList}" var="telefone" emptyMessage="Nenhum telefone cadastrado.">
+            <f:facet name="header">Telefones cadastrados</f:facet>
+            <p:column><h:outputText value="#{telefone.numeroFormatado}"/></p:column>
+        </p:dataTable>
+    </p:panelGrid>
+
+    <h3 class="assistencia-subtitulo">Endereços</h3>
+    <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="ui-panelgrid-blank">
+        <p:dataTable value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoaList}" var="enderecoPessoa" emptyMessage="Nenhum endereço cadastrado.">
+            <f:facet name="header">Endereços cadastrados</f:facet>
+            <p:column headerText="Logradouro"><h:outputText value="#{enderecoPessoa.endereco.logradouro}"/></p:column>
+            <p:column headerText="Número"><h:outputText value="#{enderecoPessoa.endereco.numero}"/></p:column>
+            <p:column headerText="Cidade"><h:outputText value="#{enderecoPessoa.endereco.municipio.descricao}"/></p:column>
+            <p:column headerText="Bairro"><h:outputText value="#{enderecoPessoa.endereco.bairro}"/></p:column>
+            <p:column headerText="Opções" style="text-align: center; width: 10%">
+                <p:commandButton icon="ui-icon-remove-red-eye" title="Visualizar endereço" oncomplete="PF('dlgEndereco').show()" process="@this" update=":form:pnlFormEndereco"
+                                 actionListener="#{efetivaAtendimentoPsicologicoBean.setEnderecoPessoa(enderecoPessoa)}" action="#{efetivaAtendimentoPsicologicoBean.preparaEnderecoModal}"/>
+            </p:column>
+        </p:dataTable>
+    </p:panelGrid>
+
+</ui:composition>

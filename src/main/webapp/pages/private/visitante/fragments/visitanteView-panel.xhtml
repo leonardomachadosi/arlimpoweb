@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panel header="Visitante" styleClass="clearfix car-item">
+        <div class="car-details">
+            <p:graphicImage
+                    value="#{fotoBean.getFotoFrontalPath(visitanteView.codPessoa, 2)}"
+                    style="max-width: 100px; margin:24px;"/>
+        </div>
+        <div class="car-details">
+            <p><strong>#{visitanteView.nome}</strong></p>
+            <p>RG: <h:outputLabel
+                    value="#{visualizaSolicitacaoVisitaAssistidaBean.visitanteView.rg}"/></p>
+            <p>CPF: <h:outputLabel
+                    value="#{visualizaSolicitacaoVisitaAssistidaBean.visitanteView.cpf}">
+                <f:converter converterId="cpfConverter"/>
+            </h:outputLabel></p>
+            <p>Data de Nascimento:
+                <h:outputLabel value="#{visitanteView.nascimento}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputLabel>
+            </p>
+            <p>Situação:
+                <h:outputLabel value="#{visitanteView.situacaoVisitante}"
+                               styleClass="#{utilBean.addStyleByStatus(visitanteView.situacaoVisitante)}"/>
+            </p>
+        </div>
+    </p:panel>
+</ui:composition>

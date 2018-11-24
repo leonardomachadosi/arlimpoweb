@@ -1,0 +1,444 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="false" />
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Saída por Transferência</h1>
+                        <p:panelGrid id="pgDetentoUnidadePrisional" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-6,ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:inputText id="itUnidadePrisional"
+                                             value="#{solicitacaoTransferenciaBean.unidadePrisional.descricao}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itUnidadePrisional" value="Unidade Prisional"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield" id="hpDetento">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{solicitacaoTransferenciaBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                value="#{solicitacaoTransferenciaBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                                itemValue="#{detentoView}">
+                                    <p:column style="width: 10%; text-align: center">
+                                        <h:panelGroup
+                                                rendered="#{detentoView.foto == null or detentoView.foto == '' or detentoView.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:40px;color:#757575;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <p:graphicImage
+                                                rendered="#{detentoView.foto != null and detentoView.foto != '' and !detentoView.foto.contains('\\')}"
+                                                value="/foto-detento?foto=#{buscaDetentoBean.enconder(detentoView.foto)}"
+                                                style="width: 90%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect" update="hpPrecisaAmbulanciaServidor"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Detento"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:commandButton title="Adicionar"
+                                                 action="#{solicitacaoTransferenciaBean.adicionarDetento()}"
+                                                 id="btnAdicionarDetento" icon="ui-icon-plus"
+                                                 process="@this,acDetento,hpPrecisaAmbulanciaServidor"
+                                                 update="acDetento, dtDetentos, hpPrecisaAmbulanciaServidor, messages"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="hpPrecisaAmbulanciaServidor">
+                            <p:panelGrid id="pgPrecisaAmbulânciaServidor" columns="2"
+                                         rendered="#{solicitacaoTransferenciaBean.detentoView != null
+                                         and solicitacaoTransferenciaBean.detentoView.codDetento != null}"
+                                         columnClasses="ui-grid-col-3, ui-grid-col-3, ui-grid-col-3, ui-grid-col-3"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h:panelGroup style="text-align: left; color: darkblue">
+                                    <p:outputLabel value="Precisa de Ambulância?"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <!--<p:inputSwitch
+                                            value="#{solicitacaoTransferenciaBean.detentoView.precisaAmbulancia}">
+                                    </p:inputSwitch>-->
+                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                      style="width: 100%; color: darkBlue"
+                                                      requiredMessage="Informe se precisa de ambulância."
+                                                      required="true"
+                                                      value="#{solicitacaoTransferenciaBean.detentoView.precisaAmbulancia}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                                <h:panelGroup style="text-align: left; color: darkblue">
+                                    <p:outputLabel value="Precisa de Acompanhamento de Servidor da Saúde?"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <!--<p:inputSwitch
+                                            value="#{solicitacaoTransferenciaBean.detentoView.precisaServidorSaude}"/>-->
+                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                      style="width: 100%; color: darkBlue"
+                                                      required="true"
+                                                      requiredMessage="Informe se precisa de acompanhamento de servidor da saúde."
+                                                      value="#{solicitacaoTransferenciaBean.detentoView.precisaServidorSaude}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                                <h:panelGroup style="text-align: left; color: darkblue">
+                                    <p:outputLabel value="Existe algum informe de resgaste?"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <!-- <p:inputSwitch
+                                             value="#{solicitacaoTransferenciaBean.detentoView.informeResgate}"/>-->
+                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                      style="width: 100%; color: darkBlue"
+                                                      required="true"
+                                                      requiredMessage="Informe se existe algum informe de resgate."
+                                                      value="#{solicitacaoTransferenciaBean.detentoView.informeResgate}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                                <h:panelGroup style="text-align: left; color: darkblue">
+                                    <p:outputLabel value="Preso corre risco de morte (por ameaça de terceiros)?"/>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <!--<p:inputSwitch
+                                            value="#{solicitacaoTransferenciaBean.detentoView.riscoMorte}"/>-->
+                                    <p:selectOneRadio layout="responsive" columns="2"
+                                                      style="width: 100%; color: darkBlue"
+                                                      required="true"
+                                                      requiredMessage="Informe se o preso corre risco por ameaça de terceiros."
+                                                      value="#{solicitacaoTransferenciaBean.detentoView.riscoMorte}"
+                                                      converter="omnifaces.SelectItemsConverter">
+                                        <f:selectItem itemLabel="Sim" itemValue="#{true}"/>
+                                        <f:selectItem itemLabel="Nao" itemValue="#{false}"/>
+                                    </p:selectOneRadio>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid id="pgTitulo" columns="1"
+                                     columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h3>Dados</h3>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgTransferenciaDetento" columns="4"
+                                     columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 value="#{solicitacaoTransferenciaBean.solicitacaoTransferencia.tipoMovimentacao}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 id="soTipoTransferencia">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems value="#{solicitacaoTransferenciaBean.tiposMovimentacao}"
+                                                   var="tipoMovimentacao"
+                                                   itemLabel="#{tipoMovimentacao.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soTipoTransferencia" value="Tipo de Transferência"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{solicitacaoTransferenciaBean.solicitacaoTransferencia.prioridadeTransferencia}"
+                                                 id="soPrioridadeTransferencia">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems value="#{solicitacaoTransferenciaBean.prioridadesTransferencia}"
+                                                   var="prioridadeTransferencia"
+                                                   itemLabel="#{prioridadeTransferencia.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soPrioridadeTransferencia" value="Prioridade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{solicitacaoTransferenciaBean.solicitacaoTransferencia.tipoSolicitacaoMovimentacao}"
+                                                 id="soTipoSolicitacaoMovimentacao">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems value="#{solicitacaoTransferenciaBean.tiposSolicitacaoMovimentacao}"
+                                                   var="tipoSolicitacaoMovimentacao"
+                                                   itemLabel="#{tipoSolicitacaoMovimentacao.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soTipoSolicitacaoMovimentacao" value="Motivo"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar style="width: 100%"
+                                            inputStyle="width: 60%"
+                                            value="#{solicitacaoTransferenciaBean.dataHoraPrevistaSaida}"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            locale="pt"
+                                            id="cdDataTransferencia"/>
+                                <p:outputLabel for="cdDataTransferencia" value="Data e Hora Prevista da Saída"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="hpTituloArquivo">
+                            <p:panelGrid columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         id="pgTituloArquivos"
+                                         rendered="#{!solicitacaoTransferenciaBean.arquivos.isEmpty()}"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h3>Documentos</h3>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     id="pgDocumentosDetento"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup rendered="#{!solicitacaoTransferenciaBean.arquivos.isEmpty()}">
+                                <p:dataTable id="dtDocumentosDetento"
+                                             var="arquivo"
+                                             reflow="true"
+                                             value="#{solicitacaoTransferenciaBean.arquivos}"
+                                             rows="5"
+                                             emptyMessage=""
+                                             style="width: 100%">
+                                    <f:facet name="header">
+                                        Documentos
+                                    </f:facet>
+                                    <p:column headerText="Descrição" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Opção" style="width: 78px; text-align: center;">
+                                        <p:commandButton title="Visualizar"
+                                                         icon="ui-icon-file-download" process="@this"
+                                                         update="dtDocumentosDetento"
+                                                         action="#{solicitacaoTransferenciaBean.mostrarPdf()}"
+                                                         onclick="this.form.target='_blank'" ajax="false">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{solicitacaoTransferenciaBean.arquivo}"/>
+                                        </p:commandButton>
+                                        <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                         action="#{solicitacaoTransferenciaBean.removerDocumentoDetento()}"
+                                                         process="@this"
+                                                         update="form:pgDocumentosDetento form:pgAnexo form:hpTituloArquivo">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{solicitacaoTransferenciaBean.arquivo}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgAnexo" columns="2"
+                                     columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:commandButton title="Anexo" oncomplete="PF('addDocumentoTransferencia').show();"
+                                                 actionListener="#{solicitacaoTransferenciaBean.refreshArquivo()}"
+                                                 process="@this"
+                                                 update="dialogDocumentoTransferencia"
+                                                 icon="ui-icon-attach-file"
+                                                 value="Anexo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarTransferenciaSaida" value="Salvar"
+                                             action="#{solicitacaoTransferenciaBean.salvar()}"
+                                             process="@form"
+                                             update="@form"
+                                             icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:dataTable
+                                id="dtDetentos"
+                                emptyMessage=""
+                                value="#{solicitacaoTransferenciaBean.detentosView}"
+                                var="detento"
+                                paginator="true"
+                                paginatorPosition="bottom"
+                                style="width: 100%; text-align: center;"
+                                rows="10">
+                            <f:facet name="header">
+                                Presos
+                            </f:facet>
+                            <p:column width="5%">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:column headerText="Foto" width="10%" style="text-align: center">
+                                <h:panelGroup
+                                        rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                    <i class="ui-icon ui-icon-person"
+                                       style="font-size:78px;color:#757575;">
+                                    </i>
+                                </h:panelGroup>
+                                <p:graphicImage
+                                        rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                        value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                        style="width: 90%;"/>
+                            </p:column>
+                            <p:column headerText="Preso" style="text-align: center;">
+                                <h:outputText value="#{detento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Data da Entrada" style="width: 9%">
+                                <h:outputText value="#{detento.dataEntrada}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estabelecimento">
+                                <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão" style=" width: 9%">
+                                <h:outputText value="#{detento.nomePavilhao}"/>
+                            </p:column>
+                            <p:column headerText="Cela" style="width: 9%">
+                                <h:outputText value="#{detento.nomeCela}"/>
+                            </p:column>
+                            <p:column headerText="Precisa de Ambulância" style=" width: 11%">
+                                <h:outputText value="#{detento.precisaAmbulancia ? 'SIM' : 'NÃO'}"/>
+                            </p:column>
+                            <p:column headerText="Precisa de Servidor da Saúde">
+                                <h:outputText value="#{detento.precisaServidorSaude ? 'SIM' : 'NÃO'}"/>
+                            </p:column>
+                            <p:column headerText="Ação" style="width: 5%; text-align: center">
+                                <p:commandButton
+                                        icon="ui-icon-trash"
+                                        style="border-bottom: 10px"
+                                        title="Remover"
+                                        styleClass="red-btn"
+                                        update="dtDetentos"
+                                        process="@this"
+                                        action="#{solicitacaoTransferenciaBean.removerDetento()}">
+                                    <f:setPropertyActionListener value="#{detento}"
+                                                                 target="#{solicitacaoTransferenciaBean.detentoView}"/>
+                                </p:commandButton>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panelGrid layout="grid" columns="2"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                             styleClass="ui-panelgrid-blank form-group">
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;"
+                                                       value="Precisa de servidor da saúde? "/>
+                                        <p:outputLabel value="#{detento.precisaServidorSaude ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;" value="Precisa de ambulância? "/>
+                                        <p:outputLabel value="#{detento.precisaAmbulancia ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;" value="Informe de Resgate? "/>
+                                        <p:outputLabel value="#{detento.informeResgate ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;"
+                                                       value="O preso corre risco de morte (por ameaça de terceiros)? "/>
+                                        <p:outputLabel value="#{detento.riscoMorte ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                </p:panelGrid>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+            <p:dialog header="Anexar Documentacao" id="dialogDocumentoTransferencia"
+                      widgetVar="addDocumentoTransferencia" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             id="pgDescricaoDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoDocumento" value="Descrição do Documento"/>
+                        <p:inputText id="itDescricaoDocumento" value="#{solicitacaoTransferenciaBean.arquivo.descricao}"
+                                     style="width: 100%">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="soTipoDocumento" value="Tipo do Documento"/>
+                        <p:selectOneMenu id="soTipoDocumento"
+                                         style="width: 100%"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         value="#{solicitacaoTransferenciaBean.arquivo.tipoArquivo}">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems var="tipoArquivo"
+                                           itemLabel="#{tipoArquivo.descricao}"
+                                           value="#{solicitacaoTransferenciaBean.tiposArquivos}"/>
+                            <p:ajax process="@this" event="blur"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                             background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                oncomplete="PF('addDocumentoTransferencia').hide();"
+                                process="pgDescricaoDocumento"
+                                update="pgDocumentosDetento pgAnexo hpTituloArquivo messages"
+                                label="Carregar Documento"
+                                cancelLabel="Cancelar"
+                                uploadLabel="Anexar"
+                                fileUploadListener="#{solicitacaoTransferenciaBean.uploadDocumentoDetento}"
+                                sizeLimit="10485760"
+                                invalidSizeMessage="O tamanho máximo permitido é de 10MB."
+                                allowTypes="/(\.|\/)(pdf)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+        </h:form>
+        <!-- <h:form id="form-documento-transferencia">
+
+         </h:form>-->
+    </ui:define>
+</ui:composition>

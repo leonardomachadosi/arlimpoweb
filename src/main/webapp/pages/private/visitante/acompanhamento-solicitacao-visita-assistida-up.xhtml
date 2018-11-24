@@ -1,0 +1,103 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Acompanhamento de Visita Assistida</b></h1>
+                        <p:panelGrid columns="2"
+                                     columnClasses="ui-grid-col-6,ui-grid-col-6,ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeDetento"
+                                             value="#{acompanhaSolicitacaoVisitaAssistidaUPBean.nomeDetentoBusca}"
+                                             style="width: 100%;"
+                                             inputStyle="width:100%;"/>
+                                <p:outputLabel for="itNomeDetento" value="Nome do Preso"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomeVisitante"
+                                             value="#{acompanhaSolicitacaoVisitaAssistidaUPBean.nomeVisitanteBusca}"
+                                             style="width: 100%;"
+                                             inputStyle="width:100%;"/>
+                                <p:outputLabel for="itNomeVisitante" value="Nome do Visitante"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnBuscar" value="Buscar"
+                                             actionListener="#{acompanhaSolicitacaoVisitaAssistidaUPBean.buscar()}"
+                                             update="@form"
+                                             icon="ui-icon-search"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Solicitações</b></h1>
+                        <p:dataTable id="dtSolicitacaoTransferencia"
+                                     reflow="true"
+                                     value="#{acompanhaSolicitacaoVisitaAssistidaUPBean.solicitacaoVisitaAssistidaList}"
+                                     var="solicitacao"
+                                     paginator="true" paginatorPosition="bottom" rows="10"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                            <f:facet name="header">
+                                Solicitações
+                            </f:facet>
+                            <p:column headerText="Número da Solicitação">
+                                <h:outputText value="#{solicitacao.numeroSolicitacao}"/>
+                            </p:column>
+                            <p:column headerText="Unidade Prisional">
+                                <h:outputText value="#{solicitacao.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Preso">
+                                <h:outputText value="#{solicitacao.pessoaParentesco.pessoa.nome}"/>
+                            </p:column>
+                            <p:column headerText="Visitante">
+                                <h:outputText value="#{solicitacao.pessoaParentesco.pessoaParente.nome}"/>
+                            </p:column>
+                            <p:column headerText="Data Prevista">
+                                <h:outputText
+                                        value="#{solicitacao.dataPrevista}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Status">
+                                <h:outputText value="#{historicoSolicitacaoVisitaAssistidaServiceImpl.getSolicitacaoAberta(solicitacao).situacaoSolicitacaoVisitaAssistida.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Ação">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{acompanhaSolicitacaoVisitaAssistidaUPBean.visualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{solicitacao}"
+                                                                 target="#{acompanhaSolicitacaoVisitaAssistidaUPBean.solicitacaoVisitaAssistida}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

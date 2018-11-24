@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:outputLabel value="Histórico de Visitas" styleClass="customLabel"/>
+    <p:dataTable value="#{visualizaDetentoBean.visitaList}" style="text-align: center"
+                 var="visita" paginator="#{visualizaDetentoBean.visitaList.size() > 10}" rows="10"
+                 rendered="#{visualizaDetentoBean.visitaList.size() > 0}"
+                 paginatorPosition="bottom"
+                 emptyMessage="Nenhum registro encontrado">
+        <f:facet name="header">
+            Histórico de Visitas
+        </f:facet>
+        <p:column style="width: 20px;">
+            <p:rowToggler/>
+        </p:column>
+        <p:column headerText="Visitante">
+            <h:outputText value="#{visita.pessoaParentesco.pessoaParente.nome}"/>
+        </p:column>
+
+        <p:column headerText="Data">
+            <h:outputText value="#{visita.data}">
+                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:column>
+
+        <p:rowExpansion>
+            <p:panelGrid style="margin-bottom:20px;width: 100%;">
+                <p:row>
+                    <p:column>
+                        <h:outputLabel value="Hora da Entrada: "/>
+                        <h:outputText value="#{visita.horaEntrada}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputLabel value="Hora da Saída: "/>
+                        <h:outputText value="#{visita.horaSaida}"/>
+                    </p:column>
+
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <h:outputLabel value="Tipo de Visita: "/>
+                        <h:outputText value="#{visita.tipoVisita.descricao}"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputLabel value="Unidade Prisional: "/>
+                        <h:outputText value="#{visita.unidadePrisional.descricao}"/>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <h:outputLabel value="Peso: "/>
+                        <h:outputText rendered="#{visita.peso != null}" value="#{visita.peso} Kg"/>
+                    </p:column>
+                    <p:column>
+                        <h:outputLabel value="Observação: "/>
+                        <h:outputText value="#{visita.observacao}"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </p:rowExpansion>
+
+    </p:dataTable>
+</ui:composition>

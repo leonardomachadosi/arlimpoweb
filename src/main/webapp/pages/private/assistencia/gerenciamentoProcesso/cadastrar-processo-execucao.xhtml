@@ -1,0 +1,438 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             action="#{cadastroProcessoExecucaoBean.voltar()}"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h3>Processo de Execução</h3>
+                        <p:panelGrid id="pgProcessoNrUnica" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="inProcesso"
+                                             value="#{cadastroProcessoExecucaoBean.processo.numeroExecucao}"
+                                             readonly="#{cadastroProcessoExecucaoBean.processo.id != null}"
+                                             required="true"
+                                             style="width: 100%;">
+                                    <p:keyFilter regEx="/[-0-9-.]/i"/>
+                                </p:inputText>
+                                <p:outputLabel for="inProcesso" value="Nº Processo Execução"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgNomePresoNascimento" columns="2"
+                                     columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNomePreso"
+                                             value="#{cadastroProcessoExecucaoBean.detento.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNomePreso" value="Nome do Preso"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="cdNascimento"
+                                             value="#{cadastroProcessoExecucaoBean.detento.pessoa.dataNascimento}"
+                                             readonly="true"
+                                             style="width: 100%">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                                <p:outputLabel for="cdNascimento" value="Data de Nascimento"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="2"
+                                     id="pgMae"
+                                     columnClasses="ui-grid-col-8,ui-grid-col-2"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itMae"
+                                             value="#{cadastroProcessoExecucaoBean.pessoaMae.nome}"
+                                             readonly="true"
+                                             style="width: 100%;"
+                                             inputStyle="width: 100%;"/>
+                                <p:outputLabel for="itMae" value="Mãe"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="2"
+                                     id="pgPai"
+                                     columnClasses="ui-grid-col-8, ui-grid-col-2"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itPai"
+                                             value="#{cadastroProcessoExecucaoBean.pessoaPai.nome}"
+                                             readonly="true"
+                                             var="pessoa"
+                                             style="width: 100%"
+                                             inputStyle="width: 100%;"/>
+                                <p:outputLabel for="itPai" value="Pai"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid id="pgEsferaOrigemSecaoSubsecao" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somEsferaOrigem"
+                                                 value="#{cadastroProcessoExecucaoBean.esferaOrigem}"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 required="true"
+                                                 requiredMessage="Juízo: Erro de validação: o valor é necessário."
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Juízo"
+                                                  itemValue=""/>
+                                    <f:selectItems var="esferaOrigem"
+                                                   itemLabel="#{esferaOrigem.descricao}"
+                                                   value="#{cadastroProcessoExecucaoBean.esferasOrigens}"/>
+                                    <f:ajax event="change" execute="@this"
+                                            render="hpEstadoComarcaVara pgEsferaOrigemSecaoSubsecao"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Juízo"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgSecao"
+                                          rendered="#{cadastroProcessoExecucaoBean.esferaOrigem.id == 2398}"
+                                          styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somSecao"
+                                                 value="#{cadastroProcessoExecucaoBean.secao}"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Seção" itemValue=""/>
+                                    <f:selectItems var="secao"
+                                                   itemLabel="#{secao.descricao.toUpperCase()}"
+                                                   value="#{cadastroProcessoExecucaoBean.secoes}"/>
+                                    <p:ajax process="@this" update="pgSubsecao"
+                                            listener="#{cadastroProcessoExecucaoBean.onSelectSecoes}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Seção"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgSubsecao"
+                                          rendered="#{cadastroProcessoExecucaoBean.esferaOrigem.id == 2398}"
+                                          styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somSubsecao"
+                                                 value="#{cadastroProcessoExecucaoBean.processo.subsecao}"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Subseção" itemValue=""/>
+                                    <f:selectItems var="subsecao" itemLabel="#{subsecao.descricao}"
+                                                   value="#{cadastroProcessoExecucaoBean.subsecoes}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Subseção"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <h:panelGroup id="hpEstadoComarcaVara">
+                            <p:panelGrid id="pgEstadoComarcaVara" columns="3"
+                                         columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                         rendered="#{cadastroProcessoExecucaoBean.esferaOrigem.id == 2399}"
+                                         layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0 none; background-color:transparent;">
+                                <h:panelGroup styleClass="md-selectonemenu">
+                                    <p:selectOneMenu id="somEstado"
+                                                     value="#{cadastroProcessoExecucaoBean.estado}"
+                                                     filter="true"
+                                                     filterMatchMode="contains"
+                                                     converter="omnifaces.SelectItemsConverter"
+                                                     style="width: 100%;">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItem itemLabel="Selecione o Estado"
+                                                      itemValue=""/>
+                                        <f:selectItems var="estado"
+                                                       itemLabel="#{estado.descricao.toUpperCase()}"
+                                                       value="#{cadastroProcessoExecucaoBean.estados}"/>
+                                        <p:ajax process="@this" update="pgComarca"
+                                                listener="#{cadastroProcessoExecucaoBean.onSelectEstados}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Estado"/>
+                                </h:panelGroup>
+                                <h:panelGroup id="pgComarca" styleClass="md-selectonemenu">
+                                    <p:selectOneMenu id="somComarca"
+                                                     value="#{cadastroProcessoExecucaoBean.comarca}"
+                                                     filter="true"
+                                                     filterMatchMode="contains"
+                                                     converter="omnifaces.SelectItemsConverter"
+                                                     style="width: 100%;">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItem itemLabel="Selecione a Comarca" itemValue=""/>
+                                        <f:selectItems var="comarca" itemLabel="#{comarca.descricao}"
+                                                       value="#{cadastroProcessoExecucaoBean.comarcas}"/>
+                                        <p:ajax process="@this" update="pgVara"
+                                                listener="#{cadastroProcessoExecucaoBean.onSelectComarcas}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Comarca"/>
+                                </h:panelGroup>
+                                <h:panelGroup id="pgVara" styleClass="md-selectonemenu">
+                                    <p:selectOneMenu id="somVara"
+                                                     value="#{cadastroProcessoExecucaoBean.processo.vara}"
+                                                     filter="true"
+                                                     filterMatchMode="contains"
+                                                     converter="omnifaces.SelectItemsConverter"
+                                                     style="width: 100%;">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItem itemLabel="Selecione a Vara" itemValue=""/>
+                                        <f:selectItems var="vara" itemLabel="#{vara.descricao}"
+                                                       value="#{cadastroProcessoExecucaoBean.varas}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Vara"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <br/>
+                        <p:panelGrid id="pgClassesCompetenciaProcesso" columns="3"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <!--<h:panelGroup id="pgClasse" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somCasse"
+                                                 value="#{cadastroProcessoExecucaoBean.classe}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Classe" itemValue=""/>
+                                    <f:selectItems var="classe" itemLabel="#{classe.descricao}"
+                                                   value="#{cadastroProcessoExecucaoBean.classes}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Classe"/>
+                            </h:panelGroup>-->
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somNaturezaCustodia"
+                                                 value="#{cadastroProcessoExecucaoBean.processoNaturezaCustodia.naturezaCustodia}"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 required="true"
+                                                 requiredMessage="Natureza de Custódia: Erro de validação: o valor é necessário."
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a natureza de custódia"
+                                                  itemValue=""/>
+                                    <f:selectItems var="naturezaCustodia"
+                                                   itemLabel="#{naturezaCustodia.descricao}"
+                                                   value="#{cadastroProcessoExecucaoBean.naturezaCustodias}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Natureza de Custódia"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataAbertura"
+                                            value="#{cadastroProcessoExecucaoBean.processo.dataCadastro}"
+                                            maxdate="#{cadastroProcessoExecucaoBean.dataMaxima}"
+                                            required="true"
+                                            pattern="dd/MM/yyyy"
+                                            mask="99/99/9999"
+                                            locale='pt'
+                                            style="width: 100%"
+                                            inputStyle="width: 100%" navigator="true"/>
+                                <p:outputLabel for="cdDataAbertura" value="Data do Cadastro"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgSituacao" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somSituacao"
+                                                 value="#{cadastroProcessoExecucaoBean.statusProcesso}"
+                                                 filter="true"
+                                                 filterMatchMode="contains"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 required="true"
+                                                 requiredMessage="Situação: Erro de validação: o valor é necessário."
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione a Situação" itemValue=""/>
+                                    <f:selectItems var="statusProcesso"
+                                                   itemLabel="#{statusProcesso.descricao}"
+                                                   value="#{cadastroProcessoExecucaoBean.statusProcessos}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Situação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="3"
+                                     id="pdDataAberturaTipoParticipacaoSituacao"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="1"
+                                     id="pgGuias"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group processoGuiaList"
+                                     style="border:0 none; background-color:transparent;">
+                            <h1>Guias</h1>
+                            <h:panelGroup>
+                                <p:dataTable id="dtProcessoGuias"
+                                             value="#{cadastroProcessoExecucaoBean.processoGuias}"
+                                             var="processoGuia"
+                                             style="text-align: center"
+                                             paginator="true"
+                                             paginatorPosition="bottom"
+                                             reflow="true"
+                                             emptyMessage="Nenhum item cadastrado">
+                                    <f:facet name="header">
+                                        Guias
+                                    </f:facet>
+                                    <p:column headerText="N° Guia">
+                                        <h:outputText value="#{processoGuia.guia.numero}"/>
+                                    </p:column>
+                                    <p:column headerText="Processo Origem">
+                                        <h:outputText value="#{processoGuia.guia.processo.numeroGrande}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo Guia">
+                                        <h:outputText value="#{processoGuia.guia.tipoGuia.descricao}"/>
+                                    </p:column>
+                                    <p:column style="width: 12%">
+                                        <p:commandButton
+                                                icon="ui-icon-trash" style="border-bottom: 10px"
+                                                styleClass="red-btn" title="Remover" update="dtProcessoGuias"
+                                                process="@this"
+                                                rendered="#{cadastroProcessoExecucaoBean.processo.id == null || processoGuia.id == null}"
+                                                action="#{cadastroProcessoExecucaoBean.removerProcessoGuia(processoGuia)}">
+                                            <!--<p:confirm header="Confirmação"-->
+                                                       <!--message="Deseja realmente remover a guia da lista?"-->
+                                                       <!--icon="ui-icon>-alert"/>-->
+                                        </p:commandButton>
+                                        <p:commandButton title="Visualizar" process="@this"
+                                                         onclick="this.form.target='_blank'" ajax="false"
+                                                         action="#{cadastroProcessoExecucaoBean.visualizarProcessoOriginario()}"
+                                                         immediate="true"
+                                                         icon="ui-icon-remove-red-eye">
+                                            <f:setPropertyActionListener value="#{processoGuia.guia}"
+                                                                         target="#{cadastroProcessoExecucaoBean.guiaSelecionada}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:commandButton title="Nova guia" icon="ui-icon-plus"
+                                                 style="margin-left: 95%"
+                                                 process="@this"
+                                                 action="#{cadastroProcessoExecucaoBean.carregarGuiasDisponiveis()}"
+                                                 oncomplete="PF('dlgAddGuiaVar').show();"
+                                                 update="dtAddProcessoGuias">
+                                </p:commandButton>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <h:panelGroup style="text-align: right">
+                                <p:commandButton id="btnSalvarProcesso" value="Salvar"
+                                                 update="@form"
+                                                 action="#{cadastroProcessoExecucaoBean.salvar()}"
+                                                 icon="ui-icon-check">
+                                    <p:confirm header="Confirmação"
+                                               message="Deseja realmente salvar processo de execução?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlgEstabelecimento">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"
+                                                         oncomplete="PF('confirmDlgEstabelecimento').hide();"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                            </h:panelGroup>
+                            <p:defaultCommand target="btnSalvarProcesso"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:form prependId="false">
+                    <p:dialog header="Adicionar Guia" widgetVar="dlgAddGuiaVar"
+                              id="dlgAddGuia" width="1200"
+                              modal="true" responsive="true" showEffect="fade"
+                              hideEffect="fade">
+                        <p:dataTable id="dtAddProcessoGuias"
+                                     value="#{cadastroProcessoExecucaoBean.guias}"
+                                     selection="#{cadastroProcessoExecucaoBean.selectedGuias}"
+                                     var="guia"
+                                     rowKey="#{guia.id}"
+                                     style="text-align: center"
+                                     paginator="true"
+                                     paginatorPosition="bottom"
+                                     reflow="true"
+                                     emptyMessage="Nenhum item cadastrado">
+                            <f:facet name="header">
+                                Guias
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="N° Guia">
+                                <h:outputText value="#{guia.numero}"/>
+                            </p:column>
+                            <p:column headerText="Processo Origem">
+                                <h:outputText value="#{guia.processo.numeroGrande}"/>
+                            </p:column>
+                            <p:column headerText="Tipo Guia">
+                                <h:outputText value="#{guia.tipoGuia.descricao}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:spacer/>
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <p:commandButton
+                                        value="Inserir" icon="ui-icon-done" update="dtProcessoGuias"
+                                        oncomplete="PF('dlgAddGuiaVar').hide();"
+                                        actionListener="#{cadastroProcessoExecucaoBean.onSelectAddGuia()}"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </p:dialog>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

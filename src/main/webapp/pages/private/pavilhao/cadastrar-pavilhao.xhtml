@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+
+	</ui:define>
+
+	<ui:define name="title">SIISP</ui:define>
+
+	<ui:define name="content">
+		<h:form id="form">
+			<!-- MESSAGES -->
+			<p:growl id="messages" showDetail="false"
+				closable="true" showIcon="false" sticky="true" />
+			<!-- MESSAGES -->
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<p:toolbar>
+						<f:facet name="left">
+							<p:commandButton id="btnVoltar" value="Voltar"
+								action="#{cadastroPavilhaoBean.onClickVoltar()}"
+								icon="ui-icon-arrow-back" />
+						</f:facet>
+					</p:toolbar>
+				</div>
+			</div>
+
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+						<h1>Cadastro de Pavilhão</h1>
+						<p:panelGrid id="pgPavilhaoDescricao" columns="2"
+							columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+							styleClass="ui-panelgrid-blank form-group"
+							style="border:0px none; background-color:transparent;">
+							<h:panelGroup styleClass="md-inputfield">
+								<p:inputText id="itPavilhao"
+									value="#{cadastroPavilhaoBean.pavilhao.descricao}"
+									style="width: 100%;" />
+								<p:outputLabel for="itPavilhao" value="Nome do Pavilhão" />
+							</h:panelGroup>
+
+							<h:panelGroup styleClass="md-selectonemenu" rendered="#{cadastroPavilhaoBean.pavilhao.id == null}">
+								<p:selectOneMenu id="somUnidadePrisional"
+
+									value="#{cadastroPavilhaoBean.pavilhao.unidadePrisional}"
+									converter="omnifaces.SelectItemsConverter" 
+									style="width: 100%;">
+									<f:selectItem itemLabel="Selecione o Estabelecimento" itemValue="" />
+									<f:selectItems var="unidadePrisional"
+										itemLabel="#{unidadePrisional.descricao}"
+										value="#{cadastroPavilhaoBean.unidadePrisionais}" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Estabelecimento" />
+							</h:panelGroup>
+							<h:panelGroup styleClass="md-inputfield" rendered="#{cadastroPavilhaoBean.pavilhao.id != null}">
+								<p:inputText id="itUnidadePrisional"
+											 readonly="true"
+											 value="#{cadastroPavilhaoBean.pavilhao.unidadePrisional.descricao}"
+											 style="width: 100%;" />
+								<p:outputLabel for="itUnidadePrisional" value="Nome do Estabelecimento" />
+							</h:panelGroup>
+						</p:panelGrid>
+
+
+						<p:panelGrid columns="1" columnClasses="ui-grid-col-4"
+							layout="grid" styleClass="ui-panelgrid-blank form-group"
+							style="border:0px none; background-color:transparent;">
+							<h:panelGroup styleClass="md-selectonemenu"
+							rendered="#{cadastroPavilhaoBean.pavilhao.id != null}">
+								<p:selectOneMenu id="somSituacaoPavilhao"
+												 value="#{cadastroPavilhaoBean.situacaoPavilhao}"
+												 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+									<f:selectItem itemLabel="Selecione a Situação" itemValue="" />
+									<f:selectItems var="situacaoPavilhao"
+										itemLabel="#{situacaoPavilhao.descricao}"
+										value="#{cadastroPavilhaoBean.situacaoPavilhoes}" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Situação" />
+							</h:panelGroup>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<p:toolbar>
+						<f:facet name="left">
+							<p:commandButton id="btnSalvarPavilhao" icon="ui-icon-check"
+								process="@form" update="@form"
+								actionListener="#{cadastroPavilhaoBean.savePavilhao()}"
+								value="Salvar" />
+							<span class="ui-separator" style="padding-right: 5px;" />
+							<p:commandButton id="btnNovoPavilhao" icon="ui-icon-refresh"
+								process="@this" update="@form"
+								actionListener="#{cadastroPavilhaoBean.refreshPavilhao()}"
+								value="Novo" />
+						</f:facet>
+					</p:toolbar>
+				</div>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

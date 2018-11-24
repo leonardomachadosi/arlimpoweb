@@ -1,0 +1,205 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui" xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+                template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+
+                        <h1><b>Consulta de Coleta Dna</b></h1>
+                        <h:panelGroup>
+                            <p:panelGrid layout="grid" styleClass="ui-panelgrid-blank form-group" columns="3">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText style="width: 100%" value="#{consultaColetaDnaBean.nomePessoa}"/>
+                                    <h:outputLabel value="Nome Detento"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-selectonemenu">
+                                    <p:selectOneMenu
+                                            converter="omnifaces.SelectItemsConverter"
+
+                                            value="#{consultaColetaDnaBean.statusColeta}"
+                                            style="width: 100%">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItem itemLabel="Selecione um" itemValue=""/>
+                                        <f:selectItems var="statusColeta" value="#{consultaColetaDnaBean.statusColetas}"
+                                                       itemLabel="#{statusColeta.descricao}"/>
+                                    </p:selectOneMenu>
+                                    <h:outputLabel value="Status Coleta"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup styleClass="md-selectonemenu">
+                                    <p:selectOneMenu
+                                            panelStyle="width: 50%"
+                                            style="width: 100%"
+                                            converter="omnifaces.SelectItemsConverter"
+                                            value="#{consultaColetaDnaBean.incidenciaColetaDna}">
+                                        <f:selectItem noSelectionOption="true"/>
+                                        <f:selectItems var="incidencia" value="#{consultaColetaDnaBean.incidencias}"
+                                                       itemLabel="Art º #{incidencia.incidenciaPenal.numero} #{incidencia.incidenciaPenal.descricao}"/>
+                                    </p:selectOneMenu>
+                                    <h:outputLabel value="Incidencia Penal"/>
+                                </h:panelGroup>
+
+                            </p:panelGrid>
+                            <p:panelGrid layout="grid" styleClass="ui-panelgrid-blank form-group" columns="2">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText style="width: 100%;"/>
+                                    <h:outputLabel value="Unidade Prisional"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText style="width: 100%;"/>
+                                    <h:outputLabel value="Cidade"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:panelGrid layout="grid" styleClass="ui-panelgrid-blank form-group" columns="3">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:calendar inputStyle="width: 100%"/>
+                                    <h:outputLabel value="Data Inicial"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:calendar inputStyle="width: 100%"/>
+                                    <h:outputLabel value="Data Final"/>
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText style="width: 100%"/>
+                                    <h:outputLabel value="Número Formulário"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton value="Buscar" icon="ui-icon-search" process="@form"
+                                                     update="tabela"/>
+                                </f:facet>
+                                <f:facet name="right">
+                                    <p:commandButton value="Adicionar coleta" icon="ui-icon-plus"
+                                                     onclick="PF('dlg1').show();"
+                                    />
+                                </f:facet>
+                            </p:toolbar>
+                            <p:spacer/>
+                        </h:panelGroup>
+
+                        <p:dataTable id="tabela" var="coletaDna" value="#{consultaColetaDnaBean.coletaDnaLazyDataModel}"
+                                     emptyMessage="Sem registros"
+                                     paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     lazy="true"
+                                     paginator="true" paginatorPosition="bottom"
+                                     rows="10">
+                            <p:column headerText="Nº Formulário" width="10%" style="text-align: center">
+                                <h:outputText value="#{coletaDna.numeroFormulario}"/>
+                            </p:column>
+                            <p:column headerText="Detento">
+                                <h:outputText value="#{coletaDna.nomePessoa}"/>
+                            </p:column>
+                            <p:column headerText="Incidencia Penal" style="text-align: center">
+                                <h:outputText value="#{coletaDna.incidenciaDescricao}"/>
+                            </p:column>
+                            <p:column headerText="Status Coleta" style="text-align: center">
+                                <h:outputText value="#{coletaDna.statusColeta}"/>
+                            </p:column>
+
+                            <p:column headerText="Ações" style="text-align: center" width="10%">
+                                <p:commandButton icon="ui-icon-info"
+                                                 title="Dados do Detento"
+                                                 action="#{consultaColetaDnaBean.visualizarDetento(coletaDna)}"
+                                                 process="@this" onclick="this.form.target='_blank'"
+                                                 update="@this" ajax="false"
+
+                                                />
+                                <p:commandButton icon="ui-icon-plus"
+                                                 title="Registrar Coleta"
+                                                 action="#{consultaColetaDnaBean.registrarColeta(coletaDna)}"
+                                                 rendered="(#{coletaDna.statusColeta.equals('APTO')} || #{coletaDna.statusColeta.equals('RECUSA DETENTO')})"/>
+                                <p:commandButton icon="ui-icon-remove-red-eye"
+                                                 action="#{consultaColetaDnaBean.registrarColeta(coletaDna)}"
+                                                 rendered="#{!coletaDna.statusColeta.equals('APTO')}"
+                                                 title="Visualizar coleta"
+                                />
+
+                                <p:commandButton icon="ui-icon-remove"
+                                                 rendered="#{coletaDna.statusColeta.equals('RECEBIDO LABORATORIO')}"
+                                                 title="Registrar no CODIS"
+                                />
+                                <p:commandButton icon="ui-icon-check"
+                                                 actionListener="#{consultaColetaDnaBean.receberColeta(coletaDna)}"
+                                                 update="tabela"
+                                                 rendered="#{coletaDna.statusColeta.equals('ENCAMINHADO PARA LABORATORIO')}"
+                                                 title="Receber Coleta"
+                                />
+
+                            </p:column>
+                            <f:facet name="footer">
+                                Total de  #{consultaColetaDnaBean.coletaDnaLazyDataModel.rowCount} registros.
+                            </f:facet>
+
+                        </p:dataTable>
+                        <p:dialog header="Detentos" widgetVar="dlg1" modal="true" width="1000">
+                            <p:panelGrid layout="grid" styleClass="ui-panelgrid-blank form-group" columns="1">
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText style="width: 100%"
+                                                 value="#{consultaColetaDnaBean.nomeDetentoFiltro}"/>
+                                    <h:outputLabel value="Nome Detento"/>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <p:toolbar>
+                                <f:facet name="left">
+                                    <p:commandButton value="Buscar" icon="ui-icon-search"
+                                                     actionListener="#{consultaColetaDnaBean.buscarDetentoPorNome}"
+                                                     update="dtDetentos"/>
+                                </f:facet>
+                            </p:toolbar>
+                            <p:spacer/>
+                            <p:dataTable id="dtDetentos"
+                                         var="detento"
+                                         rows="5"
+                                         paginator="true"
+                                         value="#{consultaColetaDnaBean.detentos}"
+                                         paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         emptyMessage="Sem registros">
+                                <p:ajax event="page"  listener="#{consultaColetaDnaBean.changePageDialogDetento}" />
+                                <p:column width="20%" style="text-align: center" headerText="Foto">
+                                    <p:graphicImage
+                                            rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                            style="width: 20px; margin:14px;"/>
+                                </p:column>
+                                <p:column headerText="Matricula" width="10%" style="text-align: center">
+                                    <h:outputText value="#{detento.matriculaDetento}"/>
+                                </p:column>
+                                <p:column headerText="Nome" style="text-align: center">
+                                    <h:outputText value="#{detento.nomeDetento}"/>
+                                </p:column>
+                                <p:column headerText="Unidade Prisional" style="text-align: center">
+                                    <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                                </p:column>
+                                <p:column headerText="Ações" style="text-align: center" width="10%">
+                                    <p:commandButton icon="ui-icon-plus"
+                                                     title="Registrar Coleta"
+                                                     action="#{consultaColetaDnaBean.registrarColetaDetento(detento)}"
+                                    />
+                                </p:column>
+                            </p:dataTable>
+                        </p:dialog>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar" action="#{cadastroDelegaciaOrigemBean.onClickVoltar()}"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Delegacia</b>
+                        </h1>
+                        <p:panelGrid id="pgDelegaciaMunicipio" columns="3"
+                                     columnClasses="ui-grid-col-8, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itDelegacia"
+                                             value="#{cadastroDelegaciaOrigemBean.delegaciaOrigem.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itDelegacia" value="Delegacia"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soEstado"
+                                                 value="#{cadastroDelegaciaOrigemBean.municipio.estado}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Estado"
+                                                  itemValue=""/>
+                                    <f:selectItems var="estado"
+                                                   itemLabel="#{estado.descricao.toUpperCase()}"
+                                                   value="#{cadastroDelegaciaOrigemBean.estados}"/>
+                                    <p:ajax process="@this" update="soMunicipio"
+                                            listener="#{cadastroDelegaciaOrigemBean.onSelectEstados}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estado"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soMunicipio"
+                                                 value="#{cadastroDelegaciaOrigemBean.delegaciaOrigem.municipio}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems var="municipio"
+                                                   itemLabel="#{municipio.descricao.toUpperCase()}"
+                                                   value="#{cadastroDelegaciaOrigemBean.municipios}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Município"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarDelegacia" value="Salvar"
+                                             process="@form" update="@form"
+                                             action="#{cadastroDelegaciaOrigemBean.saveDelegaciaOrigem()}"
+                                             icon="ui-icon-check" />
+                            <span class="ui-separator" style="padding-right: 5px;" />
+                            <p:commandButton id="btnNovaDelegacia"
+                                             value="Novo"
+                                             process="@this"
+                                             update="@form"
+                                             actionListener="#{cadastroDelegaciaOrigemBean.refreshDelegaciaOrigem()}"
+                                             icon="ui-icon-refresh" />
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

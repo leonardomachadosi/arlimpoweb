@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .message {
+                background-color: #2196F3;
+                color: #ffffff;
+                padding: 1em;
+                font-size: 14px;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false" />
+            <p:remoteCommand name="setResponse" process="@this"
+                             update="form:tabDetentoFotoBiometria:dgPosicao"
+                             actionListener="#{cadastroDetentoFotoBiometriaBean.setResponseMessage}"/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <div class="message">
+                            Para finalizar o cadastro, é necessário salvar fotos e biometria do preso.
+                        </div>
+                        <h1>Matrícula do Preso:<span
+                                style="font-weight: bold"> #{cadastroDetentoFotoBiometriaBean.detento.pessoa.matricula} </span>
+                        </h1>
+                        <p:tabView id="tabDetentoFotoBiometria">
+                            <p:tab title="Fotos">
+                                <p:carousel id="crDetentoFoto"
+                                            value="#{cadastroDetentoFotoBiometriaBean.detentoFotos}"
+                                            var="detentoFoto"
+                                            numVisible="3"
+                                            itemStyle="text-align:center"
+                                            responsive="true">
+                                    <p:panelGrid id="pgFotoDetento" columns="1"
+                                                 style="margin:10px 10px; text-align:center" columnClasses="label,value"
+                                                 layout="grid" styleClass="ui-panelgrid-blank">
+                                        <p:graphicImage
+                                                rendered="#{detentoFoto.path != null and detentoFoto.path != ''}"
+                                                value="/foto-detento?foto=#{cadastroDetentoFotoBiometriaBean.enconder(detentoFoto.path)}"
+                                                width="90%" style="max-height: 180px"/>
+                                        <p:outputLabel value="#{detentoFoto.tipoFoto.descricao}"/>
+                                        <p:commandButton icon="ui-icon-trash"
+                                                         value="Remover"
+                                                         rendered="#{detentoFoto.path != null and detentoFoto.path != ''}"
+                                                         styleClass="red-btn"
+                                                         update="@form"
+                                                         action="#{cadastroDetentoFotoBiometriaBean.removerFoto()}">
+                                            <f:setPropertyActionListener value="#{detentoFoto}"
+                                                                         target="#{cadastroDetentoFotoBiometriaBean.detentoFoto}"/>
+                                        </p:commandButton>
+                                        <p:splitButton value="Adicionar" icon="ui-icon-check"
+                                                       rendered="#{detentoFoto.path == null or detentoFoto.path == ''}">
+                                            <p:menuitem value="Carregar Foto"
+                                                        actionListener="#{cadastroDetentoFotoBiometriaBean.refreshFotoDetento('foto', detentoFoto.tipoFoto)}"
+                                                        update="form-dialog-foto:dialogFoto"
+                                                        oncomplete="PF('addFoto').show();"
+                                                        style="float: right"
+                                                        icon="ui-icon-plus"/>
+                                            <p:menuitem title="Tirar Foto"
+                                                        value="Tirar Foto"
+                                                        actionListener="#{cadastroDetentoFotoBiometriaBean.refreshFotoDetento('camera', detentoFoto.tipoFoto)}"
+                                                        update="form-dialog-foto-cam:soTipoFoto"
+                                                        oncomplete="PF('addFotoCam').show();"
+                                                        icon="ui-icon-photo-camera"/>
+                                        </p:splitButton>
+                                    </p:panelGrid>
+                                </p:carousel>
+                            </p:tab>
+                            <p:tab title="Biometria" id="tabBiomentria">
+                                <p:dataGrid id="dgPosicao" value="#{cadastroDetentoFotoBiometriaBean.posicoes}"
+                                            var="posicao" columns="5" layout="grid" paginator="false"
+                                            paginatorAlwaysVisible="false">
+                                    <p:panel header="#{posicao.descricao}" style="text-align: center">
+                                        <p:panelGrid columns="1" style="width: 100%">
+                                            <p:graphicImage value="#{posicao.img == null ? resource['biometric:digital.png'] : posicao.digitalStreamedContent}"
+                                                            stream="false"
+                                                            style="max-width: 128px !important;"/>
+                                            <p:commandButton value="#{posicao.img == null ? 'Cadastrar' : 'Alterar'}"
+                                                             type="button"
+                                                             onclick="callClientWS('#{cadastroDetentoFotoBiometriaBean.getJsonRequest(posicao.id)}')"/>
+                                        </p:panelGrid>
+                                    </p:panel>
+                                    <f:facet name="footer">Datiloscopia</f:facet>
+                                </p:dataGrid>
+                            </p:tab>
+                        </p:tabView>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvar"
+                                             action="#{cadastroDetentoFotoBiometriaBean.salvar()}"
+                                             process="@form" update="@form"
+                                             value="Finalizar"
+                                             icon="ui-icon-check"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+        </h:form>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-foto.xhtml"/>
+        </ui:insert>
+        <ui:insert name="form">
+            <ui:include src="detentoForms/modals/modal-foto-cam.xhtml"/>
+        </ui:insert>
+    </ui:define>
+</ui:composition>

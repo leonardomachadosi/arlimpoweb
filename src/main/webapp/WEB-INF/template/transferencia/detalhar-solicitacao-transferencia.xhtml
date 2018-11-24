@@ -1,0 +1,280 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <div class="card card-w-title">
+                <h1>Visualizar Solicitação de Transferência</h1>
+                <p:panelGrid
+                        style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                        styleClass="ui-panelgrid-blank form-group">
+                    <p:row>
+                        <p:column rowspan="7">
+                            <h:graphicImage style="width: 20em"
+                                            value="/foto-detento?foto=#{detalhaSolicitacaoTransferenciaBean.enconder(detalhaSolicitacaoTransferenciaBean.detentoView.foto)}"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton id="btnVisualizarDetento"
+                                             title="Visualizar"
+                                             action="#{detalhaSolicitacaoTransferenciaBean.visualizarDetento()}"
+                                             onclick="this.form.target='_blank'"
+                                             style="float: risght"
+                                             ajax="false"
+                                             icon="ui-icon-remove-red-eye"
+
+                            />
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Matrícula: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detentoView.matriculaDetento}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Nome: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detentoView.nomeDetento}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Data de nascimento: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detentoView.dataNascimento}">
+                                <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Nome do pai: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detentoView.nomePai}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Naturalidade: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detento.pessoa.municipioNascimento.descricao.toUpperCase()}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Nome da mãe: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detentoView.nomeMae}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Nacionalidade: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detento.pessoa.nacionalidade.descricao}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <h:panelGroup
+                        rendered="#{detalhaSolicitacaoTransferenciaBean.outrosNomes != null and !detalhaSolicitacaoTransferenciaBean.outrosNomes.isEmpty()}">
+                    <p:outputLabel value="Outros Nomes" styleClass="customLabel"/>
+                    <p:dataTable value="#{detalhaSolicitacaoTransferenciaBean.outrosNomes}"
+                                 var="outroNome"
+                                 style="text-align: center; margin-top: 1em;margin-bottom: 2em;">
+                        <f:facet name="header">
+                            Nomes
+                        </f:facet>
+                        <p:column headerText="Nome">
+                            <h:outputText value="#{outroNome.nome}"/>
+                        </p:column>
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{outroNome.tipoNome.descricao}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGroup>
+                <p:panelGrid
+                        style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                        styleClass="ui-panelgrid-blank form-group">
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Sexo: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detento.pessoa.sexo.descricao}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Orientação Sexual: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detento.pessoa.orientacaoSexual.descricao}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Identidade de Gênero: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detento.pessoa.identidadeGenero.descricao}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-4"
+                             rendered="#{detalhaSolicitacaoTransferenciaBean.pessoaTiposDeficiencia != null and !detalhaSolicitacaoTransferenciaBean.pessoaTiposDeficiencia.isEmpty()}"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                    <p:outputLabel value="Deficiências" styleClass="customLabel"/>
+                    <p:dataTable
+                            value="#{detalhaSolicitacaoTransferenciaBean.pessoaTiposDeficiencia}"
+                            var="pessoaTipoDeficiencia"
+                            style="text-align: center; margin-top: 1em;margin-bottom: 2em;">
+                        <f:facet name="header">
+                            Deficiências
+                        </f:facet>
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{pessoaTipoDeficiencia.deficiencia.descricao}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:panelGrid>
+                <p:panelGrid
+                        style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                        styleClass="ui-panelgrid-blank form-group">
+                    <p:row>
+                        <p:column rendered="#{detalhaSolicitacaoTransferenciaBean.renderizarFaccao()}">
+                            <h:outputLabel value="Grupo Criminoso: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.perfilDetento.faccao.descricao} "/>
+                        </p:column>
+                        <p:column rendered="#{detalhaSolicitacaoTransferenciaBean.renderizarCargoFaccao()}">
+                            <h:outputLabel value="Posição :"/>
+                            <h:outputText
+                                value="#{detalhaSolicitacaoTransferenciaBean.perfilDetento.cargoFaccao.descricao}" />
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Grau de Risco: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.periculosidade}"/>
+                        </p:column>
+                        <p:column>
+                            <h:outputLabel value="Regime: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.detentoNaturezaCustodia.naturezaCustodia.descricao}"/>
+                        </p:column>
+                    </p:row>
+                    <!--<p:row>
+                        <p:column>
+                            <h:outputLabel value="Regime: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.naturezaCustodia.descricao}"/>
+                        </p:column>
+                    </p:row>-->
+                    <p:row>
+
+                    </p:row>
+                </p:panelGrid>
+                <ui:include src="../../../pages/private/assistencia/gerenciamentoProcesso/fragments/processo-artigo-datatable.xhtml">
+                    <ui:param name="tituloFacet" value="Incidência Penal"/>
+                    <ui:param name="processoArtigoList"
+                              value="#{detalhaSolicitacaoTransferenciaBean.processoArtigoList}"/>
+                </ui:include>
+                <p:panelGrid columns="1"
+                             id="pgDtRestricao"
+                             rendered="#{!detalhaSolicitacaoTransferenciaBean.detentosView.isEmpty()}"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <p:outputLabel value="Restrição de Convivência" styleClass="customLabel"/>
+                    <h:panelGroup>
+                        <p:dataTable
+                                id="dtPessoasRestricao"
+                                value="#{detalhaSolicitacaoTransferenciaBean.detentosView}"
+                                var="detento"
+                                reflow="true"
+                                rowKey="#{detento.matriculaDetento}"
+                                paginator="#{detalhaSolicitacaoTransferenciaBean.detentosView.size() > 5}"
+                                style="text-align: center"
+                        >
+                            <f:facet name="header">
+                                Presos
+                            </f:facet>
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{detento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Estabelecimento">
+                                <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão">
+                                <h:outputText value="#{detento.nomePavilhao}"/>
+                            </p:column>
+                            <p:column headerText="Cela">
+                                <h:outputText value="#{detento.nomeCela}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <!--<p:panelGrid columns="1"
+                             id="pgDtTipoCrimePraticado"
+                             columnClasses="ui-grid-col-4"
+                             layout="grid"
+                             rendered="#{detalhaSolicitacaoTransferenciaBean.tiposDetentoPerfilDetento != null and !detalhaSolicitacaoTransferenciaBean.tiposDetentoPerfilDetento.isEmpty()}"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent;">
+                    <p:outputLabel value="Tipo de Crime Praticado" styleClass="customLabel"/>
+                    <h:panelGroup>
+                        <p:dataTable id="dtTipoPerfilDetento" var="tipoDetentoPerfilDetento"
+                                     value="#{detalhaSolicitacaoTransferenciaBean.tiposDetentoPerfilDetento}"
+                                     reflow="true"
+                                     rowKey="#{tipoDetentoPerfilDetento.id}"
+                                     paginator="false" rows="5"
+                                     emptyMessage="Nenhum registro encontrado"
+                                     style="text-align: center">
+                            <f:facet name="header">
+                                Tipos de Crimes Praticados
+                            </f:facet>
+                            <p:column headerText="Crime">
+                                <h:outputText value="#{tipoDetentoPerfilDetento.tipoDetento.descricao}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:panelGrid>-->
+                <p:panelGrid
+                        style="margin-bottom:20px;width: 100%;border:0px none;background-color:transparent;"
+                        rendered="#{detalhaSolicitacaoTransferenciaBean.atendimentoSeguranca != null}"
+                        styleClass="ui-panelgrid-blank form-group">
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Comportamento na Triagem: "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.atendimentoSeguranca.comportamento}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Conduta com os presos na triagem (Observação): "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.atendimentoSeguranca.condutaObservacao} "/>
+
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Higiene Pessoal (Observação): "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.atendimentoSeguranca.higienePessoalObservacaoDetalhada} "/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel
+                                    value="Aspecto de liderança em relação aos demais presos (Observação): "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.atendimentoSeguranca.liderancaObservacaoDetalhada} "/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <h:outputLabel value="Conduta com os funcionários na triagem (Observação): "/>
+                            <h:outputText
+                                    value="#{detalhaSolicitacaoTransferenciaBean.atendimentoSeguranca.condutaFuncionarioObservacao}"/>
+
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </div>
+        </div>
+    </div>
+</ui:composition>

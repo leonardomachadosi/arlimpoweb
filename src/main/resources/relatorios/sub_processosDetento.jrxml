@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_processosDetento" pageWidth="595" pageHeight="100" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a712b59d-fcba-44d7-91e5-e4a2e779b03f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiispAdapter.xml"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="numeroGrande" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numero_processo"/>
+	</field>
+	<field name="numeroGuia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numero_guia"/>
+	</field>
+	<field name="nomeVara" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="vara"/>
+	</field>
+	<field name="nomeComarca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="comarca"/>
+	</field>
+	<field name="nomeNaturezaCustodia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="natureza_custodia"/>
+	</field>
+	<field name="nomeSecao" class="java.lang.String"/>
+	<field name="nomeSubsecao" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="130" height="18" uuid="3ed6fc4d-5a29-45e3-8483-61f80e7c545d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="38c1fc2d-3622-4372-9426-43c504d30085"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[NUMERAÇÃO ÚNICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="100" height="18" uuid="1b79e6a3-93b0-433b-8f3d-ebeabd3ebebc">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="736abd56-da1d-4322-970b-351cb8235180"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[COMARCA/SEÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="0" width="101" height="18" uuid="66221c3a-3bc3-4b80-ab44-13c1fd93725a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32f97550-b2e5-465b-bc50-bfda2d0de808"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[VARA/SUBSEÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="0" width="144" height="18" uuid="cc2d3200-28e5-407f-80f1-b9f29333c55b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aced3c4e-5744-472f-9553-788a88988682"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[REGIME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="80" height="18" uuid="fb6611e3-631e-4778-ae0f-b6570f97293e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1d85cde4-2213-4308-b742-ca35edff17c3"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[GUIA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="130" height="17" uuid="bfa49589-b8e2-48b8-bb66-a6284fc22341">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="38c1fc2d-3622-4372-9426-43c504d30085"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{numeroGrande}.substring(0, 7) + "-" + $F{numeroGrande}.substring(7, 9) + "." + $F{numeroGrande}.substring(9, 13) + "." + $F{numeroGrande}.substring(13, 14) + "." + $F{numeroGrande}.substring(14, 16) + "." + $F{numeroGrande}.substring(16, 20))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="210" y="0" width="100" height="17" uuid="de6a40da-19d6-44cd-a58d-aad11310ae86">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="736abd56-da1d-4322-970b-351cb8235180"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{nomeComarca} == null ? "" : $F{nomeComarca}) + ($F{nomeSecao} == null ? "" : $F{nomeSecao})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="101" height="17" uuid="ad5ae359-5346-44b5-9f03-43d86ac022c5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32f97550-b2e5-465b-bc50-bfda2d0de808"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[($F{nomeVara} == null ? "" : $F{nomeVara}) + ($F{nomeSubsecao} == null ? "" : $F{nomeSubsecao})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="411" y="0" width="144" height="17" uuid="a5ff1954-9be4-41fb-b2e5-249bbcc6557f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="aced3c4e-5744-472f-9553-788a88988682"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{nomeNaturezaCustodia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="80" height="17" uuid="3d1a4291-d109-4581-b867-dd5e0d607a8b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1d85cde4-2213-4308-b742-ca35edff17c3"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{numeroGuia}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

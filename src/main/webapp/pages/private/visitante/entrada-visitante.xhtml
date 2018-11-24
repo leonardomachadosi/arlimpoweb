@@ -1,0 +1,194 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+
+            .ui-panelgrid {
+                border-collapse: unset !important;
+            }
+
+            .ui-panelgrid .ui-widget-header {
+                background-color: transparent !important;
+            }
+
+            .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .ui-grid-row {
+                margin-bottom: 1em;
+            }
+
+            .ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+
+            body .ui-widget-content {
+                border: 0;
+            }
+
+            .ui-steps .ui-steps-item {
+                width: 33%;
+            }
+        </style>
+        <style type="text/css" media="print">
+            .footer, .ui-button, .topbar-left, .topbar-right, .ui-steps, .nano-slider, h1 {
+                display: none;
+            }
+
+            .card, .layout-wrapper .topbar {
+                box-shadow: none;
+                -webkit-box-shadow: none;
+                padding-top: 0;
+            }
+
+            .card .card-w-title {
+                padding-top: 0;
+            }
+
+            body.layout-compact .card.card-w-title {
+                position: absolute;
+                top: 1.5em;
+                left: 10em;
+            }
+
+            .ui-grid-row {
+                margin-bottom: 0;
+            }
+
+            body .ui-panelgrid .ui-panelgrid-cell {
+                padding: 0;
+            }
+
+            body .ui-widget-content {
+                border: 0;
+            }
+
+            body.layout-compact .ui-widget-content {
+                font-size: 12px;
+            }
+
+            .pnComprovanteVisita {
+                width: 24em;
+                border: 1px solid #bebebe;
+                padding: 1em;
+            }
+
+            .ui-grid-col-12 {
+                padding: 0;
+                width: 98%;
+            }
+
+            .lbMsg {
+                font-size: 9px;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false" />
+            <p:remoteCommand name="setResponse" process="@this" update="@form"
+                             actionListener="#{entradaVisitanteBean.fingerPrint}"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Entrada de Visitantes</b></h1>
+
+                        <p:steps activeIndex="#{entradaVisitanteBean.passo}" styleClass="stepTimeline">
+                            <p:menuitem value="Identificação"/>
+                            <p:menuitem value="Dados da entrada"/>
+                            <p:menuitem value="Comprovante"/>
+                        </p:steps>
+
+                        <p:spacer/>
+
+                        <h:panelGroup rendered="#{entradaVisitanteBean.passo == 0}">
+                            <ui:insert name="form">
+                                <ui:include src="fragments/identificacao-panel.xhtml"/>
+                            </ui:insert>
+                        </h:panelGroup>
+
+                        <!--<h:panelGroup rendered="#{entradaVisitanteBean.passo == 1}">-->
+                            <!--<p:panelGrid id="pngDlgFingerPrintVerify" columns="1" columnClasses="ui-grid-col-12"-->
+                                         <!--layout="grid" styleClass="ui-panelgrid-blank form-group">-->
+                                <!--<h:panelGroup styleClass="md-selectonemenu">-->
+                                    <!--<p:selectOneMenu id="somDatiloscopia" value="#{entradaVisitanteBean.datiloscopia}"-->
+                                                     <!--converter="omnifaces.SelectItemsConverter"-->
+                                                     <!--style="width: 100%;">-->
+                                        <!--<f:selectItem noSelectionOption="true"/>-->
+                                        <!--<f:selectItems value="#{entradaVisitanteBean.datiloscopiaList}"-->
+                                                       <!--var="datiloscopia"-->
+                                                       <!--itemLabel="#{datiloscopia.posicao.descricao}"-->
+                                                       <!--itemValue="#{datiloscopia}"/>-->
+                                        <!--<p:ajax process="@this" event="itemSelect" update="pngDlgFingerPrintVerify"/>-->
+                                    <!--</p:selectOneMenu>-->
+                                    <!--<p:outputLabel value="Datiloscopia"/>-->
+                                <!--</h:panelGroup>-->
+                                <!--<h:inputText id="itxJsonVerify"-->
+                                             <!--value="#{entradaVisitanteBean.onSelectJsonRequest()}"-->
+                                             <!--style="display: none;"/>-->
+                                <!--<p:commandButton rendered="#{entradaVisitanteBean.canRenderButtonVerifyBiometric}"-->
+                                                 <!--title="Verificar" icon="ui-icon-fingerprint" type="button"-->
+                                                 <!--onclick="verifyFingerPrint($('#itxJsonVerify').val())"/>-->
+                            <!--</p:panelGrid>-->
+                        <!--</h:panelGroup>-->
+
+                        <h:panelGroup rendered="#{entradaVisitanteBean.passo == 1}">
+                            <ui:insert name="form">
+                                <ui:include src="fragments/dados-entrada-panel.xhtml"/>
+                            </ui:insert>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{entradaVisitanteBean.passo == 2}">
+                            <ui:insert name="form">
+                                <ui:include src="fragments/comprovante-visita.xhtml"/>
+                            </ui:insert>
+                        </h:panelGroup>
+
+                    </div>
+
+                    <div class="ui-g">
+                        <div class="ui-g-12" style="padding-right: 0;padding-left: 0">
+                            <p:commandButton id="btnFinalizar"
+                                             value="Finalizar"
+                                             process="@form"
+                                             style="float:right;"
+                                             update="@form"
+                                             resetValues="true"
+                                             rendered="#{entradaVisitanteBean.passo == 2}"
+                                             action="#{entradaVisitanteBean.finalizar}"
+                            />
+                            <p:commandButton id="btnProximo"
+                                             value="Próximo"
+                                             process="@form"
+                                             style="float:right;"
+                                             update="@form"
+                                             rendered="#{entradaVisitanteBean.passo lt 2}"
+                                             action="#{entradaVisitanteBean.avancar()}"
+                            />
+                            <p:commandButton id="btnVoltar"
+                                             value="Voltar"
+                                             process="@form"
+                                             style="float:left;"
+                                             update="@form"
+                                             rendered="#{entradaVisitanteBean.passo == 1}"
+                                             action="#{entradaVisitanteBean.retornar()}"
+                            />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

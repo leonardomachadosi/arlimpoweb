@@ -1,0 +1,343 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:button value="Voltar" icon="ui-icon-arrow-back"
+                                      outcome="pretty:buscaSolicitacaoTransferenciaNEC"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <h:panelGroup id="pnlBtnAdicionarEscolta" layout="block" rendered="#{!visualizaSolicitacaoTransferenciaNecBean.detentoQuePodeTerEscoltaList.isEmpty()
+                            and visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.situacaoSolicitacaoTransferencia.id ==  6}">
+                                <p:commandButton id="btnAdicionar" value="Anexar"
+                                                 oncomplete="PF('addDocumentoTransferencia').show();"
+                                                 actionListener="#{visualizaSolicitacaoTransferenciaNecBean.refreshArquivo()}"
+                                                 process="@this"
+                                                 update="dialogDocumentoTransferencia"
+                                                 icon="ui-icon-attach-file"/>
+                                <p:commandButton icon="ui-icon-send" type="button"
+                                                 style="margin-left: 8px; margin-right: 8px"
+                                                 value="Encaminhar Escolta"
+                                                 actionListener="#{visualizaSolicitacaoTransferenciaNecBean.atualizarDetentosQuePodemTerEscolta}"
+                                                 rendered="#{!visualizaSolicitacaoTransferenciaNecBean.efetuarEscolta}"
+                                                 onclick="PF('modalEncaminhaEscolta').show();"/>
+                                <p:commandButton icon="ui-icon-directions-transit" type="button"
+                                                 style="margin-left: 8px; margin-right: 8px"
+                                                 onclick="PF('modalEscolta').show();"
+                                                 actionListener="#{visualizaSolicitacaoTransferenciaNecBean.atualizarDetentosQuePodemTerEscolta}"
+                                                 value="Adicionar Escolta" update="dlgAddEscolta"
+                                                 rendered="#{(not empty visualizaSolicitacaoTransferenciaNecBean.detentoQuePodeTerEscoltaList) and visualizaSolicitacaoTransferenciaNecBean.efetuarEscolta}"/>
+                                <p:outputLabel style="margin-right: 10px" value="Efetuar Escolta?"/>
+                                <p:inputSwitch value="#{visualizaSolicitacaoTransferenciaNecBean.efetuarEscolta}">
+                                    <f:ajax render="pnlBtnAdicionarEscolta"
+                                            event="change"
+                                            execute="@this"/>
+                                </p:inputSwitch>
+                            </h:panelGroup>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Visualizar Solicitação de Transferência</h1>
+
+                        <p:panelGrid layout="grid" columns="4" columnClasses="ui-grid-col-3"
+                                     styleClass="ui-panelgrid-blank form-group" style="padding-top: 15px;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.numeroFormatado}"
+                                        id="itNumeroSolicitacao" styleClass="input-auto" readonly="true"/>
+                                <p:outputLabel for="itNumeroSolicitacao" value="Número da Solicitação"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.unidadePrisional.descricao}"
+                                        id="itUnidadeDescricao" styleClass="input-auto" readonly="true"/>
+                                <p:outputLabel for="itNumeroSolicitacao" value="Unidade de Origem"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{visualizaSolicitacaoTransferenciaNecBean.servidorSolicitante.pessoa.nome}"
+                                        id="itFuncionarioSolicitante" styleClass="input-auto" readonly="true"/>
+                                <p:outputLabel for="itFuncionarioSolicitante" value="Funcionário Solicitante"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.dataSolicitacao}"
+                                        id="itDataSolicitacao" styleClass="input-auto" readonly="true">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </p:inputText>
+                                <p:outputLabel for="itDataSolicitacao" value="Data da Solicitação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid layout="grid" columns="3"
+                                     columnClasses="ui-grid-col-5, ui-grid-col-3, ui-grid-col-3"
+                                     styleClass="ui-panelgrid-blank form-group">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.situacaoSolicitacaoTransferencia.descricao}"
+                                        id="itSituacao" styleClass="input-auto" readonly="true"/>
+                                <p:outputLabel for="itSituacao" value="Situação"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText
+                                        value="#{visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.prioridadeTransferencia.descricao}"
+                                        id="itPrioridade" styleClass="input-auto" readonly="true"/>
+                                <p:outputLabel for="itPrioridade" value="Prioridade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itTipoSolicitacao"
+                                             value="#{visualizaSolicitacaoTransferenciaNecBean.historicoSolicitacaoTransferencia.solicitacaoTransferencia.tipoSolicitacaoMovimentacao.descricao}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itTipoSolicitacao" value="Motivo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDtListaArquivos" layout="grid" columns="1" columnClasses="ui-grid-col-12"
+                                     styleClass="ui-panelgrid-blank form-group" style="padding-top: 15px;">
+                            <h2>Documentos</h2>
+                            <p:dataTable
+                                    id="dtDocumentosDetento"
+                                    value="#{visualizaSolicitacaoTransferenciaNecBean.arquivosSolicitacaoTransferencia}"
+                                    var="arquivoSolicitacao" emptyMessage="Nenhum documento encontrado." reflow="true">
+                                <f:facet name="header">Documentos</f:facet>
+                                <p:column headerText="Descrição" style="text-align: center;">
+                                    <h:outputText value="#{arquivoSolicitacao.arquivo.descricao}"/>
+                                </p:column>
+                                <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                    <h:outputText value="#{arquivoSolicitacao.arquivo.tipoArquivo.descricao}"/>
+                                </p:column>
+                                <p:column headerText="Opção" style="text-align: center; width: 13%">
+                                    <p:commandButton icon="ui-icon-file-download" process="@this" title="Visualizar"
+                                                     onclick="this.form.target='_blank'" ajax="false"
+                                                     action="#{documentoBean.baixarArquivo(arquivoSolicitacao.arquivo)}"
+                                                     immediate="true"/>
+                                    <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                     action="#{visualizaSolicitacaoTransferenciaNecBean.removerDocumentoDetento(arquivoSolicitacao)}"
+                                                     process="@this"
+                                                     styleClass="red-btn"
+                                                     rendered="#{arquivoSolicitacao.id == null}"
+                                                     update="dtDocumentosDetento">
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panelGrid>
+                        <h2>Presos</h2>
+                        <p:dataTable value="#{visualizaSolicitacaoTransferenciaNecBean.detentosAprovados}"
+                                     var="detentoAprovado" reflow="true"
+                                     emptyMessage="Nenhum preso adicionado na solicitação" id="tblDetentosAprovados">
+                            <f:facet name="header">Presos</f:facet>
+                            <p:column width="5%">
+                                <p:rowToggler/>
+                            </p:column>
+                            <p:column headerText="Foto" width="15%" style="text-align: center;">
+                                <h:graphicImage style="max-height:5em;"
+                                                value="#{fotoBean.getFotoFrontalPath(detentoAprovado.detentoSolicitacaoTransferencia.detento.pessoa.id, 1)}"/>
+                            </p:column>
+                            <p:column headerText="Nome" style="text-align: center;">
+                                <h:outputText
+                                        value="#{detentoAprovado.detentoSolicitacaoTransferencia.detento.pessoa.nome}"/>
+                            </p:column>
+                            <p:column headerText="Situação" style="text-align: center; width: 15%;">
+                                <h:outputText
+                                        value="#{detentoAprovado.situacaoDetentoSolicitacaoTransferencia.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Destino" style="text-align: center;">
+                                <h:outputText
+                                        value="#{detentoAprovado.detentoSolicitacaoTransferencia.unidadePrisionalDestino.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Ação" style="width: 13%; text-align: center;">
+                                <p:commandButton title="Visualizar Preso" icon="ui-icon-remove-red-eye"
+                                                 style="margin-right: 5px;" immediate="true" ajax="false"
+                                                 onclick="this.form.target='_blank'"
+                                                 action="#{visualizaSolicitacaoTransferenciaNecBean.gotoDetalhaSolicitacaoTransferenciaNEC(detentoAprovado.detentoSolicitacaoTransferencia)}"/>
+
+                                <p:commandButton title="Visualizar escolta"
+                                                 action="#{escoltaBean.onClickVerEscolta(detentoAprovado.detentoSolicitacaoTransferencia)}"
+                                                 icon="ui-icon-directions-transit"
+                                                 style="margin-left: 5px; margin-right: 5px;"
+                                                 oncomplete="PF('modalDetalheEscolta').show()" immediate="true"
+                                                 update="form:tblEscoltaView"/>
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:panelGrid id="pgMotivoReprovacao" columns="1"
+                                             columnClasses="label, value"
+                                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                             rendered="#{detentoAprovado.detentoSolicitacaoTransferencia.justificativa != null}"
+                                             style="border:0px none; background-color:transparent; width: 100%">
+                                    <h:panelGroup>
+                                        <p:outputLabel style="font-weight: bold;"
+                                                       value="Justificativa: "/>
+                                        <p:outputLabel
+                                                value="#{detentoAprovado.detentoSolicitacaoTransferencia.justificativa}"/>
+                                    </h:panelGroup>
+                                </p:panelGrid>
+                                <p:panelGrid layout="grid" columns="2"
+                                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                                             styleClass="ui-panelgrid-blank form-group">
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;"
+                                                       value="Precisa de servidor da saúde? "/>
+                                        <p:outputLabel
+                                                value="#{detentoAprovado.detentoSolicitacaoTransferencia.precisaServidorSaude ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;" value="Precisa de ambulância? "/>
+                                        <p:outputLabel
+                                                value="#{detentoAprovado.detentoSolicitacaoTransferencia.precisaAmbulancia ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;" value="Informe de Resgate? "/>
+                                        <p:outputLabel
+                                                value="#{detentoAprovado.detentoSolicitacaoTransferencia.detento.informeResgate ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel style="font-weight: bold;"
+                                                       value="O preso corre risco de morte (por ameaça de terceiros)? "/>
+                                        <p:outputLabel
+                                                value="#{detentoAprovado.detentoSolicitacaoTransferencia.detento.riscoMorte ? 'SIM' : 'NÃO'}"/>
+                                    </p:column>
+                                </p:panelGrid>
+                            </p:rowExpansion>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h:panelGroup layout="block" id="pnlBtnNotificar">
+                        <p:toolbar
+                                rendered="#{visualizaSolicitacaoTransferenciaNecBean.renderizarNotificaUnidadePrisional() or visualizaSolicitacaoTransferenciaNecBean.renderizarSalvar()}">
+                            <f:facet name="left">
+                                <p:commandButton value="Salvar"
+                                                 icon="ui-icon-check"
+                                                 id="btnSalvar"
+                                                 rendered="#{visualizaSolicitacaoTransferenciaNecBean.renderizarSalvar()}"
+                                                 action="#{visualizaSolicitacaoTransferenciaNecBean.salvarArquivoSolicitacaoTransferencia()}"
+                                                 update="@form"
+                                                 process="@this">
+                                    <p:confirm header="Confirmação" message="Deseja salvar alterações?"
+                                               icon="ui-icon-alert"/>
+                                    <p:confirmDialog id="cfSalvar" global="true" showEffect="fade" hideEffect="fade"
+                                                     widgetVar="confirmDlg">
+                                        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                         icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                         icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:commandButton>
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                                <p:commandButton icon="ui-icon-send" update="@form" immediate="true"
+                                                 action="#{visualizaSolicitacaoTransferenciaNecBean.onClickNotificarUnidadeOrigem}"
+                                                 value="Notificar unidade de origem">
+                                    <p:confirm header="Confirmação"
+                                               message="Deseja realmente notificar a unidade de origem?"
+                                               icon="ui-icon-alert"/>
+                                </p:commandButton>
+                            </f:facet>
+                        </p:toolbar>
+                    </h:panelGroup>
+                </div>
+            </div>
+
+            <p:confirmDialog global="true">
+                <p:commandButton type="button" value="Sim" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton type="button" value="Não" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+
+            <ui:include src="/WEB-INF/template/escolta/addEscoltaModal.xhtml"/>
+
+            <ui:include src="/WEB-INF/template/escolta/visualizaEscoltaModal.xhtml"/>
+
+            <ui:include src="/WEB-INF/template/escolta/encaminhaEscoltaModal.xhtml"/>
+            <p:dialog header="Anexar Documentacao" id="dialogDocumentoTransferencia"
+                      widgetVar="addDocumentoTransferencia" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             id="pgDescricaoDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                          background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoDocumento" value="Descrição do Documento"/>
+                        <p:inputText id="itDescricaoDocumento"
+                                     value="#{visualizaSolicitacaoTransferenciaNecBean.arquivo.descricao}"
+                                     style="width: 100%">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="soTipoDocumento" value="Tipo do Documento"/>
+                        <p:selectOneMenu id="soTipoDocumento"
+                                         style="width: 100%"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         value="#{visualizaSolicitacaoTransferenciaNecBean.arquivo.tipoArquivo}">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems
+                                    value="#{visualizaSolicitacaoTransferenciaNecBean.tiposAquivoEnum}"
+                                    var="tipoArquivo"
+                                    itemValue="#{tipoArquivo.objeto}"
+                                    itemLabel="#{tipoArquivo.descricao}"/>
+                            <p:ajax process="@this" event="blur"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                              background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                oncomplete="PF('addDocumentoTransferencia').hide();"
+                                process="pgDescricaoDocumento"
+                                update="pgDtListaArquivos messages"
+                                label="Carregar Documento"
+                                cancelLabel="Cancelar"
+                                uploadLabel="Anexar"
+                                fileUploadListener="#{visualizaSolicitacaoTransferenciaNecBean.uploadDocumentoDetento}"
+                                invalidSizeMessage="#{utilBean.messageInvalidFile}"
+                                sizeLimit="#{utilBean.sizeFile}"
+                                allowTypes="/(\.|\/)(pdf)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+        </h:form>
+
+        <script type="text/javascript">
+            function handleAddEscoltaRequest(args) {
+                if (args.ehValido) PF('modalEscolta').hide();
+            }
+        </script>
+    </ui:define>
+</ui:composition>

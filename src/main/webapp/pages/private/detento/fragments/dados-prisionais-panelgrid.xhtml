@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid style="margin-bottom:20px;width: 100%;" styleClass="customDadosPanelgrid" rendered="#{detentoCela.id != null}">
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Unidade Prisional: "/>
+                <h:outputText value="#{visualizaDetentoBean.getUltimoDetentoUnidadePrisional(detentoSituacao.detento).unidadePrisional.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Situação: "/>
+                <h:outputText styleClass="#{utilBean.addStyleByStatus(detentoSituacao.situacao.descricao)}"
+                              value="#{detentoSituacao.situacao.descricao}"/>
+
+                <h:outputText rendered="#{detentoSituacao.situacao.id == 3}"
+                              value=" - #{visualizaDetentoBean.getUltimaMovimentacao(detentoSituacao.detento).tipoMovimentacao.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row rendered="#{visualizaDetentoBean.renderizarCelaPavilhao(visualizaDetentoBean.getUltimoDetentoUnidadePrisional(detentoSituacao.detento).unidadePrisional)}">
+            <p:column>
+                <h:outputLabel value="Pavilhão: "/>
+                <h:outputText value="#{detentoCela.cela.pavilhao.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Cela: "/>
+                <h:outputText value="#{detentoCela.cela.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Esfera de Origem: "/>
+                <h:outputText value="#{detentoCela.detento.esferaOrigem.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Oriundo: "/>
+                <h:outputText value="#{detentoCela.detento.delegaciaOrigem.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Tipo de Prisão: "/>
+                <h:outputText value="#{detentoTipoPrisao.tipoPrisao.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Código do Ciclo: " />
+                <h:outputText value="#{detentoCela.detento.codigoCiclo}" />
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Estado da Prisão: "/>
+                <h:outputText value="#{detentoCela.detento.municipio.estado.descricao}"/>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Cidade da Prisão: "/>
+                <h:outputText value="#{detentoCela.detento.municipio.descricao}"/>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Nº da Tornozeleira Eletrônica: "/>
+                <!--<h:outputText value="#{visualizaDetentoBean.detentoView.}"/>-->
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Data da Prisão: "/>
+                <h:outputText value="#{detentoCela.detento.dataPrisao}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Data de Inicio de Ciclo: "/>
+                <h:outputText value="#{detentoCela.detento.dataInicioCiclo}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+            <p:column>
+                <h:outputLabel value="Data de Cadastro: "/>
+                <h:outputText value="#{detentoCela.detento.dataCadastro}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+        <p:row>
+            <p:column>
+                <h:outputLabel value="Data do Fim de Ciclo: "/>
+                <h:outputText value="#{detentoCela.detento.dataFimCiclo}">
+                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+        </p:row>
+    </p:panelGrid>
+
+</ui:composition>

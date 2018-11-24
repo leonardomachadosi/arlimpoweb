@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:outputLabel value="Visitantes" styleClass="customLabel"/>
+    <p:dataList value="#{visualizaDetentoBean.visitanteDetentosView}" var="visitante"
+                type="unordered" itemType="none"
+                paginator="#{visualizaDetentoBean.visitanteDetentosView.size() > 10}"
+                rendered="#{visualizaDetentoBean.visitanteDetentosView.size() > 0}"
+                rows="10"
+                paginatorPosition="bottom"
+                emptyMessage="Nenhum registro encontrado"
+                styleClass="cars-datalist">
+        <f:facet name="header">
+            Visitantes
+        </f:facet>
+        <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">
+            <div class="car-details">
+                <p:graphicImage
+                        value="#{fotoBean.getFotoFrontalPath(visitante.codPessoaVisitante, 2)}"
+                        style="width: 78px; margin:24px;"/>
+            </div>
+            <div class="car-details">
+                <p><strong>#{visitante.nomeVisitante}</strong></p>
+                <p>Parentesco: <h:outputLabel
+                        value="#{visitante.parentesco}"/></p>
+                Situação Vínculo:
+                <p:outputLabel value="#{visitante.vinculo}"
+                               styleClass="#{utilBean.addStyleByStatus(visitante.vinculo)}"/>
+            </div>
+            <p:commandButton
+                    title="Detalhes do Visitante" icon="ui-icon-remove-red-eye"
+                    action="#{visualizaDetentoBean.visualizarDetalhes()}"
+                    style="margin:24px 12px 0 0">
+                <f:setPropertyActionListener value="#{visitante}"
+                                             target="#{visualizaDetentoBean.visitanteDetentoView}"/>
+            </p:commandButton>
+        </div>
+    </p:dataList>
+
+    <p:outputLabel value="Solicitação de Visita Assistida" styleClass="customLabel"/>
+    <ui:include src="../../visitante/fragments/visualiza-visita-assistida-datalist.xhtml">
+        <ui:param name="list" value="#{visualizaDetentoBean.visitaAssistidaList}"/>
+    </ui:include>
+
+</ui:composition>

@@ -1,0 +1,230 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             process="@this"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Gerenciar Frente de Trabalho</h1>
+
+                        <p:panelGrid id="pgFuncionarioFrenteTrabalho" columns="2"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itFuncionario"
+                                             value="#{gerenciaFrenteTrabalhoBean.usuario.pessoa.nome}"
+                                             readonly="true"
+                                             style="width: 100%"/>
+                                <p:outputLabel for="itFuncionario" value="Funcionário"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soFrenteTrabalho"
+                                                 value="#{gerenciaFrenteTrabalhoBean.producaoDiaria.frenteTrabalho}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel=""/>
+                                    <f:selectItems value="#{gerenciaFrenteTrabalhoBean.frentesTrabalho}"
+                                                   var="frenteTrabalho"
+                                                   itemLabel="#{frenteTrabalho.descricao}"/>
+                                    <p:ajax
+                                            update="@form"
+                                            event="change"
+                                            listener="#{gerenciaFrenteTrabalhoBean.carregarDadosFrenteTrabalho()}"
+                                            execute="@this"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soFrenteTrabalho" value="Frente de Trabalho"/>
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <p:outputLabel value="Produção Diária" style="color:darkBlue;"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDataProdutosQuantidade" columns="3"
+                                     columnClasses="ui-grid-col-3, ui-grid-col-4, ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdData"
+                                            style="width: 100%"
+                                            pattern="dd/MM/yyyy"
+                                            value="#{gerenciaFrenteTrabalhoBean.producaoDiaria.data}"
+                                            maxdate="#{gerenciaFrenteTrabalhoBean.dataAtual}"
+                                            mask="99/99/9999"
+                                            locale="pt"/>
+                                <p:outputLabel for="cdData"
+                                               value="Data"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soProdutos"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{gerenciaFrenteTrabalhoBean.producaoDiaria.produto}"
+                                                 style="width: 100%">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel=""/>
+                                    <f:selectItems value="#{gerenciaFrenteTrabalhoBean.produtos}"
+                                                   var="produto"
+                                                   itemLabel="#{produto.descricao}"
+                                    />
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soProdutos" value="Produtos"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputNumber id="inQuantidade"
+                                               decimalPlaces="0" thousandSeparator=""
+                                               value="#{gerenciaFrenteTrabalhoBean.producaoDiaria.quantidade}"
+                                               style="width: 100%"/>
+                                <p:outputLabel for="inQuantidade" value="Quantidade"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup style="float: right">
+                                <p:commandButton value="Adicionar"
+                                                 action="#{gerenciaFrenteTrabalhoBean.adicionarProducaoDiaria()}"
+                                                 update="pgProducaoDiariaList pgDataProdutosQuantidade"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid
+                                id="pgProducaoDiariaList"
+                                columns="1"
+                                columnClasses="ui-grid-col-12"
+                                layout="grid"
+                                styleClass="ui-panelgrid-blank form-group"
+                                style="border:0px none; background-color:transparent;">
+                            <h:panelGroup rendered="#{!gerenciaFrenteTrabalhoBean.producaoDiariaList.isEmpty()}">
+                                <p:dataTable id="dtProducaoDiariaList"
+                                             value="#{gerenciaFrenteTrabalhoBean.producaoDiariaList}"
+                                             rows="5"
+                                             var="producaoDiaria"
+                                >
+                                    <p:column headerText="Data" style="text-align: center;">
+                                        <h:outputText value="#{producaoDiaria.data}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Produto" style="text-align: center;">
+                                        <h:outputText value="#{producaoDiaria.produto.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Quantidade" style="text-align: center;">
+                                        <h:outputText value="#{producaoDiaria.quantidade}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 10%">
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                styleClass="red-btn"
+                                                title="Remover"
+                                                update="form:pgProducaoDiariaList"
+                                                process="@this"
+                                                action="#{gerenciaFrenteTrabalhoBean.remover()}">
+                                            <f:setPropertyActionListener value="#{producaoDiaria}"
+                                                                         target="#{gerenciaFrenteTrabalhoBean.producaoDiaria}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarFrenteTrabalho" value="Salvar"
+                                             process="@form" update="@form"
+                                             actionListener="#{gerenciaFrenteTrabalhoBean.salvarProducoesDiarias()}"
+                                             icon="ui-icon-check"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid
+                                id="pgDtProducaoDiaria"
+                                columns="1"
+                                columnClasses="ui-grid-col-12"
+                                layout="grid"
+                                styleClass="ui-panelgrid-blank form-group"
+                                style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:dataTable id="dtProducaoDiaria"
+                                             value="#{gerenciaFrenteTrabalhoBean.producoesDiarias}"
+                                             rows="10"
+                                             emptyMessage="Nenhum registro encontrado."
+                                             var="producaoDiaria"
+                                             paginator="#{gerenciaFrenteTrabalhoBean.producoesDiarias.size()>10}"
+                                             paginatorPosition="bottom"
+
+                                >
+                                    <f:facet name="header">
+                                        <h:outputText value="Produção Mensal"/>
+                                    </f:facet>
+                                    <p:column headerText="Data" style="text-align: center;">
+                                        <h:outputText value="#{producaoDiaria.data}">
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Produto" style="text-align: center;">
+                                        <h:outputText value="#{producaoDiaria.produto.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Quantidade" style="text-align: center;">
+                                        <h:outputText value="#{producaoDiaria.quantidade}"/>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 5%">
+                                        <p:commandButton
+                                                icon="ui-icon-trash"
+                                                style="border-bottom: 10px"
+                                                styleClass="red-btn"
+                                                title="Remover"
+                                                update="form:dtProducaoDiaria form:pgProducaoDiariaList"
+                                                process="@this"
+                                                action="#{gerenciaFrenteTrabalhoBean.deletarProducaoDiaria()}">
+                                            <f:setPropertyActionListener value="#{producaoDiaria}"
+                                                                         target="#{gerenciaFrenteTrabalhoBean.producaoDiaria}"/>
+                                            <p:confirm header="Confirmação" message="Deseja remover excluir esta produção diária?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"  widgetVar="confirmDlg">
+                                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                        </p:confirmDialog>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

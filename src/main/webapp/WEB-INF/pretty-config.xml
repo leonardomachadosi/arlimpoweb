@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pretty-config xmlns="http://ocpsoft.org/schema/rewrite-config-prettyfaces"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
+                      http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
+
+    <url-mapping id="inicio">
+        <pattern value="/"/>
+        <view-id value="/pages/private/dashboard/dashboard.xhtml"/>
+    </url-mapping>
+    <url-mapping id="acessoNegado">
+        <pattern value="/acessoNegado"/>
+        <view-id value="/access.xhtml"/>
+    </url-mapping>
+    <url-mapping id="404">
+        <pattern value="/404"/>
+        <view-id value="/404.xhtml"/>
+    </url-mapping>
+
+    <url-mapping id="viewExpired">
+        <pattern value="/viewExpired"></pattern>
+        <view-id value="/viewExpired.xhtml"/>
+    </url-mapping>
+
+    <url-mapping id="error">
+        <pattern value="/error"/>
+        <view-id value="/error.xhtml"/>
+    </url-mapping>
+    <url-mapping id="login">
+        <pattern value="/login"></pattern>
+        <view-id value="/dashboard.xhtml"/>
+    </url-mapping>
+    <url-mapping id="buscaRecurso">
+        <pattern value="/recurso/buscaRecurso"></pattern>
+        <view-id value="/pages/public/recurso/buscar-recurso.xhtml"/>
+    </url-mapping>
+
+    <url-mapping id="cadastrarRecurso">
+        <pattern value="/recurso/cadastrarRecurso"></pattern>
+        <view-id value="/pages/public/recurso/cadastrar-recurso.xhtml"/>
+    </url-mapping>
+
+    <url-mapping id="cadastrarLaudo">
+        <pattern value="/recurso/cadastrarLaudo"></pattern>
+        <view-id value="/pages/public/recurso/cadastrar-laudo.xhtml"/>
+    </url-mapping>
+
+    <url-mapping id="visualizarRecurso">
+        <pattern value="/recurso/visualizarRecurso"></pattern>
+        <view-id value="/pages/public/recurso/visualizar-recurso.xhtml"/>
+    </url-mapping>
+
+
+</pretty-config>
+
+

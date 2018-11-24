@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Retorno de Saída Temporária</h1>
+                        <p:panelGrid id="pgDetento" columns="2"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectCheckboxMenu style="width: 100%"
+                                                      value="#{saidaTemporariaRetornoBean.selectedUnidadesPrisionais}"
+                                                      converter="omnifaces.SelectItemsConverter"
+                                                      id="soEstabelecimento"
+                                                      filter="true"
+                                                      filterMatchMode="startsWith"
+                                                      label="Estabelecimento de Destino">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{saidaTemporariaRetornoBean.unidadesPrisionais}"
+                                                   var="unidadePrisionalDestino"
+                                                   itemDisabled="true"
+                                                   itemLabel="#{unidadePrisionalDestino.descricao}"/>
+                                    <p:ajax event="change" process="@this" update="dtDetentos"
+                                            listener="#{saidaTemporariaRetornoBean.carregarDetentosMovimentacaoView()}"/>
+                                </p:selectCheckboxMenu>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataHora" maxdate="#{saidaTemporariaRetornoBean.dataAtual}" pattern="dd/MM/yyyy HH:mm"  value="#{saidaTemporariaRetornoBean.movimentacaoDetento.dataRetorno}"/>
+                                <p:outputLabel value="Data e Hora" for="cdDataHora"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDigital"
+                                     columns="1"
+                                     columnClasses="ui-grid-col-1"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:commandButton title="Digital"
+                                                 id="btnDigital" icon="ui-icon-fingerprint"
+                                                 process="@form"
+                                                 update="@form"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarTransferenciaAdmissao" value="Salvar"
+                                             action="#{saidaTemporariaRetornoBean.salvar()}"
+                                             process="@form"
+                                             update="messages"
+                                             icon="ui-icon-check"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton id="btnSalvarEncaminharFuga" value="Encaminhar para Fuga"
+                                             action="#{saidaTemporariaRetornoBean.encaminharFuga()}"
+                                             process="@form"
+                                             icon="ui-icon-arrow-forward"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:dataTable
+                                id="dtDetentos"
+                                emptyMessage=""
+                                var="detento"
+                                reflow="true"
+                                rowKey="#{detento.codDetento}"
+                                value="#{saidaTemporariaRetornoBean.detentosMovimentacaoExternaView}"
+                                selection="#{saidaTemporariaRetornoBean.selectededDetentoMovimentacaoExternaViews}"
+                                paginator="true"
+                                paginatorPosition="bottom"
+                                rows="10">
+                            <f:facet name="header">
+                                Presos
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Foto" width="10%" style="text-align: center">
+
+                                <p:graphicImage
+                                        value="#{fotoBean.getFotoFrontalPath(detento.matriculaDetento, 1)}"
+                                        style="width: 90%;"/>
+                            </p:column>
+                            <p:column headerText="Preso" style="text-align: center">
+                                <h:outputText value="#{detento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Data e Hora da Saída" style="text-align: center">
+                                <h:outputText value="#{detento.dataSaida}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Data e Hora Prevista do Retorno" style="text-align: center">
+                                <h:outputText value="#{detento.dataPrevistaRetorno}">
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Estabelecimento" style="text-align: center">
+                                <h:outputText value="#{detento.nomeUnidadePrisionalDestino}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

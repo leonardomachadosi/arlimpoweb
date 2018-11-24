@@ -1,0 +1,70 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:outputLabel value="Histórico Prisional" styleClass="customLabel"/>
+    <p:accordionPanel multiple="false">
+        <c:forEach items="#{visualizaDetentoBean.movimentacoesPorCiclo}" var="ciclo">
+            <p:tab title="Ciclo #{ciclo.detento.numeroCiclo}">
+                <p:dataTable value="#{visualizaDetentoBean.getDetentoUnidadePrisional(ciclo.detento)}" style="text-align: center"
+                             var="detentoUnidadePrisional" paginator="true"
+                             rows="10"
+                             paginatorPosition="bottom"
+                             emptyMessage="Nenhum registro encontrado">
+                    <f:facet name="header">
+                        Unidades Prisionais
+                    </f:facet>
+                    <p:column headerText="Nome">
+                        <h:outputText value="#{detentoUnidadePrisional.unidadePrisional.descricao}" />
+                    </p:column>
+                    <p:column headerText="Data de Entrada">
+                        <h:outputText value="#{detentoUnidadePrisional.dataInicial}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Data de Saída">
+                        <h:outputText value="#{detentoUnidadePrisional.dataFinal}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+                <p:dataTable value="#{visualizaDetentoBean.getMovimentacaoPorCiclo(ciclo.detento)}" style="text-align: center; margin-top: 2em"
+                             var="movimentacao" paginator="true"
+                             rows="10"
+                             paginatorPosition="bottom"
+                             emptyMessage="Nenhum registro encontrado">
+                    <f:facet name="header">
+                       Movimentações
+                    </f:facet>
+                    <p:column headerText="Movimentação">
+                        <h:outputText value="#{movimentacao.tipoMovimentacao.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Data de Entrada">
+                        <h:outputText value="#{movimentacao.dataEntrada}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Unidade de Origem">
+                        <h:outputText value="#{movimentacao.unidadePrisionalOrigem.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Data de Saída">
+                        <h:outputText value="#{movimentacao.dataSaida}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Data de Retorno">
+                        <h:outputText value="#{movimentacao.dataRetorno}">
+                            <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Unidade de Destino">
+                        <h:outputText value="#{movimentacao.unidadePrisionalDestino.descricao}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:tab>
+        </c:forEach>
+    </p:accordionPanel>
+
+</ui:composition>

@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog header="Editar Nome do(a) Detento(a)" id="dialogEdicaoNome" widgetVar="addNome" modal="true"
+              width="500" responsive="true" showEffect="fade" hideEffect="fade">
+
+        <p:panelGrid id="pgNome" columns="1"
+                     columnClasses="ui-grid-col-12" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+
+            <h:panelGroup styleClass="md-inputfield">
+                <!--<p:inputText id="itNome"-->
+                             <!--value="#{visualizaDetentoBean.detento.pessoa.nome}"-->
+                             <!--style="width: 100%"/>-->
+                <!--<p:outputLabel for="itNome" value="Nome"/>-->
+            </h:panelGroup>
+
+        </p:panelGrid>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="btnSalvarNome" value="Salvar"
+                                         process="@form" update="@form"
+                                         action="#{visualizaDetentoBean.salvarPessoaNome()}" icon="ui-icon-check"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </div>
+    </p:dialog>
+
+</ui:composition>

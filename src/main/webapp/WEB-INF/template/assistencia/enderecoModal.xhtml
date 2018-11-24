@@ -1,0 +1,61 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <p:dialog id="modalEndereco" widgetVar="dlgEndereco" header="Visualizar endereço" modal="true" closable="true" width="900">
+        <h:panelGroup id="pnlFormEndereco">
+            <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-8, ui-grid-col-2, ui-grid-col-2" styleClass="form-group ui-panelgrid-blank">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="txtEndereco" styleClass="input-auto" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.logradouro}"/>
+                    <p:outputLabel for="txtEndereco" value="Logradouro"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="txtNumero" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.numero}" required="true"
+                                 requiredMessage="Informe o número" styleClass="input-auto"/>
+                    <p:outputLabel for="txtNumero" value="Número"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputMask mask="99.999-999" id="txtCep" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.cep}" styleClass="input-auto"/>
+                    <p:outputLabel value="CEP" for="txtCep"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid layout="grid" columns="3" columnClasses="ui-grid-col-4" styleClass="form-group ui-panelgrid-blank">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somEstado" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.municipio.estado}" styleClass="input-auto"
+                                     converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.estadoList}" var="estado" itemValue="#{estado}" itemLabel="#{estado.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="somMunicipio" value="Município"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somMunicipio" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.municipio}" styleClass="input-auto"
+                                     converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems value="#{efetivaAtendimentoPsicologicoBean.municipioList}" var="municipio" itemValue="#{municipio}" itemLabel="#{municipio.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="somMunicipio" value="Município"/>
+                </h:panelGroup>
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="txtBairro" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.bairro}" styleClass="input-auto"/>
+                    <p:outputLabel for="txtBairro" value="Bairro"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:panelGrid layout="grid" columns="1" columnClasses="ui-grid-col-12" styleClass="form-group ui-panelgrid-blank">
+                <h:panelGroup styleClass="md-inputfield">
+                    <p:inputText id="txtReferencia" value="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.endereco.referencia}" styleClass="input-auto"/>
+                    <p:outputLabel for="txtReferencia" value="Ponto de Referência"/>
+                </h:panelGroup>
+            </p:panelGrid>
+
+            <p:toolbar style="margin-top: 20px; margin-left: 10px; margin-right: 10px;" rendered="#{efetivaAtendimentoPsicologicoBean.enderecoPessoa.id == null}">
+                <f:facet name="right">
+                    <p:commandButton value="Salvar" icon="ui-icon-check" process="pnlFormEndereco" update="pnlFormEndereco"/>
+                </f:facet>
+            </p:toolbar>
+        </h:panelGroup>
+    </p:dialog>
+</ui:composition>

@@ -1,0 +1,119 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:dialog header="Editar Dados Pessoais" id="dialogEdicaoDadosPessoasis" widgetVar="addDadosPessoais" modal="true"
+              width="1200" responsive="true" showEffect="fade" hideEffect="fade">
+        <p:panelGrid id="pgTituloEleitor" columns="3"
+                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itTituloEleitor"
+                             mask="9999 9999 9999"
+                             value="#{visualizaDetentoBean.documento.tituloEleitor}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itTituloEleitor" value="Título de Eleitor"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itZona"
+                             mask="999"
+                             value="#{visualizaDetentoBean.documento.zona}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itZona" value="Zona"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itSecao"
+                             mask="9999"
+                             value="#{visualizaDetentoBean.documento.secao}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itSecao" value="Seção"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid id="pgDocumento" columns="3"
+                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itCertidaoNascimento"
+                             mask="999999 99 99 9999 9 99999 999 9999999 99"
+                             value="#{visualizaDetentoBean.documento.certidaoNascimento}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itCertidaoNascimento" value="Certidão de Nascimento"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itCertidaoCasamento"
+                             mask="999999 99 99 9999 9 99999 999 9999999 99"
+                             value="#{visualizaDetentoBean.documento.certidaoCasamento}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itCertidaoCasamento" value="Certidão de Casamento"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itSus"
+                             mask="999 9999 9999 9999"
+                             value="#{visualizaDetentoBean.documento.sus}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itSus" value="SUS"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid id="pgLivroPagina" columns="2"
+                     columnClasses="ui-grid-col-4, ui-grid-col-4" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itLivro"
+                             value="#{visualizaDetentoBean.documento.livro}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itLivro" value="Livro"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputText id="itPagina"
+                             value="#{visualizaDetentoBean.documento.pagina}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itPagina" value="Página"/>
+            </h:panelGroup>
+        </p:panelGrid>
+        <p:panelGrid id="pgReservistaTrabalho" columns="3"
+                     columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4" layout="grid"
+                     styleClass="ui-panelgrid-blank form-group"
+                     style="border:0px none; background-color:transparent;">
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask id="itNumeroCtps"
+                             mask="999999?999"
+                             value="#{visualizaDetentoBean.documento.numeroCtps}"
+                             style="width: 100%"/>
+                <p:outputLabel for="itNumeroCtps" value="Número da Carteira de Trabalho"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask
+                        id="itSerieCtps"
+                        mask="9999"
+                        value="#{visualizaDetentoBean.documento.serieCtps}"
+                        style="width: 100%"/>
+                <p:outputLabel for="itSerieCtps" value="Série da Carteira de Trabalho"/>
+            </h:panelGroup>
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputMask
+                        id="itCertificadoReservista"
+                        mask="999999"
+                        value="#{visualizaDetentoBean.documento.reservista}"
+                        style="width: 100%"/>
+                <p:outputLabel for="itCertificadoReservista" value="Certificado de Reservista"/>
+            </h:panelGroup>
+
+        </p:panelGrid>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="btnSalvarDetento" value="Salvar"
+                                         process="@form" update="@form"
+                                         action="#{visualizaDetentoBean.salvarDocumento()}" icon="ui-icon-check"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                    </f:facet>
+                </p:toolbar>
+            </div>
+        </div>
+    </p:dialog>
+</ui:composition>

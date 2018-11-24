@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panel>
+        <p:spacer/>
+        <p:panelGrid columns="2"
+                     columnClasses="ui-grid-col-6"
+                     layout="grid" styleClass="ui-panelgrid form-group">
+            <p:column styleClass="clearfix car-item">
+                <h:panelGroup>
+                    <p:outputLabel value="Visitante" styleClass="customLabel"/>
+                    <ui:include src="visitanteView-panelgrid.xhtml">
+                        <ui:param name="visitanteView"
+                                  value="#{entradaVisitanteBean.visitanteView}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:column>
+
+            <p:column styleClass="clearfix car-item">
+                <h:panelGroup>
+                    <p:outputLabel value="Detento" styleClass="customLabel"/>
+                    <ui:include src="detentoView-panelgrid.xhtml">
+                        <ui:param name="detentoView"
+                                  value="#{entradaVisitanteBean.detentoView}"/>
+                    </ui:include>
+                </h:panelGroup>
+            </p:column>
+            <p:column styleClass="clearfix car-item">
+                <p style="padding-left: 1em;">Parentesco: <h:outputLabel
+                        id="detentoParentesco"
+                        value="#{entradaVisitanteBean.detentoSelecionado.parentesco}"/>
+                </p>
+            </p:column>
+            <p:column styleClass="clearfix car-item">
+                <p style="padding-left: 1em;">Situação Vínculo:
+                    <p:outputLabel value="#{entradaVisitanteBean.detentoSelecionado.vinculo}"
+                                   styleClass="#{utilBean.addStyleByStatus(entradaVisitanteBean.detentoSelecionado.vinculo)}"/>
+                </p>
+            </p:column>
+            <p:column styleClass="clearfix car-item">
+                <h:panelGroup styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="soParentesco"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     value="#{entradaVisitanteBean.tpVisitaSelecioda}"
+                                     style="width: 25em">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItem itemLabel="" itemValue=""/>
+                        <f:selectItems var="tpVisita"
+                                       value="#{entradaVisitanteBean.tipoVisitaList}"
+                                       itemLabel="#{tpVisita.descricao}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Motivo da Visita"/>
+                </h:panelGroup>
+            </p:column>
+
+            <p:column styleClass="clearfix car-item">
+                <h:panelGroup styleClass="md-selectoneradio">
+                    <label for="selPossuiAlimento">Possui Alimento?</label>
+                    <p:selectOneRadio value="#{entradaVisitanteBean.possuiAlimento}"
+                                      id="selPossuiAlimento" layout="responsive" columns="2">
+                        <f:selectItem itemLabel="Sim" itemValue="S"/>
+                        <f:selectItem itemLabel="Não" itemValue="N"/>
+                        <p:ajax update="pnPossuiAlimento" event="change"/>
+                    </p:selectOneRadio>
+                </h:panelGroup>
+                <p:outputPanel id="pnPossuiAlimento">
+                    <h:panelGroup styleClass="md-inputfield" style="padding-top: 1em;"
+                                  rendered="#{entradaVisitanteBean.possuiAlimento.equals('S')}">
+                        <p:inputNumber id="inpPossuiAlimento" value="#{entradaVisitanteBean.peso}"
+                                       maxValue="3.00"
+                                       decimalSeparator="," thousandSeparator="." style="width: 25em;"/>
+                        <label>Peso do alimento (Kg)</label>
+                    </h:panelGroup>
+                </p:outputPanel>
+            </p:column>
+
+
+            <h:panelGroup styleClass="md-inputfield">
+                <p:inputTextarea id="obsEntradaVisitante"
+                                 value="#{entradaVisitanteBean.observacao}"
+                                 rows="1"
+                                 cols="120"/>
+                <label for="obsEntradaVisitante">Observação</label>
+            </h:panelGroup>
+
+        </p:panelGrid>
+
+    </p:panel>
+
+</ui:composition>

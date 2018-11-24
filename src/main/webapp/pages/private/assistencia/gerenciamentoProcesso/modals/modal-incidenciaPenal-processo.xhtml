@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-incidenciaPenal-processo">
+        <p:dialog header="Adicionar Incidência Penal" id="dialogIncidenciaPenalProcesso" widgetVar="addIncidenciaPenal"
+                  modal="true" width="1000" height="500" resizable="false" style="overflow:auto;"
+                  showEffect="fade" hideEffect="fade">
+            <p:panelGrid id="pgLeiOrigemArtigo" columns="2"
+                         columnClasses="ui-grid-col-6, ui-grid-col-6" layout="grid"
+                         styleClass="ui-panelgrid-blank form-group"
+                         style="border:0 none; background-color:transparent;">
+                <h:panelGroup id="pgLeiOrigem" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somLeiOrigem" filter="true"
+                                     filterMatchMode="contains"
+                                     value="#{incidenciaPenalBean.incidenciaPenal.leiOrigem}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+
+                        <f:selectItems var="leiOrigemEnum"
+                                       itemLabel="#{leiOrigemEnum.descricao}"
+                                       itemValue="#{leiOrigemEnum.objeto}"
+                                       value="#{enumBean.leiOrigemEnums}"/>
+                        <p:ajax process="@this"
+                                update="pgArtigo plLeiParagrafo"
+                                listener="#{incidenciaPenalBean.onSelectLeiOrigem()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Lei de Origem"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgArtigo" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somIncidenciaPenal" filter="true"
+                                     filterMatchMode="contains"
+                                     value="#{incidenciaPenalBean.incidenciaPenal}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems var="incidenciaPenal"
+                                       itemLabel=" Art. #{incidenciaPenal.descricao}"
+                                       value="#{incidenciaPenalBean.incidenciaPenalCombo}"/>
+                        <p:ajax process="@this"
+                                update="pgLeiParagrafo plLeiParagrafo pgLeiInciso plLeiInciso pgBtnAdcionarArtigo pgTipificacao"
+                        listener="#{incidenciaPenalBean.onSelectArtigo()}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Artigo"/>
+                </h:panelGroup>
+                <h:panelGroup id="pgTipificacao" styleClass="md-selectonemenu">
+                    <p:selectOneMenu id="somTipificacaoPenal" filter="true"
+                                     filterMatchMode="contains"
+                                     value="#{incidenciaPenalBean.processoArtigo.tipificacaoCriminal}"
+                                     converter="omnifaces.SelectItemsConverter"
+                                     style="width: 100%;">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems var="tipificacaoCriminalEnum"
+                                       itemLabel="#{tipificacaoCriminalEnum.descricao}"
+                                       itemValue="#{tipificacaoCriminalEnum.objeto}"
+                                       value="#{enumBean.tipificacaoCriminalEnums}"/>
+                        <!--<p:ajax process="@this"-->
+                                <!--update="pgLeiParagrafo plLeiParagrafo pgLeiInciso plLeiInciso pgBtnAdcionarArtigo"-->
+                                <!--listener="#{processoArtigoBean.onSelectLeiParagragos()}"/>-->
+                    </p:selectOneMenu>
+                    <p:outputLabel value="Tipificação Penal"/>
+                </h:panelGroup>
+            </p:panelGrid>
+            <h:panelGroup id="pgLeiParagrafo">
+                <p:panelGrid id="ipsLeiParagrafo"
+                             columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0 none; background-color:transparent;">
+                    <h3>Parágrafos</h3>
+                    <p:pickList id="plLeiParagrafo"
+                                converter="leiParagrafoPickListConverter"
+                                value="#{incidenciaPenalBean.dualListModelLeiParagrafo}"
+                                var="leiParagrafo"
+                                itemLabel="#{leiParagrafo.numeroFormatado} #{leiParagrafo.descricao}"
+                                itemValue="#{leiParagrafo}"
+                                showSourceControls="true" showTargetControls="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true" responsive="true">
+                        <f:facet name="sourceCaption">Parágrafos </f:facet>
+                        <f:facet name="targetCaption">Parágrafos Selecionados</f:facet>
+                        <p:ajax event="transfer" listener="#{incidenciaPenalBean.onSelectLeiIncisos()}"
+                                update="plLeiInciso"/>
+                    </p:pickList>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="pgLeiInciso">
+                <p:panelGrid id="ipsLeiInciso"
+                             columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0 none; background-color:transparent;">
+                    <h3>Incisos</h3>
+                    <p:pickList id="plLeiInciso"
+                                value="#{incidenciaPenalBean.dualListModelLeiInciso}"
+                                converter="leiIncisoPickListConverter"
+                                var="leiInciso"
+                                itemLabel="#{leiInciso.leiParagrafo.numeroFormatado} #{leiInciso.numeroFormatado} #{leiInciso.descricao}"
+                                itemValue="#{leiInciso}"
+                                showSourceControls="true" showTargetControls="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true" responsive="true">
+                        <f:facet name="sourceCaption">Incisos</f:facet>
+                        <f:facet name="targetCaption">Incisos Selecionados</f:facet>
+                    </p:pickList>
+                </p:panelGrid>
+            </h:panelGroup>
+            <h:panelGroup id="pgBtnAdcionarArtigo">
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank form-group"
+                             style="border:0 none; background-color:transparent;">
+                    <p:toolbar id="tbBtn">
+                        <f:facet name="right">
+                            <p:commandButton id="btnAdcionarArtigo" value="Adicionar"
+                                             update="@(.processo-artigo-panelgrid)"
+                                             action="#{incidenciaPenalBean.adicionarIncidenciaPenal()}"
+                                             oncomplete="PF('addIncidenciaPenal').hide();"
+                                             icon="ui-icon-plus"/>
+                        </f:facet>
+                    </p:toolbar>
+                </p:panelGrid>
+            </h:panelGroup>
+        </p:dialog>
+    </h:form>
+</ui:composition>

@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panel style="width: 40em; margin: 0 auto; border: 1px solid #bebebe">
+        <p:spacer/>
+        <p:panelGrid columns="1" layout="grid" styleClass="pnComprovanteVisita" rendered="#{entradaVisitanteBean.visita != null}">
+            <p:row>
+                <p:column>
+                    <h:outputLabel value="Data: "/>
+                    <h:outputText value="#{entradaVisitanteBean.visita.data}">
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+                <div style="float: right;">
+                    <h:outputLabel value="Hora: "/>
+                    <h:outputText value="#{entradaVisitanteBean.visita.horaEntrada}">
+                        <f:convertDateTime type="date" pattern="H:mm"/>
+                    </h:outputText>
+                </div>
+
+            </p:row>
+            <p:row>
+                <h:outputLabel value="Visitante: "/>
+                <h:outputText value="#{entradaVisitanteBean.visita.pessoaParentesco.pessoaParente.nome}"/>
+            </p:row>
+            <p:row>
+                <h:outputLabel value="Código do Visitante: "/>
+                <h:outputText value="#{entradaVisitanteBean.formataMatricula(entradaVisitanteBean.visitanteView.codPessoa.toString())}"/>
+            </p:row>
+            <p:row>
+                <h:outputLabel value="Parentesco: "/>
+                <h:outputText value="#{entradaVisitanteBean.visita.pessoaParentesco.parentesco.descricao}"/>
+            </p:row>
+            <p:row>
+                <h:outputLabel value="Preso: "/>
+                <h:outputText value="#{entradaVisitanteBean.detentoSelecionado.nomeDetento}"/>
+            </p:row>
+            <p:row>
+                <h:outputLabel value="Unidade: "/>
+                <h:outputText value="#{entradaVisitanteBean.visita.unidadePrisional.descricao}"/>
+            </p:row>
+
+            <h:outputLabel styleClass="lbMsg" value="É necessário  a utilização desta credencial para adentrar na unidade."/>
+        </p:panelGrid>
+    </p:panel>
+    <div class="ui-g">
+        <div class="ui-g-12">
+                    <p:commandButton value="Imprimir" icon="ui-icon-print" style="float: right;"
+                                     action="#{entradaVisitanteBean.geraComprovante()}"
+                                     ajax="false" onclick="this.form.target='_blank'"/>
+        </div>
+    </div>
+</ui:composition>

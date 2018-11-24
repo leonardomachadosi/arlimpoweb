@@ -1,0 +1,371 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Gerenciamento de Processos</b></h1>
+                        <p:panelGrid id="pgDetento" columns="1"
+                                     columnClasses="ui-grid-col-6"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{buscaGerenciamentoProcessoBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                value="#{buscaGerenciamentoProcessoBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                                minQueryLength="3"
+                                                maxResults="5"
+                                                itemValue="#{detentoView}">
+                                    <p:column style="width: 15%; text-align: center">
+                                        <p:graphicImage
+                                                value="#{fotoBean.getFotoFrontalPath(detentoView.matriculaDetento, 1)}"
+                                                style="width: 80%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText style="font-weight: bold" value="Nome: "/>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText style="font-weight: bold" value="Mãe: "
+                                                      rendered="#{detentoView.nomeMae != null and detentoView.nomeMae != ''}"/>
+                                        <h:outputText value="#{detentoView.nomeMae}"
+                                                      rendered="#{detentoView.nomeMae != null and detentoView.nomeMae != ''}"/>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText style="font-weight: bold" value="Pai: "
+                                                      rendered="#{detentoView.nomePai != null and detentoView.nomePai != ''}"/>
+                                        <h:outputText value="#{detentoView.nomePai}"
+                                                      rendered="#{detentoView.nomePai != null and detentoView.nomePai != ''}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{buscaGerenciamentoProcessoBean.buscarProcessosDetento()}"
+                                            update="@form"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Presos"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDetentoView" columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0 none; background-color:transparent;">
+                            <h:panelGroup id="hpDetentoView">
+                                <ui:include src="../../detento/fragments/dados-pessoais-panelgrid.xhtml">
+                                    <ui:param name="detentoView"
+                                              value="#{buscaGerenciamentoProcessoBean.detentoView}"/>
+                                    <ui:param name="exibeDetalhes"
+                                              value="true"/>
+                                </ui:include>
+                                <p:outputLabel value="Dados Prisionais" styleClass="customLabel"
+                                               rendered="#{buscaGerenciamentoProcessoBean.detentoCela != null}"/>
+                                <p:accordionPanel multiple="false" prependId="false" activeIndex="null"
+                                                  rendered="#{buscaGerenciamentoProcessoBean.detentoCela.id != null}">
+                                    <p:tab title="Ciclo Atual">
+                                        <ui:include src="../../detento/fragments/detento-dados-prisionais.xhtml">
+                                            <ui:param name="detento"
+                                                      value="#{buscaGerenciamentoProcessoBean.detento}"/>
+                                        </ui:include>
+                                    </p:tab>
+                                </p:accordionPanel>
+                                <p:panelGrid id="pgdNaturezaCustodia"
+                                             style="width: 100%"
+                                             rendered="#{buscaGerenciamentoProcessoBean.detentoView.codDetento != null
+                                             and buscaGerenciamentoProcessoBean.detentoView.matriculaDetento != null}">
+                                    <p:outputLabel value="Naturezade de Custodia" styleClass="customLabel"/>
+                                    <h:panelGroup id="stepNatCustodia">
+                                        <ui:include src="../../detento/fragments/natureza-custodia-step.xhtml">
+                                            <ui:param name="detentoNaturezaCustodiaList"
+                                                      value="#{buscaGerenciamentoProcessoBean.detentoNaturezaCustodiaList}"/>
+                                        </ui:include>
+                                    </h:panelGroup>
+                                    <p:row style="text-align: right;">
+                                        <p:column rendered="#{buscaGerenciamentoProcessoBean.detentoNaturezaCustodia.naturezaCustodia != null
+                                        and buscaGerenciamentoProcessoBean.detentoNaturezaCustodia.naturezaCustodia.id != null}">
+                                            <p:commandButton
+                                                    title="Editar Regime" icon="ui-icon-edit"
+                                                    style="margin:0 12px 0 0"
+                                                    oncomplete="PF('dlgEditarNaturezaCustodia').show();"
+                                                    update="@(.naturezaCustodiaDlg)">
+                                                <f:setPropertyActionListener value="#{detentoView}"
+                                                                             target="#{buscaGerenciamentoProcessoBean.detentoProcesso}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column
+                                                rendered="#{buscaGerenciamentoProcessoBean.detentoNaturezaCustodia.naturezaCustodia == null}">
+                                            <p:commandButton
+                                                    title="Inserir" icon="ui-icon-plus"
+                                                    style="margin:0 12px 0 0"
+                                                    oncomplete="PF('dlgEditarNaturezaCustodia').show();"
+                                                    update="@(.naturezaCustodiaDlg)">
+                                                <f:setPropertyActionListener value="#{detentoView}"
+                                                                             target="#{buscaGerenciamentoProcessoBean.detentoProcessoView}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <h:panelGroup
+                    rendered="#{buscaGerenciamentoProcessoBean.detentoView.codDetento != null
+                    and !buscaGerenciamentoProcessoBean.detentoProcessos.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <p:commandButton id="btnResumoProcessual"
+                                                 value="Resumo Processual"
+                                                 ajax="false"
+                                                 onclick="this.form.target='_blank'"
+                                                 action="#{buscaGerenciamentoProcessoBean.emitirResumoProcessual()}"
+                                                 icon="ui-icon-print"/>
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                            </f:facet>
+                            <f:facet name="right">
+                                <p:commandButton id="btnFichaCtc"
+                                                 value="Síntese CTC"
+                                                 process="@this " icon="ui-icon-print"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{buscaGerenciamentoProcessoBean.detentoView.codDetento != null }">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h:panelGroup>
+                                <ui:include
+                                        src="../../assistencia/gerenciamentoProcesso/fragments/lei-artigo-datatable.xhtml">
+                                    <ui:param name="tituloFacet" value="Guia de Recolhimento"/>
+                                    <ui:param name="bean" value="#{buscaGerenciamentoProcessoBean}"/>
+                                    <ui:param name="exibeOpcoes" value="#{true}"/>
+                                </ui:include>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpProcessos">
+                                <h1><b>Lista de Processos</b></h1>
+                                <p:dataTable
+                                        id="dtProcessos"
+                                        value="#{buscaGerenciamentoProcessoBean.detentoProcessos}"
+                                        var="processo"
+                                        emptyMessage="Nenhum registro encontrado" style="text-align: center"
+                                        paginator="true"
+                                        paginatorPosition="bottom"
+                                        rows="10">
+                                    <f:facet name="header">
+                                        Processos
+                                    </f:facet>
+                                    <p:column style="width:16px">
+                                        <p:rowToggler/>
+                                    </p:column>
+                                    <p:column headerText="Comarca / Seção" style="width:110px;text-align: center">
+                                        <h:outputText value="#{processo.nomeComarca}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeComarca == null}"/>
+                                        <h:outputText value="#{processo.nomeSecao.toUpperCase()}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeSecao == null}"/>
+                                    </p:column>
+                                    <p:column headerText="Vara / Subseção" style="width:120px;text-align: center">
+                                        <h:outputText value="#{processo.nomeVara}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeVara == null}"/>
+                                        <h:outputText value="#{processo.nomeSubsecao}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeSubsecao == null}"/>
+                                    </p:column>
+                                    <p:column headerText="Processo" style="width:100px;text-align: center">
+                                        <h:outputText value="#{processo.numeroPequeno}"/>
+                                    </p:column>
+                                    <p:column headerText="Número Pequeno" style="width:180px;text-align: center">
+                                        <h:outputText value="#{processo.numeroGrande}">
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Competência" style="width:70px;text-align: center">
+                                        <h:outputText value="#{processo.nomeCompetenciaProcesso}"/>
+                                    </p:column>
+                                    <!--<p:column headerText="Tipo de Participação" style="width:130px;text-align: center">-->
+                                    <!--<h:outputText value="#{processo.nomeTipoParticipacao}"/>-->
+                                    <!--</p:column>-->
+                                    <p:column headerText="Data Início" style="width:70px;text-align: center">
+                                        <h:outputText value="#{processo.dataProcesso}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Responde Processo" style="width:130px;text-align: center">
+                                        <h:outputText value="#{processo.nomeSituacaoProcesso}"/>
+                                    </p:column>
+                                    <p:column headerText="Opções"
+                                              style="width:60px;text-align: center">
+                                        <p:commandButton title="Visualizar" process="@this"
+                                                         action="#{buscaGerenciamentoProcessoBean.cadastrarProcesso()}"
+                                                         icon="ui-icon-remove-red-eye">
+                                            <f:setPropertyActionListener value="#{processo}"
+                                                                         target="#{buscaGerenciamentoProcessoBean.detentoProcessoView}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid id="pgNaturezaCustodia" columns="2"
+                                                     columnClasses="label, value"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0 none; background-color:transparent; width: 30%">
+                                            <p:column>
+                                                <h:outputLabel value="Regime: "
+                                                               style="font-weight: bold"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{processo.nomeNaturezaCustodia}"/>
+                                            </p:column>
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <br/>
+                            <h:panelGroup>
+                                <p:commandButton title="Cadastrar Processos"
+                                                 action="#{buscaGerenciamentoProcessoBean.cadastrarProcesso()}"
+                                                 style="margin-left: 95%"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="hpProcessosExecucao">
+                                <h1><b>Lista de Processos de Execução</b></h1>
+                                <p:dataTable
+                                        id="dtProcessosExecucao"
+                                        value="#{buscaGerenciamentoProcessoBean.detentoProcessosExecucao}"
+                                        var="processo"
+                                        emptyMessage="Nenhum registro encontrado" style="text-align: center"
+                                        paginator="true"
+                                        paginatorPosition="bottom"
+                                        rows="10">
+                                    <f:facet name="header">
+                                        Processos de Execução
+                                    </f:facet>
+                                    <p:column style="width:16px">
+                                        <p:rowToggler/>
+                                    </p:column>
+                                    <p:column headerText="Comarca / Seção" style="width:110px;text-align: center">
+                                        <h:outputText value="#{processo.nomeComarca}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeComarca == null}"/>
+                                        <h:outputText value="#{processo.nomeSecao.toUpperCase()}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeSecao == null}"/>
+                                    </p:column>
+                                    <p:column headerText="Vara / Subseção" style="width:120px;text-align: center">
+                                        <h:outputText value="#{processo.nomeVara}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeVara == null}"/>
+                                        <h:outputText value="#{processo.nomeSubsecao}"
+                                                      rendered="#{buscaGerenciamentoProcessoBean.detentoProcessoView.nomeSubsecao == null}"/>
+                                    </p:column>
+                                    <p:column headerText="N° Processo Execução" style="width:100px;text-align: center">
+                                        <h:outputText value="#{processo.numeroExecucao}"/>
+                                    </p:column>
+                                    <!--<p:column headerText="Número CNJ" style="width:180px;text-align: center">
+                                        <h:outputText value="#{processo.numeroGrande}" converter="numeroCnjConverter">
+                                        </h:outputText>
+                                    </p:column>-->
+                                    <!--<p:column headerText="Competência" style="width:70px;text-align: center">
+                                        <h:outputText value="#{processo.nomeCompetenciaProcesso}"/>
+                                    </p:column>-->
+                                    <!-- <p:column headerText="Tipo de Participação" style="width:130px;text-align: center">
+                                         <h:outputText value="#{processo.nomeTipoParticipacao}"/>
+                                     </p:column>-->
+                                    <p:column headerText="Distribuição" style="width:70px;text-align: center">
+                                        <h:outputText value="#{processo.dataProcesso}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <!--<p:column headerText="Responde Processo" style="width:130px;text-align: center">
+                                        <h:outputText value="#{processo.nomeSituacaoProcesso}"/>
+                                    </p:column>-->
+                                    <p:column headerText="Opções"
+                                              style="width:5%;text-align: center">
+                                        <p:commandButton title="Visualizar" process="@this"
+                                                         action="#{buscaGerenciamentoProcessoBean.cadastrarProcessoExecucao()}"
+                                                         icon="ui-icon-remove-red-eye">
+                                            <f:setPropertyActionListener value="#{processo}"
+                                                                         target="#{buscaGerenciamentoProcessoBean.detentoProcessoView}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                    <p:rowExpansion>
+                                        <p:panelGrid id="pgNaturezaCustodiaExecucao" columns="2"
+                                                     columnClasses="label, value"
+                                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                                     style="border:0 none; background-color:transparent; width: 30%">
+                                            <p:column>
+                                                <h:outputLabel value="Regime: "
+                                                               style="font-weight: bold"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{processo.nomeNaturezaCustodia}"/>
+                                            </p:column>
+                                        </p:panelGrid>
+                                    </p:rowExpansion>
+                                </p:dataTable>
+                            </h:panelGroup>
+                            <br/>
+                            <h:panelGroup>
+                                <p:commandButton title="Cadastrar Processo de Execução"
+                                                 action="#{buscaGerenciamentoProcessoBean.cadastrarProcessoExecucao()}"
+                                                 style="margin-left: 95%"
+                                                 icon="ui-icon-plus"/>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <p:dialog header="Adicionar Natureza de custódia" widgetVar="dlgEditarNaturezaCustodia"
+                      id="dlgEditarNaturezaCustodia"
+                      modal="true" width="600" height="120" responsive="true" showEffect="fade"
+                      hideEffect="fade">
+                <p:panelGrid columns="1"
+                             id="pgNaturezadaCustodia"
+                             columnClasses="ui-grid-col-6"
+                             layout="grid"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0 none; background-color:transparent;">
+                    <h:panelGroup id="pgNaturezadaCustodiaList" styleClass="md-selectonemenu">
+                        <p:selectOneMenu id="soNaturezaCustodia" style="width: 25em;"
+                                         value="#{buscaGerenciamentoProcessoBean.naturezaCustodia}"
+                                         converter="omnifaces.SelectItemsConverter"
+                                         styleClass="custom-select-menu" panelStyleClass="custom-select-menu-panel">
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Selecione o Regime"
+                                          itemValue=""/>
+                            <f:selectItems
+                                    value="#{enumBean.naturezaCustodiaEnums}"
+                                    var="naturezaCustodiaEnum"
+                                    itemLabel="#{naturezaCustodiaEnum.descricao}"
+                                    itemValue="#{naturezaCustodiaEnum.objeto}"
+                            />
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Natureza de custódia"/>
+                    </h:panelGroup>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar id="tbBtn">
+                    <f:facet name="right">
+                        <p:commandButton id="btnInserir"
+                                         value="Inserir"
+                                         action="#{buscaGerenciamentoProcessoBean.editarNaturezaCustodia()}"
+                                         update="stepNatCustodia"
+                                         oncomplete="PF('dlgEditarNaturezaCustodia').hide();"
+                                         icon="ui-icon-done"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

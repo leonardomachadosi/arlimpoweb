@@ -1,0 +1,336 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child {
+                color: #757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width: 640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+        </style>
+
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Agendar Atendimento</b></h1>
+                        <p:panelGrid id="pgSetorTipoAtendimentoData" columns="4"
+                                     columnClasses="ui-grid-col-4, ui-grid-col-3, ui-grid-col-3, ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup id="pgLotacao" styleClass="md-inputfield">
+                                <p:inputText id="itLotacao"
+                                             value="#{buscaAtendimentoEnfermagemBean.servidorLotacao.lotacaoReal.nome}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itLotacao" value="Lotação"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgNome" styleClass="md-inputfield">
+                                <p:inputText id="itNome"
+                                             value="#{buscaAtendimentoEnfermagemBean.usuario.pessoa.nome}"
+                                             readonly="true" style="width: 100%;"/>
+                                <p:outputLabel for="itNome" value="Funcionário"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgTipoSolicitacaoAtendimento" styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somTipoSolicitacaoAtendimento"
+                                                 value="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimento.tipoSolicitacaoAtendimento}"
+                                                 converter="omnifaces.SelectItemsConverter" style="width: 100%;">
+                                    <f:selectItems var="tipoSolicitacaoAtendimento"
+                                                   itemLabel="#{tipoSolicitacaoAtendimento.descricao}"
+                                                   value="#{buscaAtendimentoEnfermagemBean.tiposSolicitacaoAtendimentos}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Tipo de Atendimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup id="pgDataRealizacao" styleClass="md-inputfield">
+                                <p:calendar id="cdDataRealizacao"
+                                            value="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimento.dataPrevistaAtendimento}"
+                                            mindate="#{buscaAtendimentoEnfermagemBean.dataMinima}"
+                                            pattern="dd/MM/yyyy HH:mm" mask="99/99/9999 99:99" locale='pt'
+                                            styleClass="input-auto">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                    <p:ajax update="pngToolBotoes" process="@this" event="dateSelect"/>
+                                </p:calendar>
+                                <p:outputLabel for="cdDataRealizacao" value="Data da Realização"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <br/>
+                        <p:panelGrid columns="1"
+                                     id="pgObervacao"
+                                     columnClasses="ui-grid-col-12"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputTextarea
+                                        id="itaObservacao"
+                                        value="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimento.observacao}"
+                                        rows="3"
+                                        style="width: 100%"/>
+                                <p:outputLabel for="itaObservacao" value="Observação"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="pgdtDetentosSelecionados">
+                            <p:dataTable id="dtDetentosSelecionados" var="detento"
+                                         rendered="#{!buscaAtendimentoEnfermagemBean.detentosAtendimentoEnfermagemList.isEmpty()}"
+                                         value="#{buscaAtendimentoEnfermagemBean.detentosAtendimentoEnfermagemList}"
+                                         reflow="true"
+                                         rowKey="#{detento.codDetento}"
+                                         paginator="true" paginatorPosition="bottom" rows="10"
+                                         emptyMessage="Nenhum registro encontrado" style="text-align: center">
+                                <f:facet name="header">
+                                    Presos Selecionados
+                                </f:facet>
+                                <p:column headerText="Foto" style="width: 10%; text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person" style="font-size:40px;color:#757575;"></i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                            style="max-height:5em;"/>
+                                </p:column>
+                                <p:column headerText="Matrícula" style="width:10%;text-align: center">
+                                    <h:outputText
+                                            value="#{buscaAtendimentoEnfermagemBean.getMatricula(detento.matriculaDetento)}"/>
+                                </p:column>
+                                <p:column headerText="Nome" style="text-align: center">
+                                    <h:outputText value="#{detento.nomeDetento}"/>
+                                </p:column>
+                                <p:column headerText="Unidade Prisional">
+                                    <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                                </p:column>
+                                <p:column headerText="Opções" style="width:10%;text-align: center">
+                                    <p:commandButton
+                                            icon="ui-icon-trash" style="border-bottom: 10px"
+                                            styleClass="red-btn" title="Remover" update="@form"
+                                            actionListener="#{buscaAtendimentoEnfermagemBean.removerDetento(detento)}">
+                                        <p:confirm header="Confirmação"
+                                                   message="Deseja realmente remover o preso da lista?"
+                                                   icon="ui-icon-alert"/>
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade"
+                                                     hideEffect="fade">
+                                        <p:commandButton value="Sim" type="button"
+                                                         styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                                        <p:commandButton value="Não" type="button"
+                                                         styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                                    </p:confirmDialog>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <h:panelGroup id="pngToolBotoes">
+                        <p:toolbar
+                                rendered="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimento.dataPrevistaAtendimento != null}">
+                            <f:facet name="left">
+                                <p:commandButton id="btnAddDetentos" value="Adicionar Presos"
+                                                 oncomplete="PF('dlgAddDetento').show();"
+                                                 update="dlgAdicionarDetento" process="@this"
+                                                 action="#{buscaAtendimentoEnfermagemBean.findDetentosSolicitacao()}"
+                                                 icon="ui-icon-plus"/>
+                                <span class="ui-separator" style="padding-right: 5px;"/>
+                                <p:commandButton id="btnSalvarSolicitacaoAtendimento"
+                                                 rendered="#{!buscaAtendimentoEnfermagemBean.detentosAtendimentoEnfermagemList.isEmpty()}"
+                                                 value="Salvar"
+                                                 update="@form"
+                                                 actionListener="#{buscaAtendimentoEnfermagemBean.salvar()}"
+                                                 icon="ui-icon-check"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </h:panelGroup>
+                </div>
+            </div>
+            <p:spacer/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Atendimentos Pendentes</b></h1>
+                        <p:dataTable id="dtSolicitacaoAtendimentos" var="solicitacaoAtendimento"
+                                     value="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimentos}" reflow="true"
+                                     rowKey="#{solicitacaoAtendimento.id}"
+                                     paginator="true" rows="10"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                            <p:column headerText="Código Solicitação" style="width:15%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.matricula}"/>
+                            </p:column>
+                            <p:column headerText="Estabelecimento" style="width:25%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Atendimento" style="width:25%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.tipoSolicitacaoAtendimento.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Previsão de Atendimento" style="width:20%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.dataPrevistaAtendimento}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Status" style="width:20%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.status.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:10%;" styleClass="text-center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaAtendimentoEnfermagemBean.onClickVisualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{solicitacaoAtendimento}"
+                                                                 target="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimento}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Meus Atendimentos</b></h1>
+                        <p:dataTable id="dtSolicitacaoAtendimentoss" var="solicitacaoAtendimento"
+                                     value="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimentosConcluidos}"
+                                     reflow="true"
+                                     rowKey="#{solicitacaoAtendimento.id}"
+                                     paginator="true" rows="10"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                            <p:column headerText="Código Solicitação" style="width:15%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.matricula}"/>
+                            </p:column>
+                            <p:column headerText="Unidade Prisional" style="width:25%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.unidadePrisional.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Atendimento" style="width:25%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.tipoSolicitacaoAtendimento.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Previsão de Atendimento" style="width:20%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.dataPrevistaAtendimento}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Status" style="width:20%;" styleClass="text-center">
+                                <h:outputText value="#{solicitacaoAtendimento.status.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:10%;" styleClass="text-center">
+                                <p:commandButton title="Visualizar" process="@this"
+                                                 action="#{buscaAtendimentoEnfermagemBean.onClickVisualizar()}"
+                                                 icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{solicitacaoAtendimento}"
+                                                                 target="#{buscaAtendimentoEnfermagemBean.solicitacaoAtendimento}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+
+            <p:dialog id="dlgAdicionarDetento" header="Adicionar Presos"
+                      widgetVar="dlgAddDetento" modal="true" width="1200" responsive="true"
+                      showEffect="fade" hideEffect="fade">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <p:dataTable id="dtDetentos" var="detento"
+                                     value="#{buscaAtendimentoEnfermagemBean.detentosAtendimentoEnfermagem}"
+                                     selection="#{buscaAtendimentoEnfermagemBean.selectedDetentosAtendimentoEnfermagem}"
+                                     reflow="true"
+                                     rowKey="#{detento.codDetento}"
+                                     paginator="true" rows="5" paginatorPosition="bottom"
+                                     emptyMessage="Nenhum registro encontrado" style="text-align: center"
+                                     disabledSelection="#{!detento.podeAdicionarNaSolicitacao(buscaAtendimentoEnfermagemBean.solicitacaoAtendimento.dataPrevistaAtendimento)}">
+                            <f:facet name="header">Presos</f:facet>
+                            <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                            <p:column headerText="Foto" style="width: 10%; text-align: center">
+                                <h:panelGroup
+                                        rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                    <i class="ui-icon ui-icon-person" style="font-size:40px;color:#757575;"></i>
+                                </h:panelGroup>
+                                <p:graphicImage
+                                        rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                        value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                        style="max-height:3em;"/>
+                            </p:column>
+                            <p:column headerText="Matrícula"
+                                      style="width:50px;text-align: center">
+                                <h:outputText
+                                        value="#{buscaAtendimentoEnfermagemBean.getMatricula(detento.matriculaDetento)}"/>
+                            </p:column>
+                            <p:column headerText="Nome"
+                                      style="width:200px;text-align: center">
+                                <h:outputText value="#{detento.nomeDetento}"/>
+                            </p:column>
+                            <p:column headerText="Unidade Prisional"
+                                      style="width:200px;text-align: center">
+                                <h:outputText
+                                        value="#{detento.nomeUnidadePrisional}"/>
+                            </p:column>
+                            <p:column headerText="Pavilhão"
+                                      style="width:90px;text-align: center">
+                                <h:outputText
+                                        value="#{detento.nomePavilhao}"/>
+                            </p:column>
+                            <p:column headerText="Cela"
+                                      style="width:70px;text-align: center">
+                                <h:outputText
+                                        value="#{detento.nomeCela}"/>
+                            </p:column>
+                            <p:column headerText="Data limite" style="width:10%;text-align: center">
+                                <h:outputText value="#{detento.dataLimiteDiasUteis()}"
+                                              styleClass="#{detento.quantidadeDiasUteisPreso() > 20 ? 'detento-column-prazo-ruim' : 'detento-column-prazo-bom'}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                        <p:spacer/>
+                        <p:toolbar>
+                            <f:facet name="right">
+                                <p:commandButton
+                                        value="Inserir" icon="ui-icon-done" update="@form"
+                                        actionListener="#{buscaAtendimentoEnfermagemBean.onClickSelectDetentosSolicitacao}"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </p:dialog>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,220 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Busca de Comarca</b></h1>
+                        <p:panelGrid columns="3"
+                                     columnClasses="ui-grid-col-6, ui-grid-col-3, ui-grid-col-3"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itComarca"
+                                             value="#{buscaComarcaBean.comarca.descricao}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itComarca" value="Comarca"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="somEstado"
+                                                 value="#{buscaComarcaBean.municipio.estado}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Estado"
+                                                  itemValue=""/>
+                                    <f:selectItems var="estado"
+                                                   itemLabel="#{estado.descricao.toUpperCase()}"
+                                                   value="#{buscaComarcaBean.estados}"/>
+                                    <p:ajax process="@this" update="soMunicicio"
+                                            listener="#{buscaComarcaBean.onSelectEstados}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estado"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soMunicicio"
+                                                 value="#{buscaComarcaBean.endereco.municipio}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 style="width: 100%;">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Selecione o Município" itemValue=""/>
+                                    <f:selectItems var="municipio" itemLabel="#{municipio.descricao.toUpperCase()}"
+                                                   value="#{buscaComarcaBean.municipios}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Município"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="2"
+                                     id="pgLogradouroNumero"
+                                     columnClasses="ui-grid-col-10, ui-grid-col-2"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itLogradouro"
+                                             value="#{buscaComarcaBean.endereco.logradouro}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itLogradouro" value="Logradouro"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itNumero"
+                                             value="#{buscaComarcaBean.endereco.numero}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itNumero" value="Número"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid columns="3"
+                                     id="pgBairroReferenciaCep"
+                                     columnClasses="ui-grid-col-5, ui-grid-col-5, ui-grid-col-2" layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itBairro"
+                                             value="#{buscaComarcaBean.endereco.bairro}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itBairro" value="Bairro"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="itReferencia"
+                                             value="#{buscaComarcaBean.endereco.referencia}"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="itReferencia" value="Referência"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputMask id="imCep"
+                                             value="#{buscaComarcaBean.endereco.cep}"
+                                             mask="99999-999"
+                                             style="width: 100%;"/>
+                                <p:outputLabel for="imCep" value="CEP"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g" style="margin-top: -13px;">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton
+                                    value="Cadastrar"
+                                    action="#{buscaComarcaBean.onClickCadastar}"
+                                    icon="ui-icon-plus"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton value="Buscar"
+                                             action="#{buscaComarcaBean.findComarcasByParametros()}"
+                                             icon="ui-icon-search"
+                                             update="dtComarcas"
+                                             process="@form"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Comarcas</b></h1>
+                        <p:dataTable id="dtComarcas"
+                                     var="comarca"
+                                     value="#{buscaComarcaBean.comarcas}"
+                                     reflow="true"
+                                     rowKey="#{comarca.id}"
+                                     paginator="true"
+                                     rows="10"
+                                     emptyMessage="Nenhum registro cadastrado encontrado."
+                                     style="text-align: center">
+                            <p:column headerText="Comarca" style="text-align: center">
+                                <h:outputText value="#{comarca.descricao}"/>
+                            </p:column>
+                            <p:column headerText="Município" style="width: 220px;text-align: center">
+                                <h:outputText value="#{comarca.endereco.municipio.descricao.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Estado" style="width:200px;text-align: center">
+                                <h:outputText value="#{comarca.endereco.municipio.estado.descricao.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Opções" style="width:110px;text-align: center">
+                                <p:commandButton
+                                        title="Visualizar Comarca"
+                                        process="@this"
+                                        action="#{buscaComarcaBean.onClickVisualizar()}"
+                                        icon="ui-icon-remove-red-eye">
+                                    <f:setPropertyActionListener value="#{comarca}"
+                                                                 target="#{buscaComarcaBean.comarca}"/>
+                                </p:commandButton>
+                                <p:commandButton title="Editar"
+                                                 process="@this"
+                                                 update="@form"
+                                                 action="#{buscaComarcaBean.onClickEditar()}"
+                                                 icon="ui-icon-edit">
+                                    <f:setPropertyActionListener value="#{comarca}"
+                                                                 target="#{buscaComarcaBean.comarca}"/>
+                                </p:commandButton>
+                                <p:commandButton title="Adicionar Vara"
+                                                 icon="ui-icon-plus"
+                                                 oncomplete="PF('addVara').show();"
+                                                 update="form-dialog:dialogVara" process="@this"
+                                                 action="#{buscaComarcaBean.refreshVara()}">
+                                    <f:setPropertyActionListener value="#{comarca}"
+                                                                 target="#{buscaComarcaBean.comarca}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+        <h:form id="form-dialog">
+            <p:dialog header="Adicionar Vara" id="dialogVara" widgetVar="addVara" modal="true"
+                      width="1200" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="1"
+                             id="pgVara"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                              background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itVara" value="Nome da Vara"/>
+                        <p:inputText id="itVara"
+                                     value="#{buscaComarcaBean.vara.descricao}"
+                                     style="width: 100%;"/>
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton
+                                value="Inserir"
+                                action="#{buscaComarcaBean.saveVaraComarca()}"
+                                update="idVara itVara"
+                                icon="ui-icon-done"/>
+                        <span class="ui-separator" style="padding-right: 5px;"/>
+                        <p:commandButton value="Fechar"
+                                         icon="ui-icon-clear"
+                                         onclick="PF('addVara').hide();"
+                        />
+                    </f:facet>
+                </p:toolbar>
+                <p:spacer/>
+                <p:dataTable
+                        id="idVara" paginator="true" rows="10"
+                        paginatorPosition="bottom"
+                        value="#{buscaComarcaBean.varas}"
+                        var="vara"
+                        emptyMessage="Nenhum registro encontrado">
+                    <f:facet name="header">
+                        Varas
+                    </f:facet>
+                    <p:column>
+                        <h:outputText value="#{vara.descricao}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

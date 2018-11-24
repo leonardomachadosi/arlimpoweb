@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="form-dialog-medicamentoPatologia">
+        <p:dialog header="Adicionar Medicamento" id="dialogMedicamentoPatologia" widgetVar="addMedicamento"
+                  modal="true"
+                  width="1000" height="120" responsive="true" showEffect="fade" hideEffect="fade">
+            <p:panelGrid columns="1"
+                         id="pgMedicamentosPatologia"
+                         columnClasses="ui-grid-col-8"
+                         layout="grid"
+                         styleClass="form-group ui-panelgrid-blank"
+                         style="border:0px none; background-color:transparent;">
+                <h:panelGroup id="pgMedicamentoList">
+                    <p:selectCheckboxMenu id="soDiabetes"
+                                          value="#{efetivaAtendimentoEnfermagemBean.selectedMedicamentos}"
+                                          converter="omnifaces.SelectItemsConverter"
+                                          filter="true"
+                                          filterMatchMode="startsWith"
+                                          label="Medicamentos"
+                                          style="width: 100%;color: darkgray">
+                        <f:selectItem noSelectionOption="true"/>
+                        <f:selectItems
+                                value="#{efetivaAtendimentoEnfermagemBean.medicamentos}"
+                                var="medicamento"
+                                itemLabel="#{medicamento.descricao}"/>
+                    </p:selectCheckboxMenu>
+                </h:panelGroup>
+            </p:panelGrid>
+            <p:spacer/>
+            <p:toolbar id="tbBtn">
+                <f:facet name="left">
+                    <p:commandButton
+                            value="Inserir"
+                            id="btnInserir"
+                            update="form:tab:dtMedicamentoPatologiaDiabetes form:tab:dtMedicamentoPatologiaHas form:tab:dtMedicamentoPatologiaCardiopatia
+                                    form:tab:dtMedicamentoPatologiaTuberculose form:tab:dtMedicamentoPatologiaHanseniase form:tab:dtMedicamentoPatologiaAids
+                                    form:tab:dtMedicamentoPatologiaCancer form:tab:dtMedicamentoPatologiaSifilis form:tab:dtMedicamentoPatologiaDsts"
+                            oncomplete="PF('addMedicamento').hide();"
+                            actionListener="#{efetivaAtendimentoEnfermagemBean.adicionarMedicamentos()}"
+                            icon="ui-icon-done"/>
+                </f:facet>
+            </p:toolbar>
+        </p:dialog>
+    </h:form>
+</ui:composition>

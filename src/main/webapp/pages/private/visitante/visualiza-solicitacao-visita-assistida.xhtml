@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnVoltar" value="Voltar"
+                                             ajax="false"
+                                             action="/pages/private/visitante/acompanhamento-solicitacao-visita-assistida.xhtml?faces-redirect=true"
+                                             icon="ui-icon-arrow-back"/>
+                        </f:facet>
+                        <f:facet name="right">
+                            <p:commandButton
+                                    styleClass="btnEmiteRequerimento"
+                                    value="Emitir Requerimento"
+                                    ajax="false"
+                                    onclick="this.form.target='_blank'"
+                                    action="#{visualizaSolicitacaoVisitaAssistidaBean.emitirRequerimento()}"
+                                    rendered="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id == 3}"
+                                    icon="ui-icon-file-download"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Visualizar Solicitação de Visita Assistida</b></h1>
+                        <p:outputLabel value="Dados da Solicitação" styleClass="customLabel"/>
+                        <ui:include src="fragments/dados-solicitacao-visita-assistida-panelgrid.xhtml">
+                            <ui:param name="statusAtual"
+                                      value="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual}"/>
+                            <ui:param name="solicitacaoVisitaAssistida"
+                                      value="#{visualizaSolicitacaoVisitaAssistidaBean.solicitacaoVisitaAssistida}"/>
+                        </ui:include>
+
+                        <p:outputLabel value="Status da Solicitação" styleClass="customLabel"/>
+                        <p:steps styleClass="stepTimeline"
+                                 activeIndex="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id - 1}">
+                            <p:menuitem id="menu_1" value="PENDENTE"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaBean.stepClass(1)}"/>
+                            <p:menuitem id="menu_2" value="ENCAMINHADO PARA UNIDADE PRISIONAL"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaBean.stepClass(2)}"/>
+                            <p:menuitem id="menu_3" value="APROVADO"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaBean.stepClass(3)}"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaBean.exibeAprovadoReprovado(3)}"/>
+                            <p:menuitem id="menu_4" value="REPROVADO"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaBean.stepClass(4)}"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaBean.exibeAprovadoReprovado(4)}"/>
+                            <p:menuitem id="menu_AR" value="APROVADO/REPROVADO"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id lt 3}"/>
+                            <p:menuitem id="menu_5" value="FINALIZADO"
+                                        containerStyleClass="#{visualizaSolicitacaoVisitaAssistidaBean.stepClass(5)}"
+                                        rendered="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id != 4}"/>
+                        </p:steps>
+                        <p:repeat value="#{visualizaSolicitacaoVisitaAssistidaBean.historico}" var="historico">
+                            <p:tooltip for="form:menu_#{historico.situacaoSolicitacaoVisitaAssistida.id}"
+                                       position="bottom">
+                                De
+                                <h:outputText value="#{historico.dataInicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                                <h:outputText rendered="#{historico.dataFim != null}" value=" Até "/>
+                                <h:outputText value="#{historico.dataFim}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                </h:outputText>
+                            </p:tooltip>
+                        </p:repeat>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar rendered="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id lt 2}">
+                        <!--<f:facet name="left">-->
+                            <!--<p:commandButton value="Salvar"-->
+                                             <!--action="#{visualizaSolicitacaoVisitaAssistidaBean.atualizar()}"-->
+                                             <!--process="@form" update="@form"-->
+                                             <!--disabled="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id > 1}"-->
+                                             <!--icon="ui-icon-check"/>-->
+                        <!--</f:facet>-->
+                        <f:facet name="right">
+                            <p:commandButton value="Encaminhar para Unidade Prisional"
+                                             action="#{visualizaSolicitacaoVisitaAssistidaBean.encaminhar()}"
+                                             disabled="#{visualizaSolicitacaoVisitaAssistidaBean.statusAtual.id > 1}"
+                                             process="@form" update="@form"
+                                             icon="ui-icon-arrow-forward"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:outputPanel styleClass="cars-datalist">
+                            <ui:include src="fragments/detentoView-panel.xhtml">
+                                <ui:param name="detentoView"
+                                          value="#{visualizaSolicitacaoVisitaAssistidaBean.detentoView}"/>
+                            </ui:include>
+                            <p:spacer/>
+                            <ui:include src="fragments/visitanteView-panel.xhtml">
+                                <ui:param name="visitanteView"
+                                          value="#{visualizaSolicitacaoVisitaAssistidaBean.visitanteView}"/>
+                            </ui:include>
+                        </p:outputPanel>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

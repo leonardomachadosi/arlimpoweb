@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <p:panelGrid columns="1"
+                 columnClasses="ui-grid-col-12,ui-grid-col-12"
+                 layout="grid" styleClass="ui-panelgrid-blank form-group galeriaOcorrencia"
+                 style="border:0px none; background-color:transparent;">
+        <p:dataTable
+                id="dtEnvolvidos"
+                emptyMessage="Nenhum envolvido adicionado"
+                value="#{envolvidoList}"
+                var="envolvido"
+                paginator="#{envolvidoList.size() > 10}"
+                paginatorPosition="bottom"
+                rows="10" style="text-align: left;">
+            <f:facet name="header">Envolvidos</f:facet>
+            <p:column headerText="Foto" width="10%" style="text-align: center">
+                <h:panelGroup rendered="#{envolvido.foto == null}">
+                    <i class="ui-icon ui-icon-person"
+                       style="font-size:78px;color:#757575;">
+                    </i>
+                </h:panelGroup>
+                <p:graphicImage rendered="#{envolvido.foto != null}"
+                                value="/foto-detento?foto=#{buscaDetentoBean.enconder(envolvido.foto)}"
+                                style="width: 90%;"/>
+            </p:column>
+            <p:column headerText="Nome" style="text-align: center;">
+                <h:outputText value="#{envolvido.nome}"/>
+            </p:column>
+            <p:column headerText="Tipo" style="text-align: center;">
+                <h:outputText value="#{envolvido.tipo}"/>
+            </p:column>
+            <p:column headerText="Envolvimento" style="text-align: center;">
+                <h:outputText value="#{envolvido.envolvimento}"/>
+            </p:column>
+        </p:dataTable>
+    </p:panelGrid>
+</ui:composition>

@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1>Retorno de Trabalho Externo</h1>
+                        <p:panelGrid id="pgDetento" columns="2"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 id="soEstabelecimento">
+                                    <f:selectItem noSelectionOption="true"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel value="Estabelecimento de Destino" for="soEstabelecimento"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar id="cdDataHora"/>
+                                <p:outputLabel value="Data e Hora" for="cdDataHora"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgDigital"
+                                     columns="1"
+                                     columnClasses="ui-grid-col-1"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:commandButton title="Digital"
+                                                 id="btnDigital" icon="ui-icon-fingerprint"
+                                                 process="@form"
+                                                 update="@form"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarTransferenciaAdmissao" value="Salvar"
+                                             process="@form"
+                                             icon="ui-icon-check"/>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+                            <p:commandButton id="btnSalvarEncaminharFuga" value="Encaminhar para Fuga"
+                                             process="@form"
+                                             icon="ui-icon-arrow-forward"/>
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:dataTable
+                                id="dtDetentos"
+                                emptyMessage=""
+                                paginator="true"
+                                rows="10">
+                            <p:column headerText="Preso"> </p:column>
+                            <p:column headerText="Data da Entrada"></p:column>
+                            <p:column headerText="Estabelecimento"></p:column>
+                            <p:column headerText="Pavilhão"></p:column>
+                            <p:column headerText="Cela"></p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

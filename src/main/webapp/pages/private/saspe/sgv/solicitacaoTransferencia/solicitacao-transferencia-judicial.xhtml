@@ -1,0 +1,536 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+        <style type="text/css">
+            .pgUnidadePrisionalRecomendada .ui-panelgrid-content {
+                border: none;
+            }
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form">
+            <!-- MESSAGES -->
+            <p:growl id="messages" showDetail="false"
+                     closable="true" showIcon="false" sticky="true"/>
+            <!-- MESSAGES -->
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Transferência Judicial</b></h1>
+                        <p:panelGrid id="pgDetentoUnidadePrisional" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-6,ui-grid-col-2"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu id="soUnidadePrisional"
+                                                 value="#{solicitacaoTransferenciaJudicialBean.unidadePrisional}"
+                                                 style="width:100%;"
+                                                 filter="true"
+                                                 converter="omnifaces.SelectItemsConverter">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItems value="#{solicitacaoTransferenciaJudicialBean.unidadePrisionals}"
+                                                   var="unidadePrisional"
+                                                   itemLabel="#{unidadePrisional.descricao}"/>
+                                    <p:ajax event="change" process="@this" update="@this acDetento hpUnidadePrisionalRecomendada"
+                                            listener="#{solicitacaoTransferenciaJudicialBean.inicializarUnidadesPrisionais()}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soUnidadePrisional" value="Estabelecimento de Origem"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield" id="hpDetento">
+                                <p:autoComplete id="acDetento"
+                                                style="width: 100%;" inputStyle="width: 100%;"
+                                                completeMethod="#{solicitacaoTransferenciaJudicialBean.completeDetentoView}"
+                                                converter="detentoViewConverter"
+                                                forceSelection="true"
+                                                value="#{solicitacaoTransferenciaJudicialBean.detentoView}"
+                                                var="detentoView" itemLabel="#{detentoView.nomeDetento}"
+                                                itemValue="#{detentoView}">
+                                    <p:column style="width: 10%; text-align: center">
+                                        <h:panelGroup
+                                                rendered="#{detentoView.foto == null or detentoView.foto == '' or detentoView.foto.contains('\\')}">
+                                            <i class="ui-icon ui-icon-person"
+                                               style="font-size:40px;color:#757575;">
+                                            </i>
+                                        </h:panelGroup>
+                                        <p:graphicImage
+                                                rendered="#{detentoView.foto != null and detentoView.foto != '' and !detentoView.foto.contains('\\')}"
+                                                value="/foto-detento?foto=#{buscaDetentoBean.enconder(detentoView.foto)}"
+                                                style="width: 90%;"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{detentoView.nomeDetento}"/>
+                                    </p:column>
+                                    <p:ajax event="itemSelect"
+                                            listener="#{solicitacaoTransferenciaJudicialBean.carregarDadosDetento()}"
+                                            update="hpUnidadePrisionalRecomendada"/>
+                                </p:autoComplete>
+                                <p:outputLabel for="acDetento" value="Detento"/>
+                            </h:panelGroup>
+                            <!-- <h:panelGroup>
+                                 <p:commandButton title="Adicionar"
+                                                  actionListener="#{solicitacaoTransferenciaJudicialBean.adicionarDetento()}"
+                                                  id="btnAdicionarDetento" icon="ui-icon-plus"
+                                                  process="@form"
+                                                  update="hpUnidadePrisionalRecomendada"/>
+                             </h:panelGroup>-->
+                        </p:panelGrid>
+                        <h:panelGroup id="hpUnidadePrisionalRecomendada">
+                            <p:panelGrid id="pgUnidadePrisionalRecomendada" columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         layout="grid" styleClass="form-group pgUnidadePrisionalRecomendada"
+                                         rendered="#{!solicitacaoTransferenciaJudicialBean.listaPerfilUnidadeNotaAuxiliary.isEmpty() and solicitacaoTransferenciaJudicialBean.unidadesPrisionaisDestino.isEmpty()}"
+                                         style="border:0 !important; background-color:transparent; padding-bottom: 10px">
+                                <h1><b>Estabelecimentos Recomendados</b></h1>
+                                <h:panelGroup>
+                                    <p:dataTable id="dtListaAuxiliarUnidadePrisional"
+                                                 value="#{solicitacaoTransferenciaJudicialBean.listaPerfilUnidadeNotaAuxiliary}"
+                                                 var="perfilUnidadeNotaAuxiliary"
+                                                 rowKey="#{perfilUnidadeNotaAuxiliary.perfilUnidadeAuxiliary.unidadePrisional.id}"
+                                                 selection="#{solicitacaoTransferenciaJudicialBean.perfilUnidadeNotaAuxiliary}"
+                                                 paginator="#{solicitacaoTransferenciaJudicialBean.listaPerfilUnidadeNotaAuxiliary.size() > 5}"
+                                                 paginatorPosition="bottom"
+                                                 rows="5"
+                                                 emptyMessage="Nenhum estabelecimento encontrado"
+                                                 style="text-align: center">
+                                        <f:facet name="header">
+                                            Estabelecimentos
+                                        </f:facet>
+                                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                                        <p:column headerText="Estabelecimento">
+                                            <h:outputText
+                                                    value="#{perfilUnidadeNotaAuxiliary.perfilUnidadeAuxiliary.unidadePrisional.descricao}"/>
+                                        </p:column>
+                                        <p:column headerText="Município">
+                                            <h:outputText
+                                                    value="#{perfilUnidadeNotaAuxiliary.perfilUnidadeAuxiliary.unidadePrisional.endereco.municipio.descricao}"/>
+                                        </p:column>
+                                        <p:column headerText="Capacidade Efetiva">
+                                            <h:outputText
+                                                    value="#{perfilUnidadeNotaAuxiliary.perfilUnidadeAuxiliary.unidadePrisional.capacidadeEfetiva}"/>
+                                        </p:column>
+                                        <p:column headerText="Número de Vagas">
+                                            <h:outputText
+                                                    style="#{solicitacaoTransferenciaJudicialBean.carregarCSSTexto(perfilUnidadeNotaAuxiliary.perfilUnidadeAuxiliary.unidadePrisional.vagas)}"
+                                                    value="#{perfilUnidadeNotaAuxiliary.perfilUnidadeAuxiliary.unidadePrisional.vagas}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:commandButton
+                                            title="Selecionar Estabelecimento de Destino"
+                                            style="float: right"
+                                            action="#{solicitacaoTransferenciaJudicialBean.selecionarUnidadeDestino()}"
+                                            update="@form"
+                                            icon="ui-icon-plus">
+                                    </p:commandButton>
+                                </h:panelGroup>
+                                <h:panelGroup>
+                                    <p:commandButton value="Selecionar Outro Estabelecimento"
+                                                     oncomplete="PF('addEstabelecimento').show();"
+                                                     rendered="#{solicitacaoTransferenciaJudicialBean.detentoView.codDetento != null}"
+                                                     icon="ui-icon-plus"
+                                                     id="btnSelecionar"
+                                                     update="form:dialogEstabelecimento"
+                                                     process="@this">
+                                        <p:confirm header="Confirmação"
+                                                   message="Deseja realmente selecionar outro estabelecimento?"
+                                                   icon="ui-icon-alert"/>
+                                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                         widgetVar="confirmDlgEstabelecimento">
+                                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                             icon="ui-icon-check"
+                                                             oncomplete="PF('confirmDlgEstabelecimento').hide();"/>
+                                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                             icon="ui-icon-close"/>
+                                        </p:confirmDialog>
+                                    </p:commandButton>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                            <!-- <p:panelGrid id="pgUnidadePrisional" columns="1"
+                                          columnClasses="ui-grid-col-12"
+                                          rendered="#{!solicitacaoTransferenciaJudicialBean.unidadesPrisionaisDestino.isEmpty()}"
+                                          layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                          style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                                 <h1>Estabelecimento de Destino</h1>
+                                 <p:dataTable id="dtUnidadePrisional" var="unidadePrisional"
+                                              value="#{solicitacaoTransferenciaJudicialBean.unidadesPrisionaisDestino}"
+                                              reflow="true"
+                                              rows="10"
+                                              emptyMessage="" style="text-align:center">
+                                     <f:facet name="header">
+                                         Estabelecimentos
+                                     </f:facet>
+                                     <p:column headerText="Estabelecimento" style="text-align: center">
+                                         <h:outputText value="#{unidadePrisional.descricao}"/>
+                                     </p:column>
+                                     <p:column headerText="Município" style="text-align: center">
+                                         <h:outputText
+                                                 value="#{unidadePrisional.endereco.municipio.descricao.toUpperCase()}"/>
+                                     </p:column>
+                                     <p:column headerText="Capacidade Efetiva" style="text-align: center">
+                                         <h:outputText value="#{unidadePrisional.capacidadeEfetiva}"/>
+                                     </p:column>
+                                     <p:column headerText="Número de Vagas" style="text-align: center">
+                                         <h:outputText
+                                                 style="#{solicitacaoTransferenciaJudicialBean.carregarCSSTexto(unidadePrisional.vagas)}"
+                                                 value="#{unidadePrisional.vagas}"/>
+                                     </p:column>
+                                     <p:column headerText="Ação" style="text-align: center; width: 15%">
+                                         <p:commandButton
+                                                 icon="ui-icon-trash"
+                                                 style="border-bottom: 10px"
+                                                 styleClass="red-btn"
+                                                 action="#{solicitacaoTransferenciaJudicialBean.removerUnidadeDestino()}"
+                                                 title="Remover"
+                                                 update="form:hpUnidadePrisionalRecomendada">
+                                             <p:confirm header="Confirmação"
+                                                        message="Deseja realmente remover estabelecimento de destino?"
+                                                        icon="ui-icon-alert"/>
+                                             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                              widgetVar="confirmDlg">
+                                                 <p:commandButton value="Sim" type="button"
+                                                                  styleClass="ui-confirmdialog-yes"
+                                                                  icon="ui-icon-check"/>
+                                                 <p:commandButton value="Não" type="button"
+                                                                  styleClass="ui-confirmdialog-no"
+                                                                  icon="ui-icon-close"/>
+                                             </p:confirmDialog>
+                                         </p:commandButton>
+                                     </p:column>
+                                 </p:dataTable>
+                             </p:panelGrid>-->
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid id="pgTitulo" columns="1"
+                                     columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h2><b>Dados</b></h2>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgTransferenciaDetento" columns="3"
+                                     columnClasses="ui-grid-col-4,ui-grid-col-4,ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 value="#{solicitacaoTransferenciaJudicialBean.solicitacaoTransferencia.tipoMovimentacao}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 id="soTipoTransferencia">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems value="#{solicitacaoTransferenciaJudicialBean.tiposMovimentacao}"
+                                                   var="tipoMovimentacao"
+                                                   itemLabel="#{tipoMovimentacao.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soTipoTransferencia" value="Tipo de Transferência"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-selectonemenu">
+                                <p:selectOneMenu style="width: 100%"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{solicitacaoTransferenciaJudicialBean.solicitacaoTransferencia.prioridadeTransferencia}"
+                                                 id="soPrioridadeTransferencia">
+                                    <f:selectItem noSelectionOption="true"/>
+                                    <f:selectItem itemValue="" itemLabel=""/>
+                                    <f:selectItems
+                                            value="#{solicitacaoTransferenciaJudicialBean.prioridadesTransferencia}"
+                                            var="prioridadeTransferencia"
+                                            itemLabel="#{prioridadeTransferencia.descricao}"/>
+                                </p:selectOneMenu>
+                                <p:outputLabel for="soPrioridadeTransferencia" value="Prioridade"/>
+                            </h:panelGroup>
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:calendar style="width: 100%"
+                                            inputStyle="width: 60%"
+                                            value="#{solicitacaoTransferenciaJudicialBean.dataHoraPrevistaSaida}"
+                                            pattern="dd/MM/yyyy HH:mm"
+                                            locale="pt"
+                                            mindate="#{solicitacaoTransferenciaJudicialBean.dataAtual}"
+                                            id="cdDataTransferencia"/>
+                                <p:outputLabel for="cdDataTransferencia" value="Data e Hora Prevista da Saída"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <h:panelGroup id="hpTituloArquivo">
+                            <p:panelGrid columns="1"
+                                         columnClasses="ui-grid-col-12"
+                                         id="pgTituloArquivos"
+                                         rendered="#{!solicitacaoTransferenciaJudicialBean.arquivos.isEmpty()}"
+                                         layout="grid"
+                                         styleClass="ui-panelgrid-blank form-group"
+                                         style="border:0px none; background-color:transparent;">
+                                <h3>Documentos</h3>
+                            </p:panelGrid>
+                        </h:panelGroup>
+                        <p:panelGrid columns="1"
+                                     columnClasses="ui-grid-col-12"
+                                     id="pgDocumentosDetento"
+                                     layout="grid"
+                                     styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup rendered="#{!solicitacaoTransferenciaJudicialBean.arquivos.isEmpty()}">
+                                <p:dataTable id="dtDocumentosDetento"
+                                             var="arquivo"
+                                             reflow="true"
+                                             value="#{solicitacaoTransferenciaJudicialBean.arquivos}"
+                                             rows="5"
+                                             emptyMessage=""
+                                             style="width: 100%">
+                                    <f:facet name="header">
+                                        Documentos
+                                    </f:facet>
+                                    <p:column headerText="Descrição" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo do Documento" style="text-align: center;">
+                                        <h:outputText value="#{arquivo.tipoArquivo.descricao}"/>
+                                    </p:column>
+                                    <p:column headerText="Opção" style="width: 78px; text-align: center;">
+                                        <p:commandButton title="Visualizar"
+                                                         icon="ui-icon-file-download" process="@this"
+                                                         update="dtDocumentosDetento"
+                                                         action="#{solicitacaoTransferenciaJudicialBean.mostrarPdf()}"
+                                                         onclick="this.form.target='_blank'" ajax="false">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{solicitacaoTransferenciaJudicialBean.arquivo}"/>
+                                        </p:commandButton>
+                                        <p:commandButton title="Excluir" icon="ui-icon-trash"
+                                                         action="#{solicitacaoTransferenciaJudicialBean.removerDocumentoDetento()}"
+                                                         process="@this"
+                                                         update="form:pgDocumentosDetento form:pgAnexo form:hpTituloArquivo">
+                                            <f:setPropertyActionListener value="#{arquivo}"
+                                                                         target="#{solicitacaoTransferenciaJudicialBean.arquivo}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                        <p:panelGrid id="pgAnexo" columns="2"
+                                     columnClasses="ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+                            <h:panelGroup>
+                                <p:commandButton title="Anexo" oncomplete="PF('addDocumentoTransferencia').show();"
+                                                 rendered="#{solicitacaoTransferenciaJudicialBean.arquivos.isEmpty()}"
+                                                 actionListener="#{solicitacaoTransferenciaJudicialBean.refreshArquivo()}"
+                                                 process="@this"
+                                                 update="dialogDocumentoTransferencia"
+                                                 icon="ui-icon-attach-file"
+                                                 value="Anexo"/>
+                            </h:panelGroup>
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton id="btnSalvarTransferenciaSaida" value="Salvar"
+                                             action="#{solicitacaoTransferenciaJudicialBean.salvar()}"
+                                             process="@form"
+                                             icon="ui-icon-check">
+                                <p:confirm header="Confirmação"
+                                           message="Deseja realmente salvar solicitação e encaminhar ao Núcleo de Escolta e Custódia?"
+                                           icon="ui-icon-alert"/>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade"
+                                                 widgetVar="confirmDlgEstabelecimento">
+                                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+                                                     icon="ui-icon-check"
+                                                     oncomplete="PF('confirmDlgEstabelecimento').hide();"/>
+                                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+                                                     icon="ui-icon-close"/>
+                                </p:confirmDialog>
+                            </p:commandButton>
+                            <span class="ui-separator" style="padding-right: 5px;"/>
+
+                        </f:facet>
+                    </p:toolbar>
+                </div>
+            </div>
+            <h:panelGroup rendered="#{!solicitacaoTransferenciaJudicialBean.detentosView.isEmpty()}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:dataTable
+                                    id="dtDetentos"
+                                    emptyMessage=""
+                                    value="#{solicitacaoTransferenciaJudicialBean.detentosView}"
+                                    var="detento"
+                                    paginator="true"
+                                    paginatorPosition="bottom"
+                                    rows="10">
+                                <f:facet name="header">
+                                    Presos
+                                </f:facet>
+                                <p:column headerText="Foto" width="10%" style="text-align: center">
+                                    <h:panelGroup
+                                            rendered="#{detento.foto == null or detento.foto == '' or detento.foto.contains('\\')}">
+                                        <i class="ui-icon ui-icon-person"
+                                           style="font-size:78px;color:#757575;">
+                                        </i>
+                                    </h:panelGroup>
+                                    <p:graphicImage
+                                            rendered="#{detento.foto != null and detento.foto != '' and !detento.foto.contains('\\')}"
+                                            value="/foto-detento?foto=#{buscaDetentoBean.enconder(detento.foto)}"
+                                            style="width: 90%;"/>
+                                </p:column>
+                                <p:column headerText="Preso" style="text-align: center;">
+                                    <h:outputText value="#{detento.nomeDetento}"/>
+                                </p:column>
+                                <p:column headerText="Data da Entrada" style="text-align: center;">
+                                    <h:outputText value="#{detento.dataEntrada}">
+                                        <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Estabelecimento" style="text-align: center;">
+                                    <h:outputText value="#{detento.nomeUnidadePrisional}"/>
+                                </p:column>
+                                <p:column headerText="Pavilhão" style="text-align: center;">
+                                    <h:outputText value="#{detento.nomePavilhao}"/>
+                                </p:column>
+                                <p:column headerText="Cela" style="text-align: center;">
+                                    <h:outputText value="#{detento.nomeCela}"/>
+                                </p:column>
+                                <p:column headerText="Ação" style="width: 5%; text-align: center">
+                                    <p:commandButton
+                                            icon="ui-icon-trash"
+                                            style="border-bottom: 10px"
+                                            title="Remover"
+                                            styleClass="red-btn"
+                                            update="@form"
+                                            process="@this"
+                                            action="#{solicitacaoTransferenciaJudicialBean.removerDetento()}">
+                                        <f:setPropertyActionListener value="#{detento}"
+                                                                     target="#{solicitacaoTransferenciaJudicialBean.detentoView}"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <p:dialog header="Anexar Documentacao" id="dialogDocumentoTransferencia"
+                      widgetVar="addDocumentoTransferencia" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDescricaoDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                         background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoDocumento" value="Descrição do Documento"/>
+                        <p:inputText id="itDescricaoDocumento"
+                                     value="#{solicitacaoTransferenciaJudicialBean.arquivo.descricao}"
+                                     style="width: 100%">
+                            <p:ajax process="@this" event="blur"/>
+                        </p:inputText>
+                    </p:column>
+                </p:panelGrid>
+                <p:panelGrid columns="1"
+                             columnClasses="ui-grid-col-12"
+                             id="pgDocumento"
+                             styleClass="form-group ui-panelgrid-blank"
+                             style="border:0px none;
+                             background-color:transparent;"
+                             layout="grid">
+                    <p:column>
+                        <p:fileUpload
+                                mode="advanced"
+                                oncomplete="PF('addDocumentoTransferencia').hide();"
+                                process="pgDescricaoDocumento"
+                                update="pgDocumentosDetento pgAnexo hpTituloArquivo"
+                                label="Carregar Documento"
+                                cancelLabel="Cancelar"
+                                uploadLabel="Anexar"
+                                fileUploadListener="#{solicitacaoTransferenciaJudicialBean.uploadDocumentoDetento}"
+                                sizeLimit="10485760"
+                                invalidSizeMessage="O tamanho máximo permitido é de 10MB."
+                                allowTypes="/(\.|\/)(pdf)$/"
+                                skinSimple="true"
+                        />
+                    </p:column>
+                </p:panelGrid>
+                <p:spacer/>
+            </p:dialog>
+            <p:dialog header="Selecionar Outro Estabelecimento" id="dialogEstabelecimento"
+                      widgetVar="addEstabelecimento" modal="true"
+                      width="600" showEffect="fade" hideEffect="fade">
+                <p:panelGrid id="pgNomeUnidadePrionalMunicipio" columns="2"
+                             columnClasses="ui-grid-col-6, ui-grid-col-6"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                    <p:column>
+                        <p:outputLabel for="itDescricaoEstabelecimento" value="Estabelecimento"/>
+                        <p:inputText id="itDescricaoEstabelecimento"
+                                     value="#{solicitacaoTransferenciaJudicialBean.unidadePrisionalBusca.descricao}"
+                                     style="width: 100%"/>
+                    </p:column>
+                    <p:column>
+                        <p:outputLabel for="soMunicipio" value="Município"/>
+                        <p:selectOneMenu
+                                id="soMunicipio"
+                                style="width: 100%"
+                                filter="true"
+                                converter="omnifaces.SelectItemsConverter"
+                                appendTo="@(this)"
+                                value="#{solicitacaoTransferenciaJudicialBean.unidadePrisionalBusca.endereco.municipio}">
+                            <f:selectItem itemLabel=""/>
+                            <f:selectItem noSelectionOption="true"/>
+                            <f:selectItems value="#{solicitacaoTransferenciaJudicialBean.municipios}"
+                                           var="municipio"
+                                           itemLabel="#{municipio.descricao}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:panelGrid>
+                <p:toolbar id="tbBtn">
+                    <f:facet name="left">
+                        <p:commandButton value="Buscar"
+                                         id="btnbuscar"
+                                         icon="ui-icon-search"
+                                         action="#{solicitacaoTransferenciaJudicialBean.buscarUnidadesPrisionais()}"
+                                         update="pgUnidadePrisionalList"
+                                         process="@form"/>
+                    </f:facet>
+                </p:toolbar>
+                <p:panelGrid id="pgUnidadePrisionalList" columns="1"
+                             columnClasses="ui-grid-col-12"
+                             layout="grid" styleClass="ui-panelgrid-blank form-group"
+                             style="border:0px none; background-color:transparent; padding-bottom: 10px">
+                    <p:dataTable id="dtUnidadePrisionalList" var="unidadePrisional"
+                                 value="#{solicitacaoTransferenciaJudicialBean.unidadesPrisionaisList}"
+                                 reflow="true"
+                                 paginator="true" paginatorPosition="bottom" rows="5"
+                                 emptyMessage="Nenhum registro encontrado" style="text-align:center">
+                        <p:column headerText="Estabelecimento" style="text-align: center">
+                            <h:outputText value="#{unidadePrisional.descricao}"/>
+                        </p:column>
+                        <p:column style="text-align:center; width: 15%">
+                            <p:commandButton
+                                    title="Selecionar Estabelecimento"
+                                    oncomplete="PF('addEstabelecimento').hide();"
+                                    update="@form"
+                                    action="#{solicitacaoTransferenciaJudicialBean.selecionarOutraUnidadeDestino()}"
+                                    icon="ui-icon-check">
+                                <f:setPropertyActionListener value="#{unidadePrisional}"
+                                                             target="#{solicitacaoTransferenciaJudicialBean.unidadePrisionalSelecionada}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </p:panelGrid>
+            </p:dialog>
+        </h:form>
+        <!-- <h:form id="form-documento-transferencia">
+
+         </h:form>-->
+    </ui:define>
+</ui:composition>

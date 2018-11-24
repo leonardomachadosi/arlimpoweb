@@ -1,0 +1,187 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-panelgrid {
+                border-collapse: unset !important;
+            }
+
+            .ui-panelgrid .ui-widget-header {
+                background-color: transparent !important;
+            }
+
+            body .ui-widget-content {
+                border: 0;
+            }
+
+            .ui-panelgrid-cell label {
+                font-weight: bold;
+            }
+
+            .ui-grid-row {
+                margin-bottom: 1em;
+            }
+
+            .ui-panelgrid-content.ui-widget-content {
+                border: 0;
+            }
+
+        </style>
+    </ui:define>
+    <ui:define name="title">SIISP</ui:define>
+
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+
+            <!-- MESSAGES -->
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false" />
+            <!--<p:remoteCommand name="setResponse" process="@this" update="@all"-->
+                             <!--actionListener="#{saidaVisitanteBean.fingerPrint}" oncomplete="PF('dlgFingerPrintVerify').hide();"/>-->
+            <!-- MESSAGES -->
+
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Saída de Visitantes</b></h1>
+
+                        <p:panel>
+                            <p:spacer/>
+                            <p:panelGrid id = "pgFiltroVisitas" columns="1" style="margin-bottom:10px" layout="grid"
+                                         styleClass="form-group ui-panelgrid-blank">
+                                <h:panelGroup styleClass="md-selectonemenu">
+                                    <p:selectCheckboxMenu id="scmUnidadePrisional"
+                                                          converter="omnifaces.SelectItemsConverter"
+                                                          value="#{saidaVisitanteBean.unidadesPrisionaisSelecionadas}"
+                                                          label="Unidade Prisional"
+                                                          filter="true" filterMatchMode="contains"
+                                                          style="color:darkGray;width: 50%;">
+                                        <f:selectItems value="#{saidaVisitanteBean.unidadePrisionalList}"
+                                                       var="unPrisional" itemLabel="#{unPrisional.descricao}"
+                                                       itemValue="#{unPrisional}"/>
+                                    </p:selectCheckboxMenu>
+
+                                </h:panelGroup>
+                                <h:panelGroup styleClass="md-inputfield">
+                                    <p:inputText id="inpNomeVisitante" value="#{saidaVisitanteBean.nomeBusca}"
+                                                 style="width: 35em;"/>
+                                    <label>Nome do Visitante</label>
+                                </h:panelGroup>
+                            </p:panelGrid>
+                        </p:panel>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton value="Buscar" icon="ui-icon-search"
+                                             process="@this pgFiltroVisitas"
+                                             actionListener="#{saidaVisitanteBean.buscarVisitas()}"
+                                             update="@form"/>
+                        </f:facet>
+
+                    </p:toolbar>
+                </div>
+            </div>
+
+            <h:panelGroup id="hpDetentoView" rendered="#{not empty saidaVisitanteBean.visitaList}">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <p:dataTable id="dtVisitaList" value="#{saidaVisitanteBean.visitaList}" var="visita"
+                                         paginator="true"
+                                         paginatorPosition="bottom"
+                                         rows="10"
+                                         selection="#{saidaVisitanteBean.visitasSelecionadas}"
+                                         rowKey="#{visita.id}" styleClass="cars-datalist">
+                                <f:facet name="header">Visitas Abertas</f:facet>
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center;"/>
+                                <p:column styleClass="clearfix car-item">
+                                    <p:graphicImage
+                                            value="#{fotoBean.getFotoVisitantebyPessoaParentesco(visita.pessoaParentesco)}"
+                                            style="width: 78px; margin:24px;float: left;margin-top: 6em;"/>
+                                    <div style="display: inline-block">
+                                        <p><strong>#{visita.pessoaParentesco.pessoaParente.nome}</strong></p>
+                                        <p>Preso: <h:outputLabel value="#{visita.pessoaParentesco.pessoa.nome}"/></p>
+                                        <p>Unidade Prisional: <h:outputText
+                                                value="#{visita.unidadePrisional.descricao}"/></p>
+                                        <p>Tipo de visita: <h:outputLabel value="#{visita.tipoVisita.descricao}"/></p>
+                                        <p>Peso do alimento: <h:outputLabel value="#{visita.peso} Kg"
+                                                                            rendered="#{visita.peso != null}"/></p>
+                                        <p>Observação: <h:outputLabel value="#{visita.observacao}"/></p>
+                                        <!--<p>Parentesco: <h:outputLabel-->
+                                        <!--value="#{visita.pessoaParentesco.parentesco.descricao}"/></p>-->
+                                        <p>Data/Hora da entrada: <h:outputLabel value="#{visita.data}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputLabel>
+                                            <h:outputLabel value=" #{visita.horaEntrada}">
+                                                <f:convertDateTime pattern="H:mm"/>
+                                            </h:outputLabel>
+                                        </p>
+                                    </div>
+                                    <p:commandButton
+                                            title="Saída Única" icon="ui-icon-arrow-forward"
+                                            style="margin:24px 12px 0 0"
+                                            action="#{saidaVisitanteBean.salvarSaida()}"
+                                            actionListener="#{saidaVisitanteBean.addVisitaSelecionada(visita)}"
+                                            update="@form" />
+                                </p:column>
+                            </p:dataTable>
+                            <div class="ui-g">
+                                <div class="ui-g-12" style="padding-right: 0;padding-left: 0">
+                                    <p:commandButton id="btnMultSaida"
+                                                     value="Saída Agrupada"
+                                                     process="@form"
+                                                     style="float:right;"
+                                                     update="@form"
+                                                     resetValues="true"
+                                                     action="#{saidaVisitanteBean.salvarSaida()}"
+                                    />
+                                </div>
+                            </div>
+
+                            <!--<p:dialog header="Busca por biometria" id="dlgFingerPrintVerify"-->
+                                      <!--widgetVar="dlgFingerPrintVerify"-->
+                                      <!--modal="true" width="50%">-->
+                                <!--<div class="ui-g-12">-->
+                                    <!--<p:panelGrid id="pngDlgFingerPrintVerify" columns="1" columnClasses="ui-grid-col-12"-->
+                                                 <!--layout="grid" styleClass="ui-panelgrid-blank form-group">-->
+                                        <!--<h:panelGroup styleClass="md-selectonemenu">-->
+                                            <!--<p:selectOneMenu id="somDatiloscopia"-->
+                                                             <!--value="#{saidaVisitanteBean.datiloscopia}"-->
+                                                             <!--converter="omnifaces.SelectItemsConverter"-->
+                                                             <!--style="width: 100%;">-->
+                                                <!--<f:selectItem noSelectionOption="true"/>-->
+                                                <!--<f:selectItems value="#{saidaVisitanteBean.datiloscopiaList}"-->
+                                                               <!--var="datiloscopia"-->
+                                                               <!--itemLabel="#{datiloscopia.posicao.descricao}"-->
+                                                               <!--itemValue="#{datiloscopia}"/>-->
+                                                <!--<p:ajax process="@this" event="itemSelect"-->
+                                                        <!--update="pngDlgFingerPrintVerify"/>-->
+                                            <!--</p:selectOneMenu>-->
+                                            <!--<p:outputLabel value="Datiloscopia"/>-->
+                                        <!--</h:panelGroup>-->
+                                        <!--<h:inputText id="itxJsonVerify"-->
+                                                     <!--value="#{saidaVisitanteBean.onSelectJsonRequest()}"-->
+                                                     <!--style="display: none;"/>-->
+                                        <!--<p:commandButton-->
+                                                <!--rendered="#{saidaVisitanteBean.canRenderButtonVerifyBiometric}"-->
+                                                <!--title="Verificar" icon="ui-icon-fingerprint" type="button"-->
+                                                <!--onclick="verifyFingerPrint($('#itxJsonVerify').val())"/>-->
+                                    <!--</p:panelGrid>-->
+                                <!--</div>-->
+                            <!--</p:dialog>-->
+
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>
