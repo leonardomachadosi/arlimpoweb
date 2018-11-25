@@ -50,6 +50,10 @@
         <view-id value="/pages/public/recurso/visualizar-recurso.xhtml"/>
     </url-mapping>
 
+    <url-mapping id="idDashboard">
+        <pattern value="/dashboard/dashboard"></pattern>
+        <view-id value="/pages/public/dashboard/dashboard.xhtml"/>
+    </url-mapping>
 
 </pretty-config>
 

@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI6XKvwCKUUpt1NNZuO2nbsUcyk8EkR_o&amp;sensor=false"></script>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"/>
+            <div class="ui-g">
+
+                <p:gmap center="#{dashboardBean.centerGeoMap}" widgetVar="map"
+                        zoom="15" type="HYBRID" style="width:100%;height:400px" id="myMap"/>
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
