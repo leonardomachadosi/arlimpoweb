@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.PostConstruct;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
+import java.util.Date;
 
 @Controller
 @Scope("view")
@@ -16,9 +17,9 @@ public class VisualizarRecursoBean {
 
 
     private CapabilityClient capabilityClient;
-
     private Resource resource;
-
+    private Date dataInicio, dataFinal;
+    private String agrupamento;
 
     public VisualizarRecursoBean(CapabilityClient capabilityClient) {
         this.capabilityClient = capabilityClient;
@@ -58,5 +59,27 @@ public class VisualizarRecursoBean {
         this.resource = resource;
     }
 
+    public Date getDataInicio() {
+        return dataInicio;
+    }
 
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public Date getDataFinal() {
+        return dataFinal;
+    }
+
+    public void setDataFinal(Date dataFinal) {
+        this.dataFinal = dataFinal;
+    }
+
+    public String getAgrupamento() {
+        return agrupamento;
+    }
+
+    public void setAgrupamento(String agrupamento) {
+        this.agrupamento = agrupamento;
+    }
 }

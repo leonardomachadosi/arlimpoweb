@@ -12,8 +12,8 @@
 
             <div class="ui-g-12">
                 <div class="card card-w-title">
-                    <h1><b>Visualização de Recursos</b></h1>
-                    <p:panelGrid id="pgNome" columns="1" columnClasses="ui-grid-col-6, ui-grid-col-6"
+                    <h1><b>Recurso</b></h1>
+                    <p:panelGrid id="pgNome" columns="3" columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
                                  layout="grid" styleClass="ui-panelgrid-blank form-group"
                                  style="border:0px none; background-color:transparent;">
 
@@ -36,21 +36,36 @@
                                          style="width: 100%;"/>
                             <p:outputLabel for="itStatus" value="Status"/>
                         </h:panelGroup>
-
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="itLatitude"
-                                         value="#{visualizarRecursoBean.resource.lat}"
-                                         style="width: 100%;"/>
-                            <p:outputLabel for="itLatitude" value="Latitude"/>
-                        </h:panelGroup>
-                        <h:panelGroup styleClass="md-inputfield">
-                            <p:inputText id="itLongitude"
-                                         value="#{visualizarRecursoBean.resource.lon}"
-                                         style="width: 100%;"/>
-                            <p:outputLabel for="itLongitude" value="Longitude"/>
-                        </h:panelGroup>
-
                     </p:panelGrid>
+                </div>
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <h1><b>Filtros</b></h1>
+                        <p:panelGrid id="pgFiltro" columns="3" columnClasses="ui-grid-col-4, ui-grid-col-4, ui-grid-col-4"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel for="dateInicio" value="Data Inicial:" />
+                                <p:calendar id="dateInicio" value="#{visualizarRecursoBean.dataInicio}"
+                                            showOn="button" />
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel for="dateFinal" value="Data Final:" />
+                                <p:calendar id="dateFinal" value="#{visualizarRecursoBean.dataFinal}"
+                                            showOn="button" />
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" cellpadding="1">
+                                <h:outputText value="Agrupar por:" />
+                                <p:selectOneButton value="#{visualizarRecursoBean.agrupamento}">
+                                    <f:selectItem itemLabel="Dia" itemValue="dia" />
+                                    <f:selectItem itemLabel="Mes" itemValue="mes" />
+                                    <f:selectItem itemLabel="Ano" itemValue="ano" />
+                                </p:selectOneButton>
+                            </h:panelGrid>
+                        </p:panelGrid>
+
+                    </div>
                 </div>
 
 
