@@ -22,7 +22,7 @@ public class DashboardBean {
 
     private MapModel mapModel;
     private String centerGeoMap = "-2.497438, -44.278959";
-    private LatLng coord1 = new LatLng(-2.483309, -44.262307);
+    private LatLng coord1 ;
     private Marker marker;
     private Resource resource;
     private String score = "AQI 30";
@@ -34,8 +34,34 @@ public class DashboardBean {
 
     private void initObjects() {
         mapModel = new DefaultMapModel();
+        coord1 = new LatLng(-2.498837, -44.311237);
         mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
                 "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.487405, -44.287398);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.482934, -44.256236);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.478464, -44.224888);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.469842, -44.209706);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.464936 ,-44.197916);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.497569, -44.298180);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.566465, -44.325358);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+        coord1 = new LatLng(-2.524137, -44.296232);
+        mapModel.addOverlay(new Marker(coord1,resource.getDescription(),resource,
+                "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png"));
+
     }
 
     private  Resource getMakerResource(){

@@ -48,28 +48,53 @@
                             <h:panelGrid columns="2" cellpadding="5">
                                 <p:outputLabel for="dateInicio" value="Data Inicial:" />
                                 <p:calendar id="dateInicio" value="#{visualizarRecursoBean.dataInicio}"
-                                            showOn="button" />
+                                             showOn="button" />
                             </h:panelGrid>
                             <h:panelGrid columns="2" cellpadding="5">
                                 <p:outputLabel for="dateFinal" value="Data Final:" />
                                 <p:calendar id="dateFinal" value="#{visualizarRecursoBean.dataFinal}"
-                                            showOn="button" />
+                                             showOn="button" />
                             </h:panelGrid>
                             <h:panelGrid columns="2" cellpadding="1">
                                 <h:outputText value="Agrupar por:" />
-                                <p:selectOneButton value="#{visualizarRecursoBean.agrupamento}">
+                                <p:selectOneButton id="selectGroup" value="#{visualizarRecursoBean.agrupamento}">
                                     <f:selectItem itemLabel="Dia" itemValue="dia" />
-                                    <f:selectItem itemLabel="Mes" itemValue="mes" />
+                                    <f:selectItem itemLabel="Mes" itemValue="mes" noSelectionOption="true"/>
                                     <f:selectItem itemLabel="Ano" itemValue="ano" />
                                 </p:selectOneButton>
                             </h:panelGrid>
+
+                            <h:panelGrid columns="1" cellpadding="5">
+                                <h:outputText value="Gases e partículas:" />
+                                <p:selectManyCheckbox id="check"  layout="grid" columns="5"
+                                                      value="#{visualizarRecursoBean.selectedParticula}">
+                                    <f:selectItem itemLabel="03" itemValue="OZONE" />
+                                    <f:selectItem itemLabel="S02" itemValue="SULFURE_DIOXIDE" />
+                                    <f:selectItem itemLabel="N03" itemValue="NITROGEN_DIOXIDE" />
+                                    <f:selectItem itemLabel="PM10" itemValue="PM10" />
+                                    <f:selectItem itemLabel="PM2.5" itemValue="PM25" />
+                                </p:selectManyCheckbox>
+                            </h:panelGrid>
+                            <p:commandButton
+                                    value="Criar Visualização"
+                                    process="@this dateInicio dateFinal"
+                                    action="#{visualizarRecursoBean.gerarGrafico}"
+                                    update="@this chartLine"
+                                    style="margin:24px 12px 0 0"/>
                         </p:panelGrid>
 
                     </div>
                 </div>
 
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
 
+                        <p:chart type="line" model="#{visualizarRecursoBean.lineModel}"
+                                 style="height:300px;" id="chartLine"/>
+                        <br /><br />
 
+                    </div>
+                </div>
             </div>
 
         </h:form>

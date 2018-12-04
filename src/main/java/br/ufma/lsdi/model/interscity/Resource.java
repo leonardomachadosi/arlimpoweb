@@ -29,4 +29,8 @@ public class Resource implements Serializable {
     private String postal_code;
     private String country;
     private List<String> capabilities;
+	
+
+	
+	
 }
