@@ -1,8 +1,10 @@
 package br.ufma.lsdi.controller.beans;
 
+import br.ufma.lsdi.model.ResourceHelper;
 import br.ufma.lsdi.model.auxiliar.ResourceAuxiliar;
 import br.ufma.lsdi.model.auxiliar.ResourceDataAuxiliar;
 import br.ufma.lsdi.model.interscity.Resource;
+import br.ufma.lsdi.service.ResourceColectorService;
 import br.ufma.lsdi.service.interscity.ResourceClient;
 import br.ufma.lsdi.util.WebUtil;
 import com.google.gson.Gson;
@@ -24,8 +26,11 @@ public class BuscarRecursoBean {
 
     private Resource resource;
 
-    public BuscarRecursoBean(ResourceClient resourceClient) {
+    private ResourceColectorService colectorService;
+
+    public BuscarRecursoBean(ResourceClient resourceClient, ResourceColectorService colectorService) {
         this.resourceClient = resourceClient;
+        this.colectorService = colectorService;
     }
 
     @PostConstruct
@@ -64,6 +69,10 @@ public class BuscarRecursoBean {
         } else {
             Messages.addGlobalWarn(WebUtil.BUSCAR_OBRIGATORIO);
         }
+    }
+
+    public void getDataResource(){
+        ResourceHelper resourceHelper = colectorService.getDataResource();
     }
 
     /**

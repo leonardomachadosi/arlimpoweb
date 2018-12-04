@@ -111,6 +111,13 @@
                                                  action="#{buscarRecursoBean.visualizarRecurso(recurso)}"
                                                  update="@this"
                                                  style="margin:24px 12px 0 0"/>
+                                <p:commandButton
+                                        title="Adicionar"
+                                        icon="ui-icon-add"
+                                        process="@this"
+                                        action="#{buscarRecursoBean.getDataResource}"
+                                        update="@this"
+                                        style="margin:24px 12px 0 0"/>
                             </p:column>
                         </p:dataTable>
                     </div>

@@ -2,8 +2,10 @@ package br.ufma.lsdi.controller.beans;
 
 import br.ufma.lsdi.model.Concentracao;
 import br.ufma.lsdi.model.PollutionData;
+import br.ufma.lsdi.model.ResourceHelper;
 import br.ufma.lsdi.model.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.interscity.Resource;
+import br.ufma.lsdi.service.ResourceColectorService;
 import br.ufma.lsdi.service.interscity.CapabilityClient;
 import br.ufma.lsdi.util.Util;
 import br.ufma.lsdi.util.WebUtil;
@@ -32,8 +34,8 @@ public class VisualizarRecursoBean {
     private String[] selectedParticula;
     private SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");// HH:mm:ss");
     private List<CapabilityDataAuxiliar> dataOzone, dataNitrogenio, dataEnxofre, dataPM10, dataPM25;
-
     private LineChartModel lineModel;
+
 
     public VisualizarRecursoBean(CapabilityClient capabilityClient) {
         this.capabilityClient = capabilityClient;
@@ -65,6 +67,7 @@ public class VisualizarRecursoBean {
         NavigationHandler myNav = facesContext.getApplication().getNavigationHandler();
         myNav.handleNavigation(facesContext, null, redirect);
     }
+
 
     private void createLineModels(String title, String labelX, int max, int min, List<Concentracao> mediasSO2, List<Concentracao> mediasO3) {
         lineModel = initLinearModel(mediasSO2, mediasO3);
