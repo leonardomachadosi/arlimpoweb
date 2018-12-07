@@ -1,14 +1,17 @@
 package br.ufma.lsdi.controller.beans;
 
 import br.ufma.lsdi.model.Concentracao;
-import br.ufma.lsdi.model.PollutionData;
+import br.ufma.lsdi.model.Matcher;
 import br.ufma.lsdi.model.ResourceHelper;
 import br.ufma.lsdi.model.auxiliar.CapabilityDataAuxiliar;
 import br.ufma.lsdi.model.interscity.Resource;
 import br.ufma.lsdi.service.ResourceColectorService;
 import br.ufma.lsdi.service.interscity.CapabilityClient;
+import br.ufma.lsdi.util.DateUtil;
+import br.ufma.lsdi.util.JsonUtil;
 import br.ufma.lsdi.util.Util;
 import br.ufma.lsdi.util.WebUtil;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.primefaces.model.chart.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -16,8 +19,6 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.PostConstruct;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
-import java.io.FileNotFoundException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,10 +36,11 @@ public class VisualizarRecursoBean {
     private SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");// HH:mm:ss");
     private List<CapabilityDataAuxiliar> dataOzone, dataNitrogenio, dataEnxofre, dataPM10, dataPM25;
     private LineChartModel lineModel;
+    private ResourceColectorService colectorService;
 
-
-    public VisualizarRecursoBean(CapabilityClient capabilityClient) {
+    public VisualizarRecursoBean(CapabilityClient capabilityClient, ResourceColectorService colectorService) {
         this.capabilityClient = capabilityClient;
+        this.colectorService = colectorService;
     }
 
     @PostConstruct
@@ -69,7 +71,8 @@ public class VisualizarRecursoBean {
     }
 
 
-    private void createLineModels(String title, String labelX, int max, int min, List<Concentracao> mediasSO2, List<Concentracao> mediasO3) {
+    private void createLineModels(String title, String labelX, int max, int min,
+                                  List<Concentracao> mediasSO2, List<Concentracao> mediasO3) {
         lineModel = initLinearModel(mediasSO2, mediasO3);
         lineModel.setTitle(title);
         lineModel.setLegendPosition("e");
@@ -110,7 +113,9 @@ public class VisualizarRecursoBean {
      * cria o modelo do gráfico
      */
     public void gerarGrafico(){
-        List<CapabilityDataAuxiliar> dataCapabilitySO2 =null;
+       ResourceHelper resourceHelper = getDataResource();
+
+      /*  List<CapabilityDataAuxiliar> dataCapabilitySO2 =null;
         List<CapabilityDataAuxiliar> dataCapability03 =null;
         try {
             dataCapabilitySO2 =  Util.getDataCapability("saoMarcos",Util.NITROGEN_DIOXIDE,"2016",dataInicio,dataFinal);
@@ -124,9 +129,29 @@ public class VisualizarRecursoBean {
         List<Concentracao> mediasSO2 = getConcentracaomedia(dataCapabilitySO2);
         List<Concentracao> mediasO3 = getConcentracaomedia(dataCapability03);
         createLineModels("Concentração Média","Dias",200,0,mediasSO2, mediasO3);
-
+    */
     }
 
+
+    public ResourceHelper getDataResource(){
+        ResourceHelper resourceHelper = new ResourceHelper();
+        List<String> capabilities = Arrays.asList(selectedParticula);
+        List<String> uuids = new ArrayList<>();
+        uuids.add(resource.getUuid());
+
+        try {
+            resourceHelper = colectorService.findResources(uuids,capabilities,dataInicio,dataFinal);
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+        return resourceHelper;
+    }
+
+    /**
+     * Calcula a concentração média por agrupamento
+     * @param dataList
+     * @return
+     */
     private List<Concentracao> getConcentracaomedia( List<CapabilityDataAuxiliar> dataList){
         List<Concentracao> listConcentracao = new ArrayList<>();
         Double media = 0.0;
@@ -153,8 +178,12 @@ public class VisualizarRecursoBean {
     }
 
 
-
-
+    /**
+     * Cria o modelo e  injeta dados no grafico de linha
+     * @param mediasSO2
+     * @param mediasO3
+     * @return model
+     */
     private LineChartModel initLinearModel(List<Concentracao> mediasSO2, List<Concentracao> mediasO3) {
         LineChartModel model = new LineChartModel();
         LineChartSeries seriesSO2 = new LineChartSeries();
@@ -176,6 +205,9 @@ public class VisualizarRecursoBean {
 
         return model;
     }
+
+
+
 
     public Resource getResource() {
         return resource;
