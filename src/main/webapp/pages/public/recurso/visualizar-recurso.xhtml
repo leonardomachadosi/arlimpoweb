@@ -77,7 +77,7 @@
                             </h:panelGrid>
                             <p:commandButton
                                     value="Criar Visualização"
-                                    process="@this dateInicio dateFinal"
+                                    process="@this dateInicio dateFinal check"
                                     action="#{visualizarRecursoBean.gerarGrafico}"
                                     update="@this chartLine"
                                     style="margin:24px 12px 0 0"/>

@@ -17,7 +17,7 @@
 
                 <div class="ui-g-12">
                     <div class="card card-w-title">
-                        <p:panelGrid id="pgMap" columns="2" columnClasses="ui-grid-col-8, ui-grid-col-4"
+                        <p:panelGrid id="pgMap" columns="2" columnClasses="ui-grid-col-12"
                                      layout="grid" styleClass="ui-panelgrid-blank form-group"
                                      style="border:0px none; background-color:transparent;">
 
@@ -31,10 +31,10 @@
 
                                        <h:outputText value="#{dashboardBean.marker.title}"/>
                                         <br />
-                                        <h:outputText value="#{dashboardBean.score}" />
+                                        <h:outputText value="#{dashboardBean.capabilityDataAuxiliar.value}" />
                                         <br/>
                                         <p:commandButton
-                                                title="Adicionar"
+                                                title="Visualizar"
                                                 icon="ui-icon-visibility"
                                                 process="@this"
                                                 action="#{dashboardBean.visualizarRecurso}"
@@ -45,17 +45,8 @@
                                 </p:gmapInfoWindow>
                             </p:gmap>
 
-                            <p:panel header="Activity" style="height:100%">
-                                <!--    <div class="activity-header">
-                                        <div class="ui-g">
-                                            <div class="ui-g-6">
-                                                <span style="font-weight:bold">Last Activity</span>
-                                            </div>
-                                            <div class="ui-g-6" style="text-align:right">
-                                                <p:commandButton type="button" icon="ui-icon-update" />
-                                            </div>
-                                        </div>
-                                    </div>-->
+                            <!--<p:panel header="Activity" style="height:100%">
+
                                 <ul class="activity-list">
                                     <li>
                                         <div class="count">S02</div>
@@ -93,7 +84,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            </p:panel>
+                            </p:panel>-->
                         </p:panelGrid>
                     </div>
                 </div>

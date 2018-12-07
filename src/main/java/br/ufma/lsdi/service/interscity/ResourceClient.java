@@ -1,5 +1,7 @@
 package br.ufma.lsdi.service.interscity;
 
+import br.ufma.lsdi.model.Catalog;
+import br.ufma.lsdi.model.ResourceHelper;
 import br.ufma.lsdi.model.auxiliar.ResourceAuxiliar;
 import br.ufma.lsdi.model.auxiliar.ResourceDataAuxiliar;
 import br.ufma.lsdi.service.client.FeignInmateConfiguration;
@@ -26,5 +28,14 @@ public interface ResourceClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/{uuid}")
     ResourceDataAuxiliar getResourceByUuid(@PathVariable("uuid") String uuid);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=Balneabilidade")
+    ResourceAuxiliar getAllResourceByCapability();
+
+    @RequestMapping(method = RequestMethod.POST, value = "collector/resources/data/last")
+    ResourceHelper getLastData(@RequestBody Catalog catalog);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=PM10")
+    ResourceAuxiliar getAllResourceSensor();
 
 }
