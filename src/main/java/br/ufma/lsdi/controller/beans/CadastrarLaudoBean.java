@@ -44,8 +44,8 @@ public class CadastrarLaudoBean {
         CapabilityDataAuxiliar dataAuxiliar = new CapabilityDataAuxiliar();
         dataAuxiliar.setTimestamp(timesatamp);
         dataAuxiliar.setValue(value);
-        //dataAuxiliar.setLat(resource.getLat());
-        //dataAuxiliar.setLon(resource.getLon());
+        dataAuxiliar.setLat(resource.getLat());
+        dataAuxiliar.setLon(resource.getLon());
         dataAuxiliar.setResource(resource);
         listData.add(dataAuxiliar);
         data.setData(listData);
