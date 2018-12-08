@@ -1,6 +1,7 @@
 package br.ufma.lsdi.controller.beans;
 
 import br.ufma.lsdi.model.Concentracao;
+import br.ufma.lsdi.model.GetDataContextResource;
 import br.ufma.lsdi.model.Matcher;
 import br.ufma.lsdi.model.ResourceHelper;
 import br.ufma.lsdi.model.auxiliar.CapabilityDataAuxiliar;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import javax.annotation.PostConstruct;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -47,7 +49,7 @@ public class VisualizarRecursoBean {
     public void init() {
         lineModel = new LineChartModel();
         initObjects();
-        }
+    }
 
     private void initObjects() {
         getObjetoFlashScope();
@@ -72,8 +74,8 @@ public class VisualizarRecursoBean {
 
 
     private void createLineModels(String title, String labelX, int max, int min,
-                                  List<Concentracao> mediasSO2, List<Concentracao> mediasO3) {
-        lineModel = initLinearModel(mediasSO2, mediasO3);
+                                  List<Concentracao> mediasPM10) {
+        lineModel = initLinearModel(mediasPM10);
         lineModel.setTitle(title);
         lineModel.setLegendPosition("e");
         lineModel.setShowPointLabels(true);
@@ -113,23 +115,13 @@ public class VisualizarRecursoBean {
      * cria o modelo do gráfico
      */
     public void gerarGrafico(){
-       ResourceHelper resourceHelper = getDataResource();
+        ResourceHelper resourceHelper = getDataResource();
 
-      /*  List<CapabilityDataAuxiliar> dataCapabilitySO2 =null;
-        List<CapabilityDataAuxiliar> dataCapability03 =null;
-        try {
-            dataCapabilitySO2 =  Util.getDataCapability("saoMarcos",Util.NITROGEN_DIOXIDE,"2016",dataInicio,dataFinal);
-            dataCapability03 = Util.getDataCapability("saoMarcos",Util.OZONE,"2016",dataInicio,dataFinal);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        List<Concentracao> mediasSO2 = getConcentracaomedia(dataCapabilitySO2);
-        List<Concentracao> mediasO3 = getConcentracaomedia(dataCapability03);
-        createLineModels("Concentração Média","Dias",200,0,mediasSO2, mediasO3);
-    */
+        List<Concentracao> mediasPM10 = getConcentracaoMedia(resourceHelper);
+
+        createLineModels("Concentração Média","Dias",200,0, mediasPM10);
+
     }
 
 
@@ -149,59 +141,103 @@ public class VisualizarRecursoBean {
 
     /**
      * Calcula a concentração média por agrupamento
-     * @param dataList
+     * @param resourceHelper
      * @return
      */
-    private List<Concentracao> getConcentracaomedia( List<CapabilityDataAuxiliar> dataList){
-        List<Concentracao> listConcentracao = new ArrayList<>();
-        Double media = 0.0;
-        int counter =0;
-        for (int i =0 ; i< dataList.size()-1;i++){
-            Date date1 = Util.convertTimestampData(dataList.get(i).getTimestamp());
-            Date date2 = Util.convertTimestampData(dataList.get(i+1).getTimestamp());
-            if (Util.getDay(date1) == Util.getDay(date2) &&
-                    Util.getMonth(date1) == Util.getMonth(date2) && Util.getYear(date1)== Util.getYear(date2)){
-                media +=Double.parseDouble(dataList.get(i).getValue());
-                counter ++;
-            }else{
-                Concentracao c = new Concentracao(Util.convertTimestampData(dataList.get(i+1).getTimestamp()),
-                        agrupamento, media/counter);
-                media =0.0;
-                counter =0;
-                listConcentracao.add(c);
+    private List<Concentracao> getConcentracaoMedia( ResourceHelper resourceHelper){
+        List<CapabilityDataAuxiliar> listDataAux = new ArrayList<>();
+        List<Concentracao> concentracaos = new ArrayList<>();
+        Concentracao concentracaoMedia ;
+
+        if (resourceHelper != null && resourceHelper.getResources() != null) {
+
+            for (GetDataContextResource getDataContextResource : resourceHelper.getResources()) {
+                Map<String, List<Map<String, Object>>> capability = getDataContextResource.getCapabilities();
+                List<Map<String, Object>> dataSensor = capability.get("PM10");
+
+                if (dataSensor != null) {
+                    for (Map<String, Object> cap2 : dataSensor) {
+                        CapabilityDataAuxiliar dataAuxiliar2 = new CapabilityDataAuxiliar(cap2);
+                        if (dataAuxiliar2.getResource() != null && dataAuxiliar2.getResource().getLat() != null) {
+
+                            listDataAux.add(dataAuxiliar2);
+
+                        }
+                    }
+                }
             }
-
-
         }
 
-        return listConcentracao;
+        Collections.sort(listDataAux, new Comparator<CapabilityDataAuxiliar>() {
+            @Override
+            public int compare(CapabilityDataAuxiliar o1, CapabilityDataAuxiliar o2) {
+                Date data1  ;
+                Date data2 ;
+
+                data1 = DateUtil.convertTimestampData(o1.getTimestamp());
+                data2 = DateUtil.convertTimestampData(o2.getTimestamp());
+
+                if (data2.after(data1)) {
+                    return -1;
+                }
+                if (data2.before(data1)) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
+        Double media =0.0;
+        int aux = 0;
+
+        for (CapabilityDataAuxiliar data : listDataAux){
+            if (data.getValue() != null ){
+                if (agrupamento.equals("dia")){
+                    int dia = DateUtil.getDay(dataInicio);
+                    if (dia == DateUtil.getDay(DateUtil.convertTimestampData(data.getTimestamp()))){
+                        media += Double.parseDouble(data.getValue());
+                        aux++;
+                    }else{
+                        concentracaoMedia = new Concentracao();
+                        concentracaoMedia.setAgrupamento(agrupamento);
+                        concentracaoMedia.setValue(media/aux);
+                        concentracaoMedia.setDate(DateUtil.convertTimestampData(data.getTimestamp()));
+                        concentracaos.add(concentracaoMedia);
+                        dia = DateUtil.getDay(DateUtil.convertTimestampData(data.getTimestamp()));
+                        media =0.0;
+                        aux = 0;
+                    }
+                }
+            }
+        }
+
+
+        return concentracaos;
     }
 
 
     /**
      * Cria o modelo e  injeta dados no grafico de linha
-     * @param mediasSO2
-     * @param mediasO3
+     * @param mediasPM10
      * @return model
      */
-    private LineChartModel initLinearModel(List<Concentracao> mediasSO2, List<Concentracao> mediasO3) {
+    private LineChartModel initLinearModel(List<Concentracao> mediasPM10) {
         LineChartModel model = new LineChartModel();
-        LineChartSeries seriesSO2 = new LineChartSeries();
-        model.getAxes().put(AxisType.X, new CategoryAxis("Dias"));
-        seriesSO2.setLabel("S02");
+        LineChartSeries seriesPM10 = new LineChartSeries();
+        model.getAxes().put(AxisType.X, new CategoryAxis(agrupamento));
+        seriesPM10.setLabel("PM10");
         int dia =1;
-        for(Concentracao media : mediasSO2) {
-            seriesSO2.set(dia++, media.getValue());
+        for(Concentracao media : mediasPM10) {
+            if (agrupamento.equals("dia")) {
+                seriesPM10.set(DateUtil.getDay(media.getDate())+"/"+DateUtil.getMonth(media.getDate()), media.getValue());
+            }else if(agrupamento.equals("mes")){
+                seriesPM10.set(DateUtil.getMonth(media.getDate())+"/"+DateUtil.getYear(media.getDate()), media.getValue());
+            }else{
+                seriesPM10.set(DateUtil.getYear(media.getDate()), media.getValue());
+            }
         }
 
-        LineChartSeries series03 = new LineChartSeries();
-        series03.setLabel("O3");
-        dia =1;
-        for(Concentracao media : mediasO3) {
-            series03.set(dia++, media.getValue());
-        }
-        model.addSeries(seriesSO2);
-        model.addSeries(series03);
+        model.addSeries(seriesPM10);
 
         return model;
     }
