@@ -57,9 +57,11 @@
                             </h:panelGrid>
                             <h:panelGrid columns="2" cellpadding="1">
                                 <h:outputText value="Agrupar por:" />
-                                <p:selectOneButton id="selectGroup" value="#{visualizarRecursoBean.agrupamento}">
+                                <p:selectOneButton id="selectGroup"
+                                                   value="#{visualizarRecursoBean.agrupamento}">
+
                                     <f:selectItem itemLabel="Dia" itemValue="dia" />
-                                    <f:selectItem itemLabel="Mes" itemValue="mes" noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Mes" itemValue="mes"/>
                                     <f:selectItem itemLabel="Ano" itemValue="ano" />
                                 </p:selectOneButton>
                             </h:panelGrid>

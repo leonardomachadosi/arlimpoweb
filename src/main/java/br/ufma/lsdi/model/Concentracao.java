@@ -14,7 +14,6 @@ import java.util.Date;
 public class Concentracao {
 
     private Date date;
-    private String agrupamento;
     private Double value;
 
 }

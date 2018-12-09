@@ -53,6 +53,10 @@ public class ResourceColectorService {
         int mesFim = DateUtil.getMonth(fim);
         int diaInicio = DateUtil.getDay(inicio);
         int diaFim = DateUtil.getDay(fim);
+        int contAno = (anoFim - anoInicio) +1;
+
+        int totalDias = DateUtil.dataDiff(inicio, fim);
+
 
         ResourceHelper resourceHelper = new ResourceHelper();
         Catalog catalog = new Catalog();
