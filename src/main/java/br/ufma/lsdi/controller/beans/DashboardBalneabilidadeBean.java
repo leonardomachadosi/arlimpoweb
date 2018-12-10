@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Controller
 @Scope("view")
-public class DashboardBean {
+public class DashboardBalneabilidadeBean {
 
     private MapModel mapModel;
     private String centerGeoMap = "-2.497438, -44.278959";
@@ -41,7 +41,7 @@ public class DashboardBean {
     private Catalog catalog;
     private CapabilityDataAuxiliar capabilityDataAuxiliar;
 
-    public DashboardBean(ResourceClient resourceClient) {
+    public DashboardBalneabilidadeBean(ResourceClient resourceClient) {
         this.resourceClient = resourceClient;
     }
 
@@ -49,20 +49,20 @@ public class DashboardBean {
     public void init() {
         resource = new Resource();
         initObjects();
-        carregarRecursosSensores();
+        carregarRecursos();
 
     }
 
-    private void carregarRecursosSensores() {
-        resourceAuxiliar = resourceClient.getAllResourceSensor();
+
+    private void carregarRecursos() {
+        resourceAuxiliar = resourceClient.getAllResourceByCapability();
+
         if (resourceAuxiliar != null && !resourceAuxiliar.getResources().isEmpty()) {
             for (Resource re : resourceAuxiliar.getResources()) {
                 if (re.getLat() != null) {
                     for (String cap : re.getCapabilities()) {
-                        if (cap.equals("PM10")) {
-                            if (!re.getUuid().equals("907850e5-e6ef-4958-9e83-1e461a535355")) {
-                                uuids.add(re.getUuid());
-                            }
+                        if (cap.equals("Balneabilidade")) {
+                            uuids.add(re.getUuid());
                         }
                     }
                 }
@@ -71,7 +71,7 @@ public class DashboardBean {
 
         if (!uuids.isEmpty()) {
             catalog = new Catalog();
-            capabilities.addAll(Arrays.asList("PM10"));
+            capabilities.addAll(Arrays.asList("Balneabilidade"));
             catalog.setCapabilities(capabilities);
             catalog.setUuids(uuids);
             try {
@@ -92,12 +92,14 @@ public class DashboardBean {
             for (GetDataContextResource getDataContextResource : resourceHelper.getResources()) {
                 Map<String, List<Map<String, Object>>> capability = getDataContextResource.getCapabilities();
 
-                List<Map<String, Object>> dataSensor = capability.get("PM10");
-                if (dataSensor != null) {
-                    for (Map<String, Object> cap2 : dataSensor) {
-                        CapabilityDataAuxiliar dataAuxiliar2 = new CapabilityDataAuxiliar(cap2);
-                        if (dataAuxiliar2.getResource() != null && dataAuxiliar2.getResource().getLat() != null) {
-                            plot(dataAuxiliar2);
+                List<Map<String, Object>> data = capability.get("Balneabilidade");
+
+                if (data != null) {
+                    for (Map<String, Object> cap : data) {
+
+                        CapabilityDataAuxiliar dataAuxiliar = new CapabilityDataAuxiliar(cap);
+                        if (dataAuxiliar.getLat() != null) {
+                            plot(dataAuxiliar);
                         }
                     }
                 }

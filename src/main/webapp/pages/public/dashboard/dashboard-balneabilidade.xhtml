@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+    <ui:define name="head">
+
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCI6XKvwCKUUpt1NNZuO2nbsUcyk8EkR_o&amp;sensor=false"></script>
+    </ui:define>
+
+    <ui:define name="title">SIISP</ui:define>
+    <ui:define name="content">
+        <h:form id="form" prependId="false">
+            <p:growl id="messages" widgetVar="messages" showDetail="false"
+                     closable="true" showIcon="false"/>
+            <div class="ui-g dashboard">
+
+                <div class="ui-g-12">
+                    <div class="card card-w-title">
+                        <p:panelGrid id="pgMap" columns="2" columnClasses="ui-grid-col-12"
+                                     layout="grid" styleClass="ui-panelgrid-blank form-group"
+                                     style="border:0px none; background-color:transparent;">
+
+                            <p:gmap center="#{dashboardBalneabilidadeBean.centerGeoMap}" widgetVar="map"
+                                    model="#{dashboardBalneabilidadeBean.mapModel}"
+                                    zoom="12" type="HYBRID" style="width:100%;height:500px" id="myMap">
+                                <p:ajax event="overlaySelect" listener="#{dashboardBalneabilidadeBean.onMarkerSelect}" />
+
+                                <p:gmapInfoWindow id="infoWindow">
+                                    <p:outputPanel style="text-align: center; display: block; margin: auto">
+
+                                       <h:outputText value="#{dashboardBalneabilidadeBean.marker.title}"/>
+                                        <br />
+                                        <h:outputText value="#{dashboardBalneabilidadeBean.capabilityDataAuxiliar.value}" />
+                                        <br/>
+                                        <p:commandButton
+                                                title="Visualizar"
+                                                icon="ui-icon-visibility"
+                                                process="@this"
+                                                action="#{dashboardBalneabilidadeBean.visualizarRecurso}"
+                                                update="@this"
+                                                style="margin:24px 12px 0 0"/>
+
+                                    </p:outputPanel>
+                                </p:gmapInfoWindow>
+                            </p:gmap>
+
+
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

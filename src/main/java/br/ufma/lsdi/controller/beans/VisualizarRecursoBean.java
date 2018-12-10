@@ -33,11 +33,12 @@ public class VisualizarRecursoBean {
     private SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");// HH:mm:ss");
     private LineChartModel lineModel;
     private ResourceColectorService colectorService;
-    List<Concentracao> mediasPM10 ;
-    List<Concentracao> mediasPM25 ;
-    List<Concentracao> mediasEnxofre ;
-    List<Concentracao> mediasNitrogenio ;
-    List<Concentracao> mediasOzonio ;
+    private List<Concentracao> mediasPM10 ;
+    private List<Concentracao> mediasPM25 ;
+    private List<Concentracao> mediasEnxofre ;
+    private List<Concentracao> mediasNitrogenio ;
+    private List<Concentracao> mediasOzonio ;
+    String tipoGrafico;
 
     public VisualizarRecursoBean(CapabilityClient capabilityClient, ResourceColectorService colectorService) {
         this.capabilityClient = capabilityClient;
@@ -132,8 +133,7 @@ public class VisualizarRecursoBean {
         createLineModels("Concentração Média","Dias",200,0);
 
     }
-
-
+    
     /**
      * Monta a lista de valores das médias de cada partiula
      * @param particula
@@ -294,5 +294,11 @@ public class VisualizarRecursoBean {
         this.lineModel = lineModel;
     }
 
+    public String getTipoGrafico() {
+        return tipoGrafico;
+    }
 
+    public void setTipoGrafico(String tipoGrafico) {
+        this.tipoGrafico = tipoGrafico;
+    }
 }
