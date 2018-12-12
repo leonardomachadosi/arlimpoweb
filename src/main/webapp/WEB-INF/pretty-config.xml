@@ -50,9 +50,14 @@
         <view-id value="/pages/public/recurso/visualizar-recurso.xhtml"/>
     </url-mapping>
 
-    <url-mapping id="idDashboard">
+    <url-mapping id="dashboardSensor">
         <pattern value="/dashboard/dashboard"></pattern>
         <view-id value="/pages/public/dashboard/dashboard.xhtml"/>
+    </url-mapping>
+
+    <url-mapping id="dashboardBalneabilidade">
+        <pattern value="/dashboard/balneabilidade"></pattern>
+        <view-id value="/pages/public/dashboard/dashboard-balneabilidade.xhtml"/>
     </url-mapping>
 
 </pretty-config>

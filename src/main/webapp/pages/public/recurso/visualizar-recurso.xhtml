@@ -57,9 +57,11 @@
                             </h:panelGrid>
                             <h:panelGrid columns="2" cellpadding="1">
                                 <h:outputText value="Agrupar por:" />
-                                <p:selectOneButton id="selectGroup" value="#{visualizarRecursoBean.agrupamento}">
+                                <p:selectOneButton id="selectGroup"
+                                                   value="#{visualizarRecursoBean.agrupamento}">
+
                                     <f:selectItem itemLabel="Dia" itemValue="dia" />
-                                    <f:selectItem itemLabel="Mes" itemValue="mes" noSelectionOption="true"/>
+                                    <f:selectItem itemLabel="Mes" itemValue="mes"/>
                                     <f:selectItem itemLabel="Ano" itemValue="ano" />
                                 </p:selectOneButton>
                             </h:panelGrid>
@@ -75,9 +77,19 @@
                                     <f:selectItem itemLabel="PM2.5" itemValue="PM25" />
                                 </p:selectManyCheckbox>
                             </h:panelGrid>
+
+                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                            <p:outputLabel for="grafico" value="Gráfico:" />
+                            <p:selectOneMenu id="grafico" value="#{visualizarRecursoBean.tipoGrafico}" style="width:125px">
+                                <f:selectItem itemLabel="Selecione" itemValue="" />
+                                <f:selectItem itemLabel="Linha" itemValue="Xbox One" />
+                                <f:selectItem itemLabel="Barras" itemValue="PS4" />
+                            </p:selectOneMenu>
+                            </h:panelGrid>
+
                             <p:commandButton
                                     value="Criar Visualização"
-                                    process="@this dateInicio dateFinal check"
+                                    process="@this dateInicio dateFinal check grafico"
                                     action="#{visualizarRecursoBean.gerarGrafico}"
                                     update="@this chartLine"
                                     style="margin:24px 12px 0 0"/>
