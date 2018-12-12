@@ -48,7 +48,7 @@ public class CapabilityDataAuxiliar implements Serializable {
     }
 
 
+
     public CapabilityDataAuxiliar() {
     }
-
 }

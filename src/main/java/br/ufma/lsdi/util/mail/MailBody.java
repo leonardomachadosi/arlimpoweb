@@ -97,7 +97,7 @@ public abstract class MailBody {
     public static final String RECUPERAR_SENHA_PT2 = "<br/>\nSenha  : ";
 
     public static final String RECUPERAR_SENHA_PT3 = " (Senha Padrão, deve ser alterada no primeiro acesso)\n" +
-            "<br/>Link: https://siisp.ma.gov.br/\n<br/><br/>" +
+            "<br/>Link: https://Ar Limpo.ma.gov.br/\n<br/><br/>" +
             "<br/></br>Atenciosamente,\n" +
             "<br/><br/>Desenvolvimento de Sistemas\n" +
             "<br/>Secretaria de Estado da Administração Penitenciária." +

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="modelo-siisp" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d63b36a-ee68-4c8f-8e54-04cd9b0e0fe5">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SiispAdapter.xml"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="modelo-Ar Limpo" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d63b36a-ee68-4c8f-8e54-04cd9b0e0fe5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ar LimpoAdapter.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="StyleSubRelatorio">
 		<conditionalStyle>
@@ -116,7 +116,7 @@
 				<textElement>
 					<font fontName="Arial"/>
 				</textElement>
-				<text><![CDATA[SIISP:]]></text>
+				<text><![CDATA[Ar Limpo:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="15" uuid="2f2e79e3-e48f-4761-a83b-0e893b5769bd"/>
@@ -394,7 +394,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial"/>
 				</textElement>
-				<text><![CDATA[Em consulta aos sistemas JurisConsult e Sentinela do TJ/MA, VEP/CNJ, SIISP/SEAP, SIGO E BNMP/CNJ, não foram localizadados outros processos em tramitação e mandados de prisão não cumpridos em desfavor da referida pessoa presa até a presente data.]]></text>
+				<text><![CDATA[Em consulta aos sistemas JurisConsult e Sentinela do TJ/MA, VEP/CNJ, Ar Limpo/SEAP, SIGO E BNMP/CNJ, não foram localizadados outros processos em tramitação e mandados de prisão não cumpridos em desfavor da referida pessoa presa até a presente data.]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
