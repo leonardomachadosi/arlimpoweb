@@ -58,7 +58,7 @@ public class DashboardBean {
                 if (re.getLat() != null) {
                     for (String cap : re.getCapabilities()) {
                         if (cap.equals("PM10")) {
-                            if (!re.getUuid().equals("907850e5-e6ef-4958-9e83-1e461a535355")) {
+                            if (!re.getUuid().equals("70b8f4fe-3f17-4dcb-beff-cfb586fb344f")) {
                                 uuids.add(re.getUuid());
                             }
                         }
@@ -69,7 +69,7 @@ public class DashboardBean {
 
         if (!uuids.isEmpty()) {
             catalog = new Catalog();
-            capabilities.addAll(Arrays.asList("PM25","PM25","OZONE", "SULFURE_DIOXIDE", "NITROGEN_DIOXIDE"));
+            capabilities.addAll(Arrays.asList("PM10","PM25","OZONE", "SULFURE_DIOXIDE", "NITROGEN_DIOXIDE"));
             catalog.setCapabilities(capabilities);
             catalog.setUuids(uuids);
             try {
@@ -176,21 +176,6 @@ public class DashboardBean {
 
         }
     }
-
-    private CapabilityDataAuxiliar montarDataSensor(Map<String, List<Map<String, Object>>> capability,
-                                                    String tipoSensor){
-        List<Map<String, Object>> dataSensor = capability.get(tipoSensor);
-        if (dataSensor != null) {
-            for (Map<String, Object> cap2 : dataSensor) {
-                CapabilityDataAuxiliar dataAuxiliar2 = new CapabilityDataAuxiliar(cap2);
-                if (dataAuxiliar2.getResource() != null && dataAuxiliar2.getResource().getLat() != null) {
-                    return dataAuxiliar2;
-                }
-            }
-        }
-        return null;
-    }
-
 
     private void initObjects() {
         mapModel = new DefaultMapModel();
