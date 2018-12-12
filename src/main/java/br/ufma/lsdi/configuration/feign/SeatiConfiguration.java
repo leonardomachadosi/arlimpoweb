@@ -11,6 +11,6 @@ public class SeatiConfiguration {
 
     @Bean
     public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
-        return new BasicAuthRequestInterceptor("seap-siisp","99s34p511sp99");
+        return new BasicAuthRequestInterceptor("seap-Ar Limpo","99s34p511sp99");
     }
 }

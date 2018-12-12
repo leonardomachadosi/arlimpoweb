@@ -104,7 +104,6 @@ public class DashboardBean {
         Gson gson = new Gson();
         System.out.println(gson.toJson(catalog));
         ResourceHelper resourceHelper = resourceClient.getLastData(catalog);
-        System.out.println(gson.toJson(resourceHelper));
         if (resourceHelper != null && resourceHelper.getResources() != null) {
 
             for (GetDataContextResource getDataContextResource : resourceHelper.getResources()) {
