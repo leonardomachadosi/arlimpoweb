@@ -17,6 +17,9 @@ public class CapabilityDataAuxiliar implements Serializable {
     private Resource resource;
     private Double lat;
     private Double lon;
+    private String name;
+    private String label;
+    private Long index;
 
     public CapabilityDataAuxiliar(Map<String, Object> capability) {
         try {
