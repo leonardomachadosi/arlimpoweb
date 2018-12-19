@@ -19,20 +19,20 @@
 
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="itDescricao"
-                                         value="#{visualizarRecursoBean.resource.description}"
+                                         value="#{visualizarBalneabilidadeBean.resource.description}"
                                          style="width: 100%;"/>
                             <p:outputLabel for="itDescricao" value="Recurso"/>
                         </h:panelGroup>
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="itUUID"
-                                         value="#{visualizarRecursoBean.resource.uuid}"
+                                         value="#{visualizarBalneabilidadeBean.resource.uuid}"
                                          style="width: 100%;"/>
                             <p:outputLabel for="itUUID" value="UUID"/>
                         </h:panelGroup>
 
                         <h:panelGroup styleClass="md-inputfield">
                             <p:inputText id="itStatus"
-                                         value="#{visualizarRecursoBean.resource.status}"
+                                         value="#{visualizarBalneabilidadeBean.resource.status}"
                                          style="width: 100%;"/>
                             <p:outputLabel for="itStatus" value="Status"/>
                         </h:panelGroup>
@@ -47,42 +47,22 @@
 
                             <h:panelGrid columns="2" cellpadding="5">
                                 <p:outputLabel for="dateInicio" value="Data Inicial:" />
-                                <p:calendar id="dateInicio" value="#{visualizarRecursoBean.dataInicio}"
-                                             showOn="button" />
+                                <p:calendar id="dateInicio" value="#{visualizarBalneabilidadeBean.dataInicio}"
+                                            showOn="button" />
                             </h:panelGrid>
                             <h:panelGrid columns="2" cellpadding="5">
                                 <p:outputLabel for="dateFinal" value="Data Final:" />
-                                <p:calendar id="dateFinal" value="#{visualizarRecursoBean.dataFinal}"
-                                             showOn="button" />
-                            </h:panelGrid>
-                            <h:panelGrid columns="2" cellpadding="1">
-                                <h:outputText value="Agrupar por:" />
-                                <p:selectOneButton id="selectGroup"
-                                                   value="#{visualizarRecursoBean.agrupamento}">
-
-                                    <f:selectItem itemLabel="Dia" itemValue="dia" />
-                                    <f:selectItem itemLabel="Mes" itemValue="mes"/>
-                                    <f:selectItem itemLabel="Ano" itemValue="ano" />
-                                </p:selectOneButton>
+                                <p:calendar id="dateFinal" value="#{visualizarBalneabilidadeBean.dataFinal}"
+                                            showOn="button" />
                             </h:panelGrid>
 
-                            <h:panelGrid columns="1" cellpadding="5">
-                                <h:outputText value="Gases e partículas:" />
-                                <p:selectManyCheckbox id="check"  layout="grid" columns="5"
-                                                      value="#{visualizarRecursoBean.selectedParticula}">
-                                    <f:selectItem itemLabel="03" itemValue="OZONE" />
-                                    <f:selectItem itemLabel="S02" itemValue="SULFURE_DIOXIDE" />
-                                    <f:selectItem itemLabel="N03" itemValue="NITROGEN_DIOXIDE" />
-                                    <f:selectItem itemLabel="PM10" itemValue="PM10" />
-                                    <f:selectItem itemLabel="PM2.5" itemValue="PM25" />
-                                </p:selectManyCheckbox>
-                            </h:panelGrid>
+
 
                             <p:commandButton
-                                    value="Criar Visualização"
-                                    process="@this dateInicio dateFinal check chartLine"
-                                    action="#{visualizarRecursoBean.gerarGrafico}"
-                                    update="@this chartLine"
+                                    value="Gerar Histórico"
+                                    process="@this dateInicio dateFinal dtRecursos "
+                                    action="#{visualizarBalneabilidadeBean.getHistorico(resource.uuid)}"
+                                    update="@this dtRecursos"
                                     style="margin:24px 12px 0 0"/>
                         </p:panelGrid>
 
@@ -91,11 +71,28 @@
 
                 <div class="ui-g-12">
                     <div class="card card-w-title">
+                        <h1><b>Recursos</b></h1>
+                        <p:dataTable id="dtRecursos"
+                                     var="recurso"
+                                     value="#{visualizarBalneabilidadeBean.capabilityDataList}"
+                                     reflow="true"
+                                     rowKey="#{recurso.id}"
+                                     paginator="true"
+                                     rows="12"
+                                     emptyMessage="Nenhum registro cadastrado encontrado.">
+                            <p:column headerText="" style="width:250px;text-align: center">
+                                <h:graphicImage library="imagens" name="marker_green.png" rendered="#{visualizarBalneabilidadeBean.isProprio(recurso.value)}"  />
+                                <h:graphicImage library="imagens" name="red_marker.png" rendered="#{visualizarBalneabilidadeBean.isImproprio(recurso.value)}"  />
+                            </p:column>
+                            <p:column headerText="Timestamp" style="width:210px;text-align: center">
+                                <h:outputText value="#{recurso.timestamp}"/>
+                            </p:column>
+                            <p:column headerText="Capacidade" style="text-align: center">
+                                <h:outputText value="#{recurso.value}"/>
+                            </p:column>
 
-                        <p:chart type="line" model="#{visualizarRecursoBean.lineModel}"
-                                 style="height:300px;" id="chartLine"/>
-                        <br /><br />
 
+                        </p:dataTable>
                     </div>
                 </div>
             </div>

@@ -136,7 +136,7 @@ public class DashboardBalneabilidadeBean {
 
     public String visualizarRecurso() {
         WebUtil.flashScope().put("resource", capabilityDataAuxiliar.getResource());
-        return "pretty:visualizarRecurso";
+        return "pretty:visualizarBalneabilidade";
     }
 
 
@@ -159,6 +159,8 @@ public class DashboardBalneabilidadeBean {
     public Marker getMarker() {
         return marker;
     }
+
+
 
     /**
      * Listener click marker map
