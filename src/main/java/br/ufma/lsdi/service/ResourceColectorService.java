@@ -47,33 +47,35 @@ public class ResourceColectorService {
 
     public ResourceHelper findResources(List<String> uuids, List<String> capabilities,
                                         Date inicio, Date fim) throws UnirestException {
-        int anoInicio = DateUtil.getYear(inicio);
-        int anoFim = DateUtil.getYear(fim);
-        int mesInicio = DateUtil.getMonth(inicio);
-        int mesFim = DateUtil.getMonth(fim);
-        int diaInicio = DateUtil.getDay(inicio);
-        int diaFim = DateUtil.getDay(fim);
-        int contAno = (anoFim - anoInicio) +1;
-
-        int totalDias = DateUtil.dataDiff(inicio, fim);
-
-
+        gson = new Gson();
         ResourceHelper resourceHelper = new ResourceHelper();
         Catalog catalog = new Catalog();
         catalog.setCapabilities(capabilities);
         catalog.setUuids(uuids);
-        catalog.setStart_date(""+anoInicio+"-"+mesInicio+"-"+diaInicio+"T01:00:00");
-        catalog.setEnd_date(""+anoFim+"-"+mesFim+"-"+diaFim+"T01:00:00");
-        gson = new Gson();
+        if (inicio != null && fim != null) {
+            int anoInicio = DateUtil.getYear(inicio);
+            int anoFim = DateUtil.getYear(fim);
+            int mesInicio = DateUtil.getMonth(inicio);
+            int mesFim = DateUtil.getMonth(fim);
+            int diaInicio = DateUtil.getDay(inicio);
+            int diaFim = DateUtil.getDay(fim);
+            int contAno = (anoFim - anoInicio) + 1;
+
+            int totalDias = DateUtil.dataDiff(inicio, fim);
+
+
+            catalog.setStart_date(""+anoInicio+"-"+mesInicio+"-"+diaInicio+"T01:00:00");
+            catalog.setEnd_date(""+anoFim+"-"+mesFim+"-"+diaFim+"T01:00:00");
+        }
 
         val response = Unirest.post(Util.URL_BASE+"collector/resources/data")
 
-                        .header("accept", "application/json")
-                        .header("content-type", "application/json")
-                        //.queryString("page", i)
-                        .body((gson.toJson(catalog)))
-                        .asJson().getBody().toString();
-               resourceHelper = gson.fromJson(response, ResourceHelper.class);
+                .header("accept", "application/json")
+                .header("content-type", "application/json")
+                //.queryString("page", i)
+                .body((gson.toJson(catalog)))
+                .asJson().getBody().toString();
+        resourceHelper = gson.fromJson(response, ResourceHelper.class);
 
 
         return resourceHelper;

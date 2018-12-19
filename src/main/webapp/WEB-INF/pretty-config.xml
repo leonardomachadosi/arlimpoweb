@@ -60,6 +60,11 @@
         <view-id value="/pages/public/dashboard/dashboard-balneabilidade.xhtml"/>
     </url-mapping>
 
+    <url-mapping id="visualizarBalneabilidade">
+        <pattern value="/recurso/visualizarBalneabilidade"></pattern>
+        <view-id value="/pages/public/recurso/visualizar-balneabilidade.xhtml"/>
+    </url-mapping>
+
 </pretty-config>
 
 
