@@ -61,7 +61,7 @@ public class DashboardBalneabilidadeBean {
             for (Resource re : resourceAuxiliar.getResources()) {
                 if (re.getLat() != null) {
                     for (String cap : re.getCapabilities()) {
-                        if (cap.equals("Balneabilidade")) {
+                        if (cap.equals("BALNEABILIDADE")) {
                             uuids.add(re.getUuid());
                         }
                     }
@@ -71,7 +71,7 @@ public class DashboardBalneabilidadeBean {
 
         if (!uuids.isEmpty()) {
             catalog = new Catalog();
-            capabilities.addAll(Arrays.asList("Balneabilidade"));
+            capabilities.addAll(Arrays.asList("BALNEABILIDADE"));
             catalog.setCapabilities(capabilities);
             catalog.setUuids(uuids);
             try {
@@ -92,7 +92,7 @@ public class DashboardBalneabilidadeBean {
             for (GetDataContextResource getDataContextResource : resourceHelper.getResources()) {
                 Map<String, List<Map<String, Object>>> capability = getDataContextResource.getCapabilities();
 
-                List<Map<String, Object>> data = capability.get("Balneabilidade");
+                List<Map<String, Object>> data = capability.get("BALNEABILIDADE");
 
                 if (data != null) {
                     for (Map<String, Object> cap : data) {
@@ -118,16 +118,14 @@ public class DashboardBalneabilidadeBean {
     public void plot(CapabilityDataAuxiliar capabilityDataAuxiliar) {
 
         String icon = "";
-        LatLng latLng;
+        LatLng latLng = new LatLng(capabilityDataAuxiliar.getResource().getLat(), capabilityDataAuxiliar.getResource().getLon());
+
         if (capabilityDataAuxiliar.getValue().equals("PROPRIO")) {
             icon = "http://icongal.com/gallery/image/447363/map_marker_outside_chartreuse.png";
-            latLng = new LatLng(capabilityDataAuxiliar.getResource().getLon(), capabilityDataAuxiliar.getResource().getLat());
         } else if (capabilityDataAuxiliar.getValue().equals("IMPROPRIO")) {
-            latLng = new LatLng(capabilityDataAuxiliar.getResource().getLon(), capabilityDataAuxiliar.getResource().getLat());
             icon = "http://icongal.com/gallery/image/447372/map_marker_outside_pink.png";
         } else {
             icon="http://icongal.com/gallery/image/460192/inside_icons_azure_marker_map_socialize_base.png";
-            latLng = new LatLng(capabilityDataAuxiliar.getResource().getLat(), capabilityDataAuxiliar.getResource().getLon());
         }
 
         mapModel.addOverlay(new Marker(latLng,

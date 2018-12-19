@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 )
 public interface ResourceClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=Balneabilidade")
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=BALNEABILIDADE")
     ResourceAuxiliar getResource();
 
     @RequestMapping(method = RequestMethod.POST, value = "/catalog/resources")
@@ -29,7 +29,7 @@ public interface ResourceClient {
     @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/{uuid}")
     ResourceDataAuxiliar getResourceByUuid(@PathVariable("uuid") String uuid);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=Balneabilidade")
+    @RequestMapping(method = RequestMethod.GET, value = "/catalog/resources/search?capability=BALNEABILIDADE")
     ResourceAuxiliar getAllResourceByCapability();
 
     @RequestMapping(method = RequestMethod.POST, value = "collector/resources/data/last")

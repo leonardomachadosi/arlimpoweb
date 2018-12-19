@@ -73,7 +73,7 @@ public class CadastrarLaudoBean {
         listData.add(dataAuxiliar);
         data.setData(listData);
 
-        capabilityClient.saveCapabilityData(data, resource.getUuid(), "Balneabilidade");
+        capabilityClient.saveCapabilityData(data, resource.getUuid(), "BALNEABILIDADE");
 
         timesatamp = "";
         value = "";
@@ -86,7 +86,7 @@ public class CadastrarLaudoBean {
     public void salvarAllLaudo() {
 
         try {
-            List<String> lista = Arrays.asList("11-01-2015.csv", "15-01-2016.csv", "21-01-2016.csv");
+            List<String> lista = Arrays.asList("balneabilidade\\2015\\28-10-2015.csv");
             for (String s : lista) {
                 List<String[]> linhas = Util.lerAquivoBalneabilidade(s);
                 List<CapabilityDataAuxiliar> dataAuxiliars = new ArrayList<>();
@@ -97,15 +97,15 @@ public class CadastrarLaudoBean {
                                 CapabilityDataAuxiliar dataAuxiliar = new CapabilityDataAuxiliar();
                                 dataAuxiliar.setValue(linha[2]);
                                 dataAuxiliar.setResource(capabilityDataAuxiliar.getResource());
-                                dataAuxiliar.setLon(capabilityDataAuxiliar.getLat());
-                                dataAuxiliar.setLat(capabilityDataAuxiliar.getLon());
+                                dataAuxiliar.setLon(capabilityDataAuxiliar.getLon());
+                                dataAuxiliar.setLat(capabilityDataAuxiliar.getLat());
                                 dataAuxiliar.setTimestamp(linha[3].replaceAll("[\"]", ""));
                                 dataAuxiliars.add(dataAuxiliar);
                                 Data data = new Data();
                                 data.setData(dataAuxiliars);
                                 capabilityClient.saveCapabilityData(data,
                                         dataAuxiliar.getResource().getUuid(),
-                                        "Balneabilidade");
+                                        "BALNEABILIDADE");
                             }
                         }
 
@@ -138,7 +138,7 @@ public class CadastrarLaudoBean {
             for (Resource re : resourceAuxiliar.getResources()) {
                 if (re.getLat() != null) {
                     for (String cap : re.getCapabilities()) {
-                        if (cap.equals("Balneabilidade")) {
+                        if (cap.equals("BALNEABILIDADE")) {
                             uuids.add(re.getUuid());
                         }
                     }
@@ -148,7 +148,7 @@ public class CadastrarLaudoBean {
 
         if (!uuids.isEmpty()) {
             catalog = new Catalog();
-            capabilities.addAll(Arrays.asList("Balneabilidade", "PM10"));
+            capabilities.addAll(Arrays.asList("BALNEABILIDADE"));
             catalog.setCapabilities(capabilities);
             catalog.setUuids(uuids);
             try {
@@ -166,7 +166,7 @@ public class CadastrarLaudoBean {
             for (GetDataContextResource getDataContextResource : resourceHelper.getResources()) {
                 Map<String, List<Map<String, Object>>> capability = getDataContextResource.getCapabilities();
 
-                List<Map<String, Object>> data = capability.get("Balneabilidade");
+                List<Map<String, Object>> data = capability.get("BALNEABILIDADE");
 
                 if (data != null) {
                     for (Map<String, Object> cap : data) {

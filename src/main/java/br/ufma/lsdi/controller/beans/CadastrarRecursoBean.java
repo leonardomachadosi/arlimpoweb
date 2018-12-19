@@ -42,7 +42,7 @@ public class CadastrarRecursoBean {
     private void initObjects() {
         resource = new Resource();
         capabilitiesSelected = new ArrayList<>();
-        capabilities = Arrays.asList("Balneabilidade", "Ozone", "ParticullateMatter25", "CarbonMonoxide");
+        capabilities = Arrays.asList("BALNEABILIDADE", "OZONE", "PM25", "PM10", "SULFURE_DIOXIDE", "NITROGEN_DIOXIDE");
         subCategoria = Arrays.asList("Novo Recurso", "Praia do Calhau", "Praia de São Marcos", "Praia Ponta D' Areia");
     }
 
