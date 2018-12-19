@@ -42,6 +42,7 @@ public class CadastrarLaudoBean {
     private List<String> uuids;
     private List<String> capabilities;
     private List<CapabilityDataAuxiliar> capabilityDataAuxiliars;
+    private List<Resource> resources;
 
     public CadastrarLaudoBean(CapabilityClient capabilityClient, ResourceClient resourceClient) {
         this.capabilityClient = capabilityClient;
@@ -59,6 +60,7 @@ public class CadastrarLaudoBean {
         capabilityDataAuxiliars = new ArrayList<>();
         uuids = new ArrayList<>();
         capabilities = new ArrayList<>();
+        resources = new ArrayList<>();
     }
 
     public void salvarLaudo() {
@@ -86,30 +88,33 @@ public class CadastrarLaudoBean {
     public void salvarAllLaudo() {
 
         try {
-            List<String> lista = Arrays.asList("balneabilidade\\2015\\28-10-2015.csv");
+            List<String> lista = Arrays.asList("11-01-2016.csv", "15-01-2016.csv", "21-01-2016.csv");
             for (String s : lista) {
                 List<String[]> linhas = Util.lerAquivoBalneabilidade(s);
+                Gson gson = new Gson();
                 List<CapabilityDataAuxiliar> dataAuxiliars = new ArrayList<>();
-                for (CapabilityDataAuxiliar capabilityDataAuxiliar : capabilityDataAuxiliars) {
-                    if (capabilityDataAuxiliar.getResource() != null) {
-                        for (String[] linha : linhas) {
-                            if (capabilityDataAuxiliar.getResource().getDescription().trim().equals(linha[0])) {
-                                CapabilityDataAuxiliar dataAuxiliar = new CapabilityDataAuxiliar();
-                                dataAuxiliar.setValue(linha[2]);
-                                dataAuxiliar.setResource(capabilityDataAuxiliar.getResource());
-                                dataAuxiliar.setLon(capabilityDataAuxiliar.getLon());
-                                dataAuxiliar.setLat(capabilityDataAuxiliar.getLat());
-                                dataAuxiliar.setTimestamp(linha[3].replaceAll("[\"]", ""));
-                                dataAuxiliars.add(dataAuxiliar);
-                                Data data = new Data();
-                                data.setData(dataAuxiliars);
-                                capabilityClient.saveCapabilityData(data,
-                                        dataAuxiliar.getResource().getUuid(),
-                                        "BALNEABILIDADE");
-                            }
-                        }
 
+                for (String[] linha : linhas) {
+                    Resource resource = new Resource();
+                    resource = getResourceByName(linha[6]);
+                    if (resource != null) {
+                        if (resource.getUuid().trim().equals(linha[6].trim())) {
+                            CapabilityDataAuxiliar dataAuxiliar = new CapabilityDataAuxiliar();
+                            dataAuxiliars = new ArrayList<>();
+                            dataAuxiliar.setValue(linha[2]);
+                            dataAuxiliar.setResource(resource);
+                            dataAuxiliar.setLon(resource.getLon());
+                            dataAuxiliar.setLat(resource.getLat());
+                            dataAuxiliar.setTimestamp(linha[3].replaceAll("[\"]", ""));
+                            dataAuxiliars.add(dataAuxiliar);
+                            Data data = new Data();
+                            data.setData(dataAuxiliars);
+                            capabilityClient.saveCapabilityData(data,
+                                    dataAuxiliar.getResource().getUuid(),
+                                    "BALNEABILIDADE");
+                        }
                     }
+
                 }
             }
 
@@ -121,6 +126,15 @@ public class CadastrarLaudoBean {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private Resource getResourceByName(String nome) {
+        for (Resource resource : resources) {
+            if (resource.getUuid().trim().equals(nome.trim())) {
+                return resource;
+            }
+        }
+        return null;
     }
 
     public void getObjetoFlashScope() {
@@ -139,24 +153,13 @@ public class CadastrarLaudoBean {
                 if (re.getLat() != null) {
                     for (String cap : re.getCapabilities()) {
                         if (cap.equals("BALNEABILIDADE")) {
-                            uuids.add(re.getUuid());
+                            resources.add(re);
                         }
                     }
                 }
             }
         }
 
-        if (!uuids.isEmpty()) {
-            catalog = new Catalog();
-            capabilities.addAll(Arrays.asList("BALNEABILIDADE"));
-            catalog.setCapabilities(capabilities);
-            catalog.setUuids(uuids);
-            try {
-                getLastData(catalog);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void getLastData(Catalog catalog) {
@@ -173,7 +176,9 @@ public class CadastrarLaudoBean {
 
                         CapabilityDataAuxiliar dataAuxiliar = new CapabilityDataAuxiliar(cap);
                         if (dataAuxiliar.getLat() != null) {
-                            capabilityDataAuxiliars.add(dataAuxiliar);
+                            if (!dataAuxiliar.getTimestamp().equals("2015-12-03T17:52:25.428Z")) {
+                                capabilityDataAuxiliars.add(dataAuxiliar);
+                            }
                         }
                     }
                 }

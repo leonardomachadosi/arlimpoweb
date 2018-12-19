@@ -93,8 +93,8 @@ public class Util {
 
 
     public static List<String[]> lerAquivoBalneabilidade(String arquivo) throws ParseException, FileNotFoundException {
-        InputStream inputStream = new FileInputStream("C:\\madrid\\"+arquivo);
-       CsvReader cvsReader = new CsvReader(inputStream);
+        InputStream inputStream = new FileInputStream("C:\\madrid\\" + arquivo);
+        CsvReader cvsReader = new CsvReader(inputStream);
         List<String[]> linhas = cvsReader.read();
         return linhas;
     }
