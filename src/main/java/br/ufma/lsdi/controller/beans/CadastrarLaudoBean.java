@@ -88,7 +88,7 @@ public class CadastrarLaudoBean {
     public void salvarAllLaudo() {
 
         try {
-            List<String> lista = Arrays.asList("11-01-2016.csv", "15-01-2016.csv", "21-01-2016.csv");
+            List<String> lista = Arrays.asList("05-07-2018.csv", "12-07-2018.csv", "19-07-2018.csv", "26-07-2018.csv", "02-08-2018.csv", "09-08-2018.csv", "16-08-2018.csv", "23-08-2018.csv", "30-08-2018.csv", "06-09-2018.csv", "13-09-2018.csv", "20-09-2018.csv", "27-09-2018.csv", "04-10-2018.csv", "11-10-2018.csv", "18-10-2018.csv", "25-10-2018.csv", "01-11-2018.csv", "08-11-2018.csv", "14-11-2018.csv", "22-11-2018.csv", "28-11-2018.csv", "06-12-2018.csv", "13-12-2018.csv");
             for (String s : lista) {
                 List<String[]> linhas = Util.lerAquivoBalneabilidade(s);
                 Gson gson = new Gson();
