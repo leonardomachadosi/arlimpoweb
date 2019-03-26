@@ -30,5 +30,10 @@ public class CapabilityClientFallback implements CapabilityClient {
         return new Data();
     }
 
+    @Override
+    public Object getPacienteObject(Long id) {
+        return null;
+    }
+
 
 }

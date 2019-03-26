@@ -14,7 +14,6 @@ public class FeignConfiguration {
     public SpringEncoder feignEncoder() {
         ObjectFactory<HttpMessageConverters> objectFactory = () ->
                 new HttpMessageConverters(new FormHttpMessageConverter());
-
         return new SpringEncoder(objectFactory);
     }
 

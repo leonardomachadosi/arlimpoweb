@@ -65,6 +65,12 @@
         <view-id value="/pages/public/recurso/visualizar-balneabilidade.xhtml"/>
     </url-mapping>
 
+    <url-mapping id="anderson">
+        <pattern value="/telaAnderson"></pattern>
+        <view-id value="/pages/public/tela-anderson.xhtml"/>
+    </url-mapping>
+
+
 </pretty-config>
 
 

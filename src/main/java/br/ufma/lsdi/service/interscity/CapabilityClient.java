@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @FeignClient(
         name = "capabilityClient",
-        url = "http://cidadesinteligentes.lsdi.ufma.br",
+       // url = "http://cidadesinteligentes.lsdi.ufma.br",
+        url = "http://localhost:8080/paciente",
         fallback = CapabilityClientFallback.class,
         configuration = FeignInmateConfiguration.class
 )
@@ -32,5 +33,10 @@ public interface CapabilityClient {
     Data saveCapabilityData(@RequestBody Data data,
                             @PathVariable("uuid") String uuid,
                             @PathVariable("capability") String capability);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id")
+    Object getPacienteObject(@PathVariable("id") Long id);
+
+
 
 }
